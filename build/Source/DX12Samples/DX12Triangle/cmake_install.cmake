@@ -1,4 +1,4 @@
-# Install script for directory: C:/Users/LiamZi/Documents/GitHub/LearnDX12/Source/DX12Samples/DX12Triangle
+# Install script for directory: D:/LearningDX12/Source/DX12Samples/DX12Triangle
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)

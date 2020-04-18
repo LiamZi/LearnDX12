@@ -1,2 +1,2 @@
 #pragma code_page(65001)
-1 /* CREATEPROCESS_MANIFEST_RESOURCE_ID */ 24 /* RT_MANIFEST */ "C:/Users/LiamZi/Documents/GitHub/LearnDX12/build/Source/DX12Samples/DX12Triangle/CMakeFiles/HelloTriangle.dir/embed.manifest"
+1 /* CREATEPROCESS_MANIFEST_RESOURCE_ID */ 24 /* RT_MANIFEST */ "D:/LearningDX12/build/Source/DX12Samples/DX12Triangle/CMakeFiles/HelloTriangle.dir/embed.manifest"

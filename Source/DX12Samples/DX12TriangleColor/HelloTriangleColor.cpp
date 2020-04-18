@@ -489,7 +489,8 @@ void HelloTriangle::tick()
         }
 
         m_commandList->ResourceBarrier(1, &barrier);
-        CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHandle(m_rtvDescriptorHeap->GetCPUDescriptorHandleForHeapStart(), m_flightIndex, m_rtvDescriptorSize);
+        CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHandle(m_rtvDescriptorHeap->GetCPUDescriptorHandleForHeapStart(), 
+                                            m_flightIndex, m_rtvDescriptorSize);
         m_commandList->OMSetRenderTargets(1, &rtvHandle, FALSE, nullptr);
         
         const float clearColor[] = { 0.0f, 0.2f, 0.4f, 1.0f };

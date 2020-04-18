@@ -17,6 +17,12 @@
         "xmemory": "cpp",
         "xstring": "cpp",
         "algorithm": "cpp",
-        "system_error": "cpp"
+        "system_error": "cpp",
+        "concepts": "cpp",
+        "exception": "cpp",
+        "istream": "cpp",
+        "ostream": "cpp",
+        "tuple": "cpp",
+        "utility": "cpp"
     }
 }

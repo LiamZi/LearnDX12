@@ -1,4 +1,4 @@
-# Install script for directory: C:/Users/LiamZi/Documents/GitHub/LearnDX12/Source/ThirdPart/Nix
+# Install script for directory: D:/LearningDX12/Source/ThirdPart/Nix
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)

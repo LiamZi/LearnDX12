@@ -1,61 +1,73 @@
 [
 {
-  "directory": "C:/Users/LiamZi/Documents/GitHub/LearnDX12/build",
-  "command": "\"C:\\PROGRA~2\\Microsoft Visual Studio\\2019\\Community\\VC\\Tools\\MSVC\\14.25.28610\\bin\\Hostx86\\x64\\cl.exe\"  /nologo /TP -DUNICODE -D_CRT_SECURE_NO_WARINGS -D_UNICODE -I..\\include -I..\\Source\\Common -I..\\Source\\Utility -I..\\Source\\ThirdPart  /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1   /FoSource\\DX12Samples\\DX12Test\\CMakeFiles\\HelloDX12.dir\\__\\__\\Platform\\Windows\\WinMain\\WinMain.cpp.obj /FdTARGET_COMPILE_PDB /FS -c C:\\Users\\LiamZi\\Documents\\GitHub\\LearnDX12\\Source\\Platform\\Windows\\WinMain\\WinMain.cpp",
-  "file": "C:/Users/LiamZi/Documents/GitHub/LearnDX12/Source/Platform/Windows/WinMain/WinMain.cpp"
+  "directory": "D:/LearningDX12/build",
+  "command": "C:\\PROGRA~2\\MICROS~2\\2019\\COMMUN~1\\VC\\Tools\\MSVC\\1425~1.286\\bin\\Hostx86\\x64\\cl.exe  /nologo /TP -DUNICODE -D_CRT_SECURE_NO_WARINGS -D_UNICODE -I..\\include -I..\\Source\\Common -I..\\Source\\Utility -I..\\Source\\ThirdPart  /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1   /FoSource\\DX12Samples\\DX12Test\\CMakeFiles\\HelloDX12.dir\\__\\__\\Platform\\Windows\\WinMain\\WinMain.cpp.obj /FdTARGET_COMPILE_PDB /FS -c D:\\LearningDX12\\Source\\Platform\\Windows\\WinMain\\WinMain.cpp",
+  "file": "D:/LearningDX12/Source/Platform/Windows/WinMain/WinMain.cpp"
 },
 
 {
-  "directory": "C:/Users/LiamZi/Documents/GitHub/LearnDX12/build",
-  "command": "\"C:\\PROGRA~2\\Microsoft Visual Studio\\2019\\Community\\VC\\Tools\\MSVC\\14.25.28610\\bin\\Hostx86\\x64\\cl.exe\"  /nologo /TP -DUNICODE -D_CRT_SECURE_NO_WARINGS -D_UNICODE -I..\\include -I..\\Source\\Common -I..\\Source\\Utility -I..\\Source\\ThirdPart  /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1   /FoSource\\DX12Samples\\DX12Test\\CMakeFiles\\HelloDX12.dir\\HelloDX12.cpp.obj /FdTARGET_COMPILE_PDB /FS -c C:\\Users\\LiamZi\\Documents\\GitHub\\LearnDX12\\Source\\DX12Samples\\DX12Test\\HelloDX12.cpp",
-  "file": "C:/Users/LiamZi/Documents/GitHub/LearnDX12/Source/DX12Samples/DX12Test/HelloDX12.cpp"
+  "directory": "D:/LearningDX12/build",
+  "command": "C:\\PROGRA~2\\MICROS~2\\2019\\COMMUN~1\\VC\\Tools\\MSVC\\1425~1.286\\bin\\Hostx86\\x64\\cl.exe  /nologo /TP -DUNICODE -D_CRT_SECURE_NO_WARINGS -D_UNICODE -I..\\include -I..\\Source\\Common -I..\\Source\\Utility -I..\\Source\\ThirdPart  /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1   /FoSource\\DX12Samples\\DX12Test\\CMakeFiles\\HelloDX12.dir\\HelloDX12.cpp.obj /FdTARGET_COMPILE_PDB /FS -c D:\\LearningDX12\\Source\\DX12Samples\\DX12Test\\HelloDX12.cpp",
+  "file": "D:/LearningDX12/Source/DX12Samples/DX12Test/HelloDX12.cpp"
 },
 
 {
-  "directory": "C:/Users/LiamZi/Documents/GitHub/LearnDX12/build",
-  "command": "\"C:\\PROGRA~2\\Microsoft Visual Studio\\2019\\Community\\VC\\Tools\\MSVC\\14.25.28610\\bin\\Hostx86\\x64\\cl.exe\"  /nologo /TP -DUNICODE -D_CRT_SECURE_NO_WARINGS -D_UNICODE -I..\\include -I..\\Source\\Common -I..\\Source\\Utility -I..\\Source\\ThirdPart  /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1   /FoSource\\DX12Samples\\DX12Triangle\\CMakeFiles\\HelloTriangle.dir\\__\\__\\Platform\\Windows\\WinMain\\WinMain.cpp.obj /FdTARGET_COMPILE_PDB /FS -c C:\\Users\\LiamZi\\Documents\\GitHub\\LearnDX12\\Source\\Platform\\Windows\\WinMain\\WinMain.cpp",
-  "file": "C:/Users/LiamZi/Documents/GitHub/LearnDX12/Source/Platform/Windows/WinMain/WinMain.cpp"
+  "directory": "D:/LearningDX12/build",
+  "command": "C:\\PROGRA~2\\MICROS~2\\2019\\COMMUN~1\\VC\\Tools\\MSVC\\1425~1.286\\bin\\Hostx86\\x64\\cl.exe  /nologo /TP -DUNICODE -D_CRT_SECURE_NO_WARINGS -D_UNICODE -I..\\include -I..\\Source\\Common -I..\\Source\\Utility -I..\\Source\\ThirdPart  /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1   /FoSource\\DX12Samples\\DX12Triangle\\CMakeFiles\\HelloTriangle.dir\\__\\__\\Platform\\Windows\\WinMain\\WinMain.cpp.obj /FdTARGET_COMPILE_PDB /FS -c D:\\LearningDX12\\Source\\Platform\\Windows\\WinMain\\WinMain.cpp",
+  "file": "D:/LearningDX12/Source/Platform/Windows/WinMain/WinMain.cpp"
 },
 
 {
-  "directory": "C:/Users/LiamZi/Documents/GitHub/LearnDX12/build",
-  "command": "\"C:\\PROGRA~2\\Microsoft Visual Studio\\2019\\Community\\VC\\Tools\\MSVC\\14.25.28610\\bin\\Hostx86\\x64\\cl.exe\"  /nologo /TP -DUNICODE -D_CRT_SECURE_NO_WARINGS -D_UNICODE -I..\\include -I..\\Source\\Common -I..\\Source\\Utility -I..\\Source\\ThirdPart  /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1   /FoSource\\DX12Samples\\DX12Triangle\\CMakeFiles\\HelloTriangle.dir\\HelloTriangle.cpp.obj /FdTARGET_COMPILE_PDB /FS -c C:\\Users\\LiamZi\\Documents\\GitHub\\LearnDX12\\Source\\DX12Samples\\DX12Triangle\\HelloTriangle.cpp",
-  "file": "C:/Users/LiamZi/Documents/GitHub/LearnDX12/Source/DX12Samples/DX12Triangle/HelloTriangle.cpp"
+  "directory": "D:/LearningDX12/build",
+  "command": "C:\\PROGRA~2\\MICROS~2\\2019\\COMMUN~1\\VC\\Tools\\MSVC\\1425~1.286\\bin\\Hostx86\\x64\\cl.exe  /nologo /TP -DUNICODE -D_CRT_SECURE_NO_WARINGS -D_UNICODE -I..\\include -I..\\Source\\Common -I..\\Source\\Utility -I..\\Source\\ThirdPart  /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1   /FoSource\\DX12Samples\\DX12Triangle\\CMakeFiles\\HelloTriangle.dir\\HelloTriangle.cpp.obj /FdTARGET_COMPILE_PDB /FS -c D:\\LearningDX12\\Source\\DX12Samples\\DX12Triangle\\HelloTriangle.cpp",
+  "file": "D:/LearningDX12/Source/DX12Samples/DX12Triangle/HelloTriangle.cpp"
 },
 
 {
-  "directory": "C:/Users/LiamZi/Documents/GitHub/LearnDX12/build",
-  "command": "\"C:\\PROGRA~2\\Microsoft Visual Studio\\2019\\Community\\VC\\Tools\\MSVC\\14.25.28610\\bin\\Hostx86\\x64\\cl.exe\"  /nologo /TP -DUNICODE -D_CRT_SECURE_NO_WARINGS -D_UNICODE -I..\\include -I..\\Source\\Common -I..\\Source\\Utility -I..\\Source\\ThirdPart  /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1   /FoSource\\DX12Samples\\DX12TriangleColor\\CMakeFiles\\HelloTriangleColor.dir\\__\\__\\Platform\\Windows\\WinMain\\WinMain.cpp.obj /FdTARGET_COMPILE_PDB /FS -c C:\\Users\\LiamZi\\Documents\\GitHub\\LearnDX12\\Source\\Platform\\Windows\\WinMain\\WinMain.cpp",
-  "file": "C:/Users/LiamZi/Documents/GitHub/LearnDX12/Source/Platform/Windows/WinMain/WinMain.cpp"
+  "directory": "D:/LearningDX12/build",
+  "command": "C:\\PROGRA~2\\MICROS~2\\2019\\COMMUN~1\\VC\\Tools\\MSVC\\1425~1.286\\bin\\Hostx86\\x64\\cl.exe  /nologo /TP -DUNICODE -D_CRT_SECURE_NO_WARINGS -D_UNICODE -I..\\include -I..\\Source\\Common -I..\\Source\\Utility -I..\\Source\\ThirdPart  /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1   /FoSource\\DX12Samples\\DX12TriangleColor\\CMakeFiles\\HelloTriangleColor.dir\\__\\__\\Platform\\Windows\\WinMain\\WinMain.cpp.obj /FdTARGET_COMPILE_PDB /FS -c D:\\LearningDX12\\Source\\Platform\\Windows\\WinMain\\WinMain.cpp",
+  "file": "D:/LearningDX12/Source/Platform/Windows/WinMain/WinMain.cpp"
 },
 
 {
-  "directory": "C:/Users/LiamZi/Documents/GitHub/LearnDX12/build",
-  "command": "\"C:\\PROGRA~2\\Microsoft Visual Studio\\2019\\Community\\VC\\Tools\\MSVC\\14.25.28610\\bin\\Hostx86\\x64\\cl.exe\"  /nologo /TP -DUNICODE -D_CRT_SECURE_NO_WARINGS -D_UNICODE -I..\\include -I..\\Source\\Common -I..\\Source\\Utility -I..\\Source\\ThirdPart  /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1   /FoSource\\DX12Samples\\DX12TriangleColor\\CMakeFiles\\HelloTriangleColor.dir\\HelloTriangleColor.cpp.obj /FdTARGET_COMPILE_PDB /FS -c C:\\Users\\LiamZi\\Documents\\GitHub\\LearnDX12\\Source\\DX12Samples\\DX12TriangleColor\\HelloTriangleColor.cpp",
-  "file": "C:/Users/LiamZi/Documents/GitHub/LearnDX12/Source/DX12Samples/DX12TriangleColor/HelloTriangleColor.cpp"
+  "directory": "D:/LearningDX12/build",
+  "command": "C:\\PROGRA~2\\MICROS~2\\2019\\COMMUN~1\\VC\\Tools\\MSVC\\1425~1.286\\bin\\Hostx86\\x64\\cl.exe  /nologo /TP -DUNICODE -D_CRT_SECURE_NO_WARINGS -D_UNICODE -I..\\include -I..\\Source\\Common -I..\\Source\\Utility -I..\\Source\\ThirdPart  /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1   /FoSource\\DX12Samples\\DX12TriangleColor\\CMakeFiles\\HelloTriangleColor.dir\\HelloTriangleColor.cpp.obj /FdTARGET_COMPILE_PDB /FS -c D:\\LearningDX12\\Source\\DX12Samples\\DX12TriangleColor\\HelloTriangleColor.cpp",
+  "file": "D:/LearningDX12/Source/DX12Samples/DX12TriangleColor/HelloTriangleColor.cpp"
 },
 
 {
-  "directory": "C:/Users/LiamZi/Documents/GitHub/LearnDX12/build",
-  "command": "\"C:\\PROGRA~2\\Microsoft Visual Studio\\2019\\Community\\VC\\Tools\\MSVC\\14.25.28610\\bin\\Hostx86\\x64\\cl.exe\"  /nologo /TP -D_CRT_SECURE_NO_WARINGS -I..\\include -I..\\Source\\Common -I..\\Source\\ThirdPart\\Nix  /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1   /FoSource\\ThirdPart\\Nix\\CMakeFiles\\Nix.dir\\IO\\Archive.obj /FdTARGET_COMPILE_PDB /FS -c C:\\Users\\LiamZi\\Documents\\GitHub\\LearnDX12\\Source\\ThirdPart\\Nix\\IO\\Archive.cpp",
-  "file": "C:/Users/LiamZi/Documents/GitHub/LearnDX12/Source/ThirdPart/Nix/IO/Archive.cpp"
+  "directory": "D:/LearningDX12/build",
+  "command": "C:\\PROGRA~2\\MICROS~2\\2019\\COMMUN~1\\VC\\Tools\\MSVC\\1425~1.286\\bin\\Hostx86\\x64\\cl.exe  /nologo /TP -DUNICODE -D_CRT_SECURE_NO_WARINGS -D_UNICODE -I..\\include -I..\\Source\\Common -I..\\Source\\Utility -I..\\Source\\ThirdPart  /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1   /FoSource\\DX12Samples\\DX12TriangleDelux\\CMakeFiles\\TriangleDelux.dir\\__\\__\\Platform\\Windows\\WinMain\\WinMain.cpp.obj /FdTARGET_COMPILE_PDB /FS -c D:\\LearningDX12\\Source\\Platform\\Windows\\WinMain\\WinMain.cpp",
+  "file": "D:/LearningDX12/Source/Platform/Windows/WinMain/WinMain.cpp"
 },
 
 {
-  "directory": "C:/Users/LiamZi/Documents/GitHub/LearnDX12/build",
-  "command": "\"C:\\PROGRA~2\\Microsoft Visual Studio\\2019\\Community\\VC\\Tools\\MSVC\\14.25.28610\\bin\\Hostx86\\x64\\cl.exe\"  /nologo /TP -D_CRT_SECURE_NO_WARINGS -I..\\include -I..\\Source\\Common -I..\\Source\\ThirdPart\\Nix  /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1   /FoSource\\ThirdPart\\Nix\\CMakeFiles\\Nix.dir\\String\\Encoding.obj /FdTARGET_COMPILE_PDB /FS -c C:\\Users\\LiamZi\\Documents\\GitHub\\LearnDX12\\Source\\ThirdPart\\Nix\\String\\Encoding.cpp",
-  "file": "C:/Users/LiamZi/Documents/GitHub/LearnDX12/Source/ThirdPart/Nix/String/Encoding.cpp"
+  "directory": "D:/LearningDX12/build",
+  "command": "C:\\PROGRA~2\\MICROS~2\\2019\\COMMUN~1\\VC\\Tools\\MSVC\\1425~1.286\\bin\\Hostx86\\x64\\cl.exe  /nologo /TP -DUNICODE -D_CRT_SECURE_NO_WARINGS -D_UNICODE -I..\\include -I..\\Source\\Common -I..\\Source\\Utility -I..\\Source\\ThirdPart  /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1   /FoSource\\DX12Samples\\DX12TriangleDelux\\CMakeFiles\\TriangleDelux.dir\\TriangleDelux.cpp.obj /FdTARGET_COMPILE_PDB /FS -c D:\\LearningDX12\\Source\\DX12Samples\\DX12TriangleDelux\\TriangleDelux.cpp",
+  "file": "D:/LearningDX12/Source/DX12Samples/DX12TriangleDelux/TriangleDelux.cpp"
 },
 
 {
-  "directory": "C:/Users/LiamZi/Documents/GitHub/LearnDX12/build",
-  "command": "\"C:\\PROGRA~2\\Microsoft Visual Studio\\2019\\Community\\VC\\Tools\\MSVC\\14.25.28610\\bin\\Hostx86\\x64\\cl.exe\"  /nologo /TP -D_CRT_SECURE_NO_WARINGS -I..\\include -I..\\Source\\Common -I..\\Source\\ThirdPart\\Nix  /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1   /FoSource\\ThirdPart\\Nix\\CMakeFiles\\Nix.dir\\String\\Path.obj /FdTARGET_COMPILE_PDB /FS -c C:\\Users\\LiamZi\\Documents\\GitHub\\LearnDX12\\Source\\ThirdPart\\Nix\\String\\Path.cpp",
-  "file": "C:/Users/LiamZi/Documents/GitHub/LearnDX12/Source/ThirdPart/Nix/String/Path.cpp"
+  "directory": "D:/LearningDX12/build",
+  "command": "C:\\PROGRA~2\\MICROS~2\\2019\\COMMUN~1\\VC\\Tools\\MSVC\\1425~1.286\\bin\\Hostx86\\x64\\cl.exe  /nologo /TP -D_CRT_SECURE_NO_WARINGS -I..\\include -I..\\Source\\Common -I..\\Source\\ThirdPart\\Nix  /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1   /FoSource\\ThirdPart\\Nix\\CMakeFiles\\Nix.dir\\IO\\Archive.obj /FdTARGET_COMPILE_PDB /FS -c D:\\LearningDX12\\Source\\ThirdPart\\Nix\\IO\\Archive.cpp",
+  "file": "D:/LearningDX12/Source/ThirdPart/Nix/IO/Archive.cpp"
 },
 
 {
-  "directory": "C:/Users/LiamZi/Documents/GitHub/LearnDX12/build",
-  "command": "\"C:\\PROGRA~2\\Microsoft Visual Studio\\2019\\Community\\VC\\Tools\\MSVC\\14.25.28610\\bin\\Hostx86\\x64\\cl.exe\"  /nologo /TP -D_CRT_SECURE_NO_WARINGS -I..\\include -I..\\Source\\Common -I..\\Source\\ThirdPart\\Nix  /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1   /FoSource\\ThirdPart\\Nix\\CMakeFiles\\Nix.dir\\Memory\\BuddySystemAllocator.obj /FdTARGET_COMPILE_PDB /FS -c C:\\Users\\LiamZi\\Documents\\GitHub\\LearnDX12\\Source\\ThirdPart\\Nix\\Memory\\BuddySystemAllocator.cpp",
-  "file": "C:/Users/LiamZi/Documents/GitHub/LearnDX12/Source/ThirdPart/Nix/Memory/BuddySystemAllocator.cpp"
+  "directory": "D:/LearningDX12/build",
+  "command": "C:\\PROGRA~2\\MICROS~2\\2019\\COMMUN~1\\VC\\Tools\\MSVC\\1425~1.286\\bin\\Hostx86\\x64\\cl.exe  /nologo /TP -D_CRT_SECURE_NO_WARINGS -I..\\include -I..\\Source\\Common -I..\\Source\\ThirdPart\\Nix  /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1   /FoSource\\ThirdPart\\Nix\\CMakeFiles\\Nix.dir\\String\\Encoding.obj /FdTARGET_COMPILE_PDB /FS -c D:\\LearningDX12\\Source\\ThirdPart\\Nix\\String\\Encoding.cpp",
+  "file": "D:/LearningDX12/Source/ThirdPart/Nix/String/Encoding.cpp"
+},
+
+{
+  "directory": "D:/LearningDX12/build",
+  "command": "C:\\PROGRA~2\\MICROS~2\\2019\\COMMUN~1\\VC\\Tools\\MSVC\\1425~1.286\\bin\\Hostx86\\x64\\cl.exe  /nologo /TP -D_CRT_SECURE_NO_WARINGS -I..\\include -I..\\Source\\Common -I..\\Source\\ThirdPart\\Nix  /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1   /FoSource\\ThirdPart\\Nix\\CMakeFiles\\Nix.dir\\String\\Path.obj /FdTARGET_COMPILE_PDB /FS -c D:\\LearningDX12\\Source\\ThirdPart\\Nix\\String\\Path.cpp",
+  "file": "D:/LearningDX12/Source/ThirdPart/Nix/String/Path.cpp"
+},
+
+{
+  "directory": "D:/LearningDX12/build",
+  "command": "C:\\PROGRA~2\\MICROS~2\\2019\\COMMUN~1\\VC\\Tools\\MSVC\\1425~1.286\\bin\\Hostx86\\x64\\cl.exe  /nologo /TP -D_CRT_SECURE_NO_WARINGS -I..\\include -I..\\Source\\Common -I..\\Source\\ThirdPart\\Nix  /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1   /FoSource\\ThirdPart\\Nix\\CMakeFiles\\Nix.dir\\Memory\\BuddySystemAllocator.obj /FdTARGET_COMPILE_PDB /FS -c D:\\LearningDX12\\Source\\ThirdPart\\Nix\\Memory\\BuddySystemAllocator.cpp",
+  "file": "D:/LearningDX12/Source/ThirdPart/Nix/Memory/BuddySystemAllocator.cpp"
 }
 ]

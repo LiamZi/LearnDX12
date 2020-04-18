@@ -21,7 +21,7 @@ Compilation of the C compiler identification source "CMakeCCompilerId.c" produce
 
 Compilation of the C compiler identification source "CMakeCCompilerId.c" produced "CMakeCCompilerId.obj"
 
-The C compiler identification is MSVC, found in "C:/Users/LiamZi/Documents/GitHub/LearnDX12/build/CMakeFiles/3.17.1/CompilerIdC/CMakeCCompilerId.exe"
+The C compiler identification is MSVC, found in "D:/LearningDX12/build/CMakeFiles/3.17.0/CompilerIdC/CMakeCCompilerId.exe"
 
 Compiling the CXX compiler identification source file "CMakeCXXCompilerId.cpp" succeeded.
 Compiler: C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/VC/Tools/MSVC/14.25.28610/bin/Hostx86/x64/cl.exe 
@@ -45,37 +45,37 @@ Compilation of the CXX compiler identification source "CMakeCXXCompilerId.cpp" p
 
 Compilation of the CXX compiler identification source "CMakeCXXCompilerId.cpp" produced "CMakeCXXCompilerId.obj"
 
-The CXX compiler identification is MSVC, found in "C:/Users/LiamZi/Documents/GitHub/LearnDX12/build/CMakeFiles/3.17.1/CompilerIdCXX/CMakeCXXCompilerId.exe"
+The CXX compiler identification is MSVC, found in "D:/LearningDX12/build/CMakeFiles/3.17.0/CompilerIdCXX/CMakeCXXCompilerId.exe"
 
 Determining if the C compiler works passed with the following output:
-Change Dir: C:/Users/LiamZi/Documents/GitHub/LearnDX12/build/CMakeFiles/CMakeTmp
+Change Dir: D:/LearningDX12/build/CMakeFiles/CMakeTmp
 
-Run Build Command(s):C:/PROGRA~2/Microsoft Visual Studio/2019/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/Ninja/ninja.exe cmTC_0196d && [1/2] Building C object CMakeFiles\cmTC_0196d.dir\testCCompiler.c.obj
-[2/2] Linking C executable cmTC_0196d.exe
+Run Build Command(s):C:/PROGRA~2/MICROS~2/2019/COMMUN~1/Common7/IDE/COMMON~1/MICROS~1/CMake/Ninja/ninja.exe cmTC_8bd42 && [1/2] Building C object CMakeFiles\cmTC_8bd42.dir\testCCompiler.c.obj
+[2/2] Linking C executable cmTC_8bd42.exe
 
 
 
 Detecting C compiler ABI info compiled with the following output:
-Change Dir: C:/Users/LiamZi/Documents/GitHub/LearnDX12/build/CMakeFiles/CMakeTmp
+Change Dir: D:/LearningDX12/build/CMakeFiles/CMakeTmp
 
-Run Build Command(s):C:/PROGRA~2/Microsoft Visual Studio/2019/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/Ninja/ninja.exe cmTC_75bfa && [1/2] Building C object CMakeFiles\cmTC_75bfa.dir\CMakeCCompilerABI.c.obj
-[2/2] Linking C executable cmTC_75bfa.exe
+Run Build Command(s):C:/PROGRA~2/MICROS~2/2019/COMMUN~1/Common7/IDE/COMMON~1/MICROS~1/CMake/Ninja/ninja.exe cmTC_41a82 && [1/2] Building C object CMakeFiles\cmTC_41a82.dir\CMakeCCompilerABI.c.obj
+[2/2] Linking C executable cmTC_41a82.exe
 
 
 
 Determining if the CXX compiler works passed with the following output:
-Change Dir: C:/Users/LiamZi/Documents/GitHub/LearnDX12/build/CMakeFiles/CMakeTmp
+Change Dir: D:/LearningDX12/build/CMakeFiles/CMakeTmp
 
-Run Build Command(s):C:/PROGRA~2/Microsoft Visual Studio/2019/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/Ninja/ninja.exe cmTC_b4f98 && [1/2] Building CXX object CMakeFiles\cmTC_b4f98.dir\testCXXCompiler.cxx.obj
-[2/2] Linking CXX executable cmTC_b4f98.exe
+Run Build Command(s):C:/PROGRA~2/MICROS~2/2019/COMMUN~1/Common7/IDE/COMMON~1/MICROS~1/CMake/Ninja/ninja.exe cmTC_0d783 && [1/2] Building CXX object CMakeFiles\cmTC_0d783.dir\testCXXCompiler.cxx.obj
+[2/2] Linking CXX executable cmTC_0d783.exe
 
 
 
 Detecting CXX compiler ABI info compiled with the following output:
-Change Dir: C:/Users/LiamZi/Documents/GitHub/LearnDX12/build/CMakeFiles/CMakeTmp
+Change Dir: D:/LearningDX12/build/CMakeFiles/CMakeTmp
 
-Run Build Command(s):C:/PROGRA~2/Microsoft Visual Studio/2019/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/Ninja/ninja.exe cmTC_0d0e0 && [1/2] Building CXX object CMakeFiles\cmTC_0d0e0.dir\CMakeCXXCompilerABI.cpp.obj
-[2/2] Linking CXX executable cmTC_0d0e0.exe
+Run Build Command(s):C:/PROGRA~2/MICROS~2/2019/COMMUN~1/Common7/IDE/COMMON~1/MICROS~1/CMake/Ninja/ninja.exe cmTC_9f1ac && [1/2] Building CXX object CMakeFiles\cmTC_9f1ac.dir\CMakeCXXCompilerABI.cpp.obj
+[2/2] Linking CXX executable cmTC_9f1ac.exe
 
 
 
