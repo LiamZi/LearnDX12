@@ -82,3 +82,10 @@
 3	1321	608935919	Source/DX12Samples/DX12TriangleDelux/CMakeFiles/TriangleDelux.dir/TriangleDelux.cpp.obj	d1838510a1a4eacd
 4	1385	608936075	Source/DX12Samples/DX12TriangleDelux/CMakeFiles/TriangleDelux.dir/TriangleDelux.cpp.obj	d1838510a1a4eacd
 1385	2528	608936076	../bin/Windows/x64/TriangleDelux.exe	2e9dbb400e2d95c2
+3	747	609004212	build.ninja	51d3270822ce950d
+3	1665	609016359	Source/DX12Samples/DX12TriangleDelux/CMakeFiles/TriangleDelux.dir/TriangleDelux.cpp.obj	d1838510a1a4eacd
+1665	2265	609016360	../bin/Windows/x64/TriangleDelux.exe	2e9dbb400e2d95c2
+3	1305	609016814	Source/DX12Samples/DX12TriangleDelux/CMakeFiles/TriangleDelux.dir/TriangleDelux.cpp.obj	d1838510a1a4eacd
+1305	1666	609016814	../bin/Windows/x64/TriangleDelux.exe	2e9dbb400e2d95c2
+3	1333	609017076	Source/DX12Samples/DX12TriangleDelux/CMakeFiles/TriangleDelux.dir/TriangleDelux.cpp.obj	d1838510a1a4eacd
+1333	1583	609017076	../bin/Windows/x64/TriangleDelux.exe	2e9dbb400e2d95c2

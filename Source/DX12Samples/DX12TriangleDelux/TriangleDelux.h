@@ -27,7 +27,6 @@ public:
 
     operator ComPtr<ID3D12Device> () const;
 
-private:
     bool initialize();
 
 private:
@@ -63,7 +62,7 @@ class TriangleDelux : public NixApplication
 {
 private:
     Nix::IArchive                           *_archive;
-    DeviceDX12                              _deivce;
+    DeviceDX12                              _device;
     void                                    *_hwnd;
     
     //initialize 
@@ -73,8 +72,10 @@ private:
     ComPtr<ID3D12Resource>                  _renderTargets[MaxFlightCount];
 
     uint32_t                                _rtvDescriptorSize;
+    uint32_t                                _flightIndex;
 
     ID3D12PipelineState                     *_pipelineStateObject;
+    ID3D12RootSignature                     *_pipelineRootSignature;
     ID3D12RootSignature                     *_rootSignature;
     D3D12_VIEWPORT                          _viewPort;
     D3D12_RECT                              _viewScissor;

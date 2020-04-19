@@ -640,9 +640,9 @@ build Source\DX12Samples\DX12Test\edit_cache: phony Source\DX12Samples\DX12Test\
 #############################################
 # Order-only phony target for HelloDX12
 
-build cmake_object_order_depends_target_HelloDX12_Debug: phony || cmake_object_order_depends_target_Nix_Debug
+build cmake_object_order_depends_target_HelloDX12_DEBUG: phony || cmake_object_order_depends_target_Nix_DEBUG
 
-build Source\DX12Samples\DX12Test\CMakeFiles\HelloDX12.dir\__\__\Platform\Windows\WinMain\WinMain.cpp.obj: CXX_COMPILER__HelloDX12_Debug ..\Source\Platform\Windows\WinMain\WinMain.cpp || cmake_object_order_depends_target_HelloDX12_Debug
+build Source\DX12Samples\DX12Test\CMakeFiles\HelloDX12.dir\__\__\Platform\Windows\WinMain\WinMain.cpp.obj: CXX_COMPILER__HelloDX12_Debug ..\Source\Platform\Windows\WinMain\WinMain.cpp || cmake_object_order_depends_target_HelloDX12_DEBUG
   DEFINES = -DUNICODE -D_CRT_SECURE_NO_WARINGS -D_UNICODE
   FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1
   INCLUDES = -I..\include -I..\Source\Common -I..\Source\Utility -I..\Source\ThirdPart
@@ -651,7 +651,7 @@ build Source\DX12Samples\DX12Test\CMakeFiles\HelloDX12.dir\__\__\Platform\Window
   TARGET_COMPILE_PDB = Source\DX12Samples\DX12Test\CMakeFiles\HelloDX12.dir\
   TARGET_PDB = ..\bin\Windows\x64\HelloDX12.pdb
 
-build Source\DX12Samples\DX12Test\CMakeFiles\HelloDX12.dir\HelloDX12.cpp.obj: CXX_COMPILER__HelloDX12_Debug ..\Source\DX12Samples\DX12Test\HelloDX12.cpp || cmake_object_order_depends_target_HelloDX12_Debug
+build Source\DX12Samples\DX12Test\CMakeFiles\HelloDX12.dir\HelloDX12.cpp.obj: CXX_COMPILER__HelloDX12_Debug ..\Source\DX12Samples\DX12Test\HelloDX12.cpp || cmake_object_order_depends_target_HelloDX12_DEBUG
   DEFINES = -DUNICODE -D_CRT_SECURE_NO_WARINGS -D_UNICODE
   FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1
   INCLUDES = -I..\include -I..\Source\Common -I..\Source\Utility -I..\Source\ThirdPart
@@ -741,9 +741,9 @@ build Source\DX12Samples\DX12Test\test: phony Source\DX12Samples\DX12Test\CMakeF
 #############################################
 # Order-only phony target for HelloTriangle
 
-build cmake_object_order_depends_target_HelloTriangle_Debug: phony || cmake_object_order_depends_target_Nix_Debug
+build cmake_object_order_depends_target_HelloTriangle_DEBUG: phony || cmake_object_order_depends_target_Nix_DEBUG
 
-build Source\DX12Samples\DX12Triangle\CMakeFiles\HelloTriangle.dir\__\__\Platform\Windows\WinMain\WinMain.cpp.obj: CXX_COMPILER__HelloTriangle_Debug ..\Source\Platform\Windows\WinMain\WinMain.cpp || cmake_object_order_depends_target_HelloTriangle_Debug
+build Source\DX12Samples\DX12Triangle\CMakeFiles\HelloTriangle.dir\__\__\Platform\Windows\WinMain\WinMain.cpp.obj: CXX_COMPILER__HelloTriangle_Debug ..\Source\Platform\Windows\WinMain\WinMain.cpp || cmake_object_order_depends_target_HelloTriangle_DEBUG
   DEFINES = -DUNICODE -D_CRT_SECURE_NO_WARINGS -D_UNICODE
   FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1
   INCLUDES = -I..\include -I..\Source\Common -I..\Source\Utility -I..\Source\ThirdPart
@@ -752,7 +752,7 @@ build Source\DX12Samples\DX12Triangle\CMakeFiles\HelloTriangle.dir\__\__\Platfor
   TARGET_COMPILE_PDB = Source\DX12Samples\DX12Triangle\CMakeFiles\HelloTriangle.dir\
   TARGET_PDB = ..\bin\Windows\x64\HelloTriangle.pdb
 
-build Source\DX12Samples\DX12Triangle\CMakeFiles\HelloTriangle.dir\HelloTriangle.cpp.obj: CXX_COMPILER__HelloTriangle_Debug ..\Source\DX12Samples\DX12Triangle\HelloTriangle.cpp || cmake_object_order_depends_target_HelloTriangle_Debug
+build Source\DX12Samples\DX12Triangle\CMakeFiles\HelloTriangle.dir\HelloTriangle.cpp.obj: CXX_COMPILER__HelloTriangle_Debug ..\Source\DX12Samples\DX12Triangle\HelloTriangle.cpp || cmake_object_order_depends_target_HelloTriangle_DEBUG
   DEFINES = -DUNICODE -D_CRT_SECURE_NO_WARINGS -D_UNICODE
   FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1
   INCLUDES = -I..\include -I..\Source\Common -I..\Source\Utility -I..\Source\ThirdPart
@@ -854,9 +854,9 @@ build Source\DX12Samples\DX12Triangle\edit_cache: phony Source\DX12Samples\DX12T
 #############################################
 # Order-only phony target for HelloTriangleColor
 
-build cmake_object_order_depends_target_HelloTriangleColor_Debug: phony || cmake_object_order_depends_target_Nix_Debug
+build cmake_object_order_depends_target_HelloTriangleColor_DEBUG: phony || cmake_object_order_depends_target_Nix_DEBUG
 
-build Source\DX12Samples\DX12TriangleColor\CMakeFiles\HelloTriangleColor.dir\__\__\Platform\Windows\WinMain\WinMain.cpp.obj: CXX_COMPILER__HelloTriangleColor_Debug ..\Source\Platform\Windows\WinMain\WinMain.cpp || cmake_object_order_depends_target_HelloTriangleColor_Debug
+build Source\DX12Samples\DX12TriangleColor\CMakeFiles\HelloTriangleColor.dir\__\__\Platform\Windows\WinMain\WinMain.cpp.obj: CXX_COMPILER__HelloTriangleColor_Debug ..\Source\Platform\Windows\WinMain\WinMain.cpp || cmake_object_order_depends_target_HelloTriangleColor_DEBUG
   DEFINES = -DUNICODE -D_CRT_SECURE_NO_WARINGS -D_UNICODE
   FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1
   INCLUDES = -I..\include -I..\Source\Common -I..\Source\Utility -I..\Source\ThirdPart
@@ -865,7 +865,7 @@ build Source\DX12Samples\DX12TriangleColor\CMakeFiles\HelloTriangleColor.dir\__\
   TARGET_COMPILE_PDB = Source\DX12Samples\DX12TriangleColor\CMakeFiles\HelloTriangleColor.dir\
   TARGET_PDB = ..\bin\Windows\x64\HelloTriangleColor.pdb
 
-build Source\DX12Samples\DX12TriangleColor\CMakeFiles\HelloTriangleColor.dir\HelloTriangleColor.cpp.obj: CXX_COMPILER__HelloTriangleColor_Debug ..\Source\DX12Samples\DX12TriangleColor\HelloTriangleColor.cpp || cmake_object_order_depends_target_HelloTriangleColor_Debug
+build Source\DX12Samples\DX12TriangleColor\CMakeFiles\HelloTriangleColor.dir\HelloTriangleColor.cpp.obj: CXX_COMPILER__HelloTriangleColor_Debug ..\Source\DX12Samples\DX12TriangleColor\HelloTriangleColor.cpp || cmake_object_order_depends_target_HelloTriangleColor_DEBUG
   DEFINES = -DUNICODE -D_CRT_SECURE_NO_WARINGS -D_UNICODE
   FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1
   INCLUDES = -I..\include -I..\Source\Common -I..\Source\Utility -I..\Source\ThirdPart
@@ -967,9 +967,9 @@ build Source\DX12Samples\DX12TriangleColor\edit_cache: phony Source\DX12Samples\
 #############################################
 # Order-only phony target for TriangleDelux
 
-build cmake_object_order_depends_target_TriangleDelux_Debug: phony || cmake_object_order_depends_target_Nix_Debug
+build cmake_object_order_depends_target_TriangleDelux_DEBUG: phony || cmake_object_order_depends_target_Nix_DEBUG
 
-build Source\DX12Samples\DX12TriangleDelux\CMakeFiles\TriangleDelux.dir\__\__\Platform\Windows\WinMain\WinMain.cpp.obj: CXX_COMPILER__TriangleDelux_Debug ..\Source\Platform\Windows\WinMain\WinMain.cpp || cmake_object_order_depends_target_TriangleDelux_Debug
+build Source\DX12Samples\DX12TriangleDelux\CMakeFiles\TriangleDelux.dir\__\__\Platform\Windows\WinMain\WinMain.cpp.obj: CXX_COMPILER__TriangleDelux_Debug ..\Source\Platform\Windows\WinMain\WinMain.cpp || cmake_object_order_depends_target_TriangleDelux_DEBUG
   DEFINES = -DUNICODE -D_CRT_SECURE_NO_WARINGS -D_UNICODE
   FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1
   INCLUDES = -I..\include -I..\Source\Common -I..\Source\Utility -I..\Source\ThirdPart
@@ -978,7 +978,7 @@ build Source\DX12Samples\DX12TriangleDelux\CMakeFiles\TriangleDelux.dir\__\__\Pl
   TARGET_COMPILE_PDB = Source\DX12Samples\DX12TriangleDelux\CMakeFiles\TriangleDelux.dir\
   TARGET_PDB = ..\bin\Windows\x64\TriangleDelux.pdb
 
-build Source\DX12Samples\DX12TriangleDelux\CMakeFiles\TriangleDelux.dir\TriangleDelux.cpp.obj: CXX_COMPILER__TriangleDelux_Debug ..\Source\DX12Samples\DX12TriangleDelux\TriangleDelux.cpp || cmake_object_order_depends_target_TriangleDelux_Debug
+build Source\DX12Samples\DX12TriangleDelux\CMakeFiles\TriangleDelux.dir\TriangleDelux.cpp.obj: CXX_COMPILER__TriangleDelux_Debug ..\Source\DX12Samples\DX12TriangleDelux\TriangleDelux.cpp || cmake_object_order_depends_target_TriangleDelux_DEBUG
   DEFINES = -DUNICODE -D_CRT_SECURE_NO_WARINGS -D_UNICODE
   FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1
   INCLUDES = -I..\include -I..\Source\Common -I..\Source\Utility -I..\Source\ThirdPart
@@ -1157,9 +1157,9 @@ build Source\ThirdPart\Nix\edit_cache: phony Source\ThirdPart\Nix\CMakeFiles\edi
 #############################################
 # Order-only phony target for Nix
 
-build cmake_object_order_depends_target_Nix_Debug: phony || Source\ThirdPart\Nix\CMakeFiles\Nix.dir
+build cmake_object_order_depends_target_Nix_DEBUG: phony || Source\ThirdPart\Nix\CMakeFiles\Nix.dir
 
-build Source\ThirdPart\Nix\CMakeFiles\Nix.dir\IO\Archive.obj: CXX_COMPILER__Nix_Debug ..\Source\ThirdPart\Nix\IO\Archive.cpp || cmake_object_order_depends_target_Nix_Debug
+build Source\ThirdPart\Nix\CMakeFiles\Nix.dir\IO\Archive.obj: CXX_COMPILER__Nix_Debug ..\Source\ThirdPart\Nix\IO\Archive.cpp || cmake_object_order_depends_target_Nix_DEBUG
   DEFINES = -D_CRT_SECURE_NO_WARINGS
   FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1
   INCLUDES = -I..\include -I..\Source\Common -I..\Source\ThirdPart\Nix
@@ -1168,7 +1168,7 @@ build Source\ThirdPart\Nix\CMakeFiles\Nix.dir\IO\Archive.obj: CXX_COMPILER__Nix_
   TARGET_COMPILE_PDB = Source\ThirdPart\Nix\CMakeFiles\Nix.dir\Nix.pdb
   TARGET_PDB = Source\ThirdPart\Nix\Nix.pdb
 
-build Source\ThirdPart\Nix\CMakeFiles\Nix.dir\String\Encoding.obj: CXX_COMPILER__Nix_Debug ..\Source\ThirdPart\Nix\String\Encoding.cpp || cmake_object_order_depends_target_Nix_Debug
+build Source\ThirdPart\Nix\CMakeFiles\Nix.dir\String\Encoding.obj: CXX_COMPILER__Nix_Debug ..\Source\ThirdPart\Nix\String\Encoding.cpp || cmake_object_order_depends_target_Nix_DEBUG
   DEFINES = -D_CRT_SECURE_NO_WARINGS
   FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1
   INCLUDES = -I..\include -I..\Source\Common -I..\Source\ThirdPart\Nix
@@ -1177,7 +1177,7 @@ build Source\ThirdPart\Nix\CMakeFiles\Nix.dir\String\Encoding.obj: CXX_COMPILER_
   TARGET_COMPILE_PDB = Source\ThirdPart\Nix\CMakeFiles\Nix.dir\Nix.pdb
   TARGET_PDB = Source\ThirdPart\Nix\Nix.pdb
 
-build Source\ThirdPart\Nix\CMakeFiles\Nix.dir\String\Path.obj: CXX_COMPILER__Nix_Debug ..\Source\ThirdPart\Nix\String\Path.cpp || cmake_object_order_depends_target_Nix_Debug
+build Source\ThirdPart\Nix\CMakeFiles\Nix.dir\String\Path.obj: CXX_COMPILER__Nix_Debug ..\Source\ThirdPart\Nix\String\Path.cpp || cmake_object_order_depends_target_Nix_DEBUG
   DEFINES = -D_CRT_SECURE_NO_WARINGS
   FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1
   INCLUDES = -I..\include -I..\Source\Common -I..\Source\ThirdPart\Nix
@@ -1186,7 +1186,7 @@ build Source\ThirdPart\Nix\CMakeFiles\Nix.dir\String\Path.obj: CXX_COMPILER__Nix
   TARGET_COMPILE_PDB = Source\ThirdPart\Nix\CMakeFiles\Nix.dir\Nix.pdb
   TARGET_PDB = Source\ThirdPart\Nix\Nix.pdb
 
-build Source\ThirdPart\Nix\CMakeFiles\Nix.dir\Memory\BuddySystemAllocator.obj: CXX_COMPILER__Nix_Debug ..\Source\ThirdPart\Nix\Memory\BuddySystemAllocator.cpp || cmake_object_order_depends_target_Nix_Debug
+build Source\ThirdPart\Nix\CMakeFiles\Nix.dir\Memory\BuddySystemAllocator.obj: CXX_COMPILER__Nix_Debug ..\Source\ThirdPart\Nix\Memory\BuddySystemAllocator.cpp || cmake_object_order_depends_target_Nix_DEBUG
   DEFINES = -D_CRT_SECURE_NO_WARINGS
   FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1
   INCLUDES = -I..\include -I..\Source\Common -I..\Source\ThirdPart\Nix
@@ -1362,14 +1362,14 @@ build Source\ThirdPart\Nix\all: phony Source\ThirdPart\Nix\Nix.lib
 #############################################
 # Re-run CMake if any of its inputs changed.
 
-build build.ninja: RERUN_CMAKE | ..\CMakeLists.txt ..\Source\CMakeLists.txt ..\Source\DX12Samples\CMakeLists.txt ..\Source\DX12Samples\DX12Test\CMakeLists.txt ..\Source\DX12Samples\DX12TriangleColor\CMakeLists.txt ..\Source\DX12Samples\DX12TriangleDelux\CMakeLists.txt ..\Source\DX12Samples\DX12Triangle\CMakeLists.txt ..\Source\ThirdPart\CMakeLists.txt ..\Source\ThirdPart\Nix\CMakeLists.txt C$:\Program$ Files\CMake\share\cmake-3.17\Modules\CMakeCInformation.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Modules\CMakeCXXInformation.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Modules\CMakeCommonLanguageInclude.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Modules\CMakeGenericSystem.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Modules\CMakeInitializeConfigs.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Modules\CMakeLanguageInformation.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Modules\CMakeRCInformation.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Modules\CMakeSystemSpecificInformation.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Modules\CMakeSystemSpecificInitialize.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Modules\CPack.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Modules\CPackComponent.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Modules\CTest.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Modules\CTestTargets.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Modules\CTestUseLaunchers.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Modules\Compiler\CMakeCommonCompilerMacros.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Modules\Compiler\MSVC-C.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Modules\Compiler\MSVC-CXX.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Modules\DartConfiguration.tcl.in C$:\Program$ Files\CMake\share\cmake-3.17\Modules\Platform\Windows-MSVC-C.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Modules\Platform\Windows-MSVC-CXX.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Modules\Platform\Windows-MSVC.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Modules\Platform\Windows.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Modules\Platform\WindowsPaths.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Templates\CPackConfig.cmake.in CMakeCache.txt CMakeFiles\3.17.0\CMakeCCompiler.cmake CMakeFiles\3.17.0\CMakeCXXCompiler.cmake CMakeFiles\3.17.0\CMakeRCCompiler.cmake CMakeFiles\3.17.0\CMakeSystem.cmake
+build build.ninja: RERUN_CMAKE | ..\CMakeLists.txt ..\Source\CMakeLists.txt ..\Source\DX12Samples\CMakeLists.txt ..\Source\DX12Samples\DX12Test\CMakeLists.txt ..\Source\DX12Samples\DX12TriangleColor\CMakeLists.txt ..\Source\DX12Samples\DX12TriangleDelux\CMakeLists.txt ..\Source\DX12Samples\DX12Triangle\CMakeLists.txt ..\Source\ThirdPart\CMakeLists.txt ..\Source\ThirdPart\Nix\CMakeLists.txt C$:\Program$ Files\CMake\share\cmake-3.17\Modules\CMakeCInformation.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Modules\CMakeCXXInformation.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Modules\CMakeCommonLanguageInclude.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Modules\CMakeGenericSystem.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Modules\CMakeInitializeConfigs.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Modules\CMakeLanguageInformation.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Modules\CMakeRCInformation.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Modules\CMakeSystemSpecificInformation.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Modules\CMakeSystemSpecificInitialize.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Modules\CPack.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Modules\CPackComponent.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Modules\CTest.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Modules\CTestTargets.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Modules\CTestUseLaunchers.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Modules\Compiler\CMakeCommonCompilerMacros.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Modules\Compiler\MSVC-C.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Modules\Compiler\MSVC-CXX.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Modules\DartConfiguration.tcl.in C$:\Program$ Files\CMake\share\cmake-3.17\Modules\Platform\Windows-MSVC-C.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Modules\Platform\Windows-MSVC-CXX.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Modules\Platform\Windows-MSVC.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Modules\Platform\Windows.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Modules\Platform\WindowsPaths.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Templates\CPackConfig.cmake.in CMakeCache.txt CMakeFiles\3.17.1\CMakeCCompiler.cmake CMakeFiles\3.17.1\CMakeCXXCompiler.cmake CMakeFiles\3.17.1\CMakeRCCompiler.cmake CMakeFiles\3.17.1\CMakeSystem.cmake
   pool = console
 
 
 #############################################
 # A missing CMake input file is not an error.
 
-build ..\CMakeLists.txt ..\Source\CMakeLists.txt ..\Source\DX12Samples\CMakeLists.txt ..\Source\DX12Samples\DX12Test\CMakeLists.txt ..\Source\DX12Samples\DX12TriangleColor\CMakeLists.txt ..\Source\DX12Samples\DX12TriangleDelux\CMakeLists.txt ..\Source\DX12Samples\DX12Triangle\CMakeLists.txt ..\Source\ThirdPart\CMakeLists.txt ..\Source\ThirdPart\Nix\CMakeLists.txt C$:\Program$ Files\CMake\share\cmake-3.17\Modules\CMakeCInformation.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Modules\CMakeCXXInformation.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Modules\CMakeCommonLanguageInclude.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Modules\CMakeGenericSystem.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Modules\CMakeInitializeConfigs.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Modules\CMakeLanguageInformation.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Modules\CMakeRCInformation.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Modules\CMakeSystemSpecificInformation.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Modules\CMakeSystemSpecificInitialize.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Modules\CPack.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Modules\CPackComponent.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Modules\CTest.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Modules\CTestTargets.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Modules\CTestUseLaunchers.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Modules\Compiler\CMakeCommonCompilerMacros.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Modules\Compiler\MSVC-C.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Modules\Compiler\MSVC-CXX.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Modules\DartConfiguration.tcl.in C$:\Program$ Files\CMake\share\cmake-3.17\Modules\Platform\Windows-MSVC-C.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Modules\Platform\Windows-MSVC-CXX.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Modules\Platform\Windows-MSVC.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Modules\Platform\Windows.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Modules\Platform\WindowsPaths.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Templates\CPackConfig.cmake.in CMakeCache.txt CMakeFiles\3.17.0\CMakeCCompiler.cmake CMakeFiles\3.17.0\CMakeCXXCompiler.cmake CMakeFiles\3.17.0\CMakeRCCompiler.cmake CMakeFiles\3.17.0\CMakeSystem.cmake: phony
+build ..\CMakeLists.txt ..\Source\CMakeLists.txt ..\Source\DX12Samples\CMakeLists.txt ..\Source\DX12Samples\DX12Test\CMakeLists.txt ..\Source\DX12Samples\DX12TriangleColor\CMakeLists.txt ..\Source\DX12Samples\DX12TriangleDelux\CMakeLists.txt ..\Source\DX12Samples\DX12Triangle\CMakeLists.txt ..\Source\ThirdPart\CMakeLists.txt ..\Source\ThirdPart\Nix\CMakeLists.txt C$:\Program$ Files\CMake\share\cmake-3.17\Modules\CMakeCInformation.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Modules\CMakeCXXInformation.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Modules\CMakeCommonLanguageInclude.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Modules\CMakeGenericSystem.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Modules\CMakeInitializeConfigs.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Modules\CMakeLanguageInformation.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Modules\CMakeRCInformation.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Modules\CMakeSystemSpecificInformation.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Modules\CMakeSystemSpecificInitialize.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Modules\CPack.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Modules\CPackComponent.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Modules\CTest.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Modules\CTestTargets.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Modules\CTestUseLaunchers.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Modules\Compiler\CMakeCommonCompilerMacros.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Modules\Compiler\MSVC-C.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Modules\Compiler\MSVC-CXX.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Modules\DartConfiguration.tcl.in C$:\Program$ Files\CMake\share\cmake-3.17\Modules\Platform\Windows-MSVC-C.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Modules\Platform\Windows-MSVC-CXX.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Modules\Platform\Windows-MSVC.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Modules\Platform\Windows.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Modules\Platform\WindowsPaths.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Templates\CPackConfig.cmake.in CMakeCache.txt CMakeFiles\3.17.1\CMakeCCompiler.cmake CMakeFiles\3.17.1\CMakeCXXCompiler.cmake CMakeFiles\3.17.1\CMakeRCCompiler.cmake CMakeFiles\3.17.1\CMakeSystem.cmake: phony
 
 
 #############################################

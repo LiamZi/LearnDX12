@@ -353,22 +353,377 @@ TriangleDelux::~TriangleDelux()
 
 bool TriangleDelux::initialize(void *wnd, Nix::IArchive *arch) 
 {
+    if(!wnd || !arch) return false;
+
+    _archive = arch;
+
+    if(!this->_device.initialize()) return false;
+
+    this->_hwnd = wnd;
+
+    HRESULT result = 0;
+
+    ComPtr<ID3D12Device> device = (ComPtr<ID3D12Device>)_device;
+
+    D3D12_DESCRIPTOR_HEAP_DESC srvHeapDesc = {};
+    {
+        srvHeapDesc.NumDescriptors = 1;
+        srvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
+        srvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
+        result = device->CreateDescriptorHeap(&srvHeapDesc, IID_PPV_ARGS(&_pipelineDescriptorHeap));
+        if(FAILED(result)) return false;
+    }
+
+    CD3DX12_DESCRIPTOR_RANGE1 vertexDescriptorRanges[1];
+    {
+        //vertex constant buffer / uniform
+        vertexDescriptorRanges[0].Init(D3D12_DESCRIPTOR_RANGE_TYPE_CBV,     // type        
+                                    1,                                      // descriptor count
+                                    0,                                      // base register
+                                    0,                                      // register space
+                                    D3D12_DESCRIPTOR_RANGE_FLAG_DATA_STATIC // descriptor range flag
+        );
+    }
+
+    CD3DX12_DESCRIPTOR_RANGE1 pixelDescriptorRanges[2];
+    {
+        //fragment texture
+        pixelDescriptorRanges[0].Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV,      // descriptor typ
+                                    1,                                      // descriptor count
+                                    0,                                      // base shader register
+                                    0,                                      // register space
+                                    D3D12_DESCRIPTOR_RANGE_FLAG_DATA_STATIC // descriptor data type
+        );
+
+        //fragment sampler
+        pixelDescriptorRanges[1].Init(
+                                D3D12_DESCRIPTOR_RANGE_TYPE_SAMPLER,        //descriptor type
+                                1,                                          // descriptor count
+                                0,                                          // base shader register
+                                0,                                          // register space
+                                D3D12_DESCRIPTOR_RANGE_FLAG_DESCRIPTORS_VOLATILE //descriptor data type
+        );
+    }
+
+    constexpr int vertexRangeCount = sizeof(vertexDescriptorRanges) / sizeof(CD3DX12_DESCRIPTOR_RANGE1);
+	constexpr int pixelRangeCount = sizeof(pixelDescriptorRanges) / sizeof(CD3DX12_DESCRIPTOR_RANGE1);
+
+	CD3DX12_ROOT_PARAMETER1 rootParameters[3];
+    {
+		rootParameters[0].InitAsDescriptorTable( vertexRangeCount , &vertexDescriptorRanges[0], D3D12_SHADER_VISIBILITY_VERTEX );
+		rootParameters[1].InitAsDescriptorTable( 1 , &pixelDescriptorRanges[0], D3D12_SHADER_VISIBILITY_PIXEL );
+		rootParameters[2].InitAsDescriptorTable( 1 , &pixelDescriptorRanges[1], D3D12_SHADER_VISIBILITY_PIXEL );
+	}
+
+    D3D12_STATIC_SAMPLER_DESC sampler = {}; {
+		sampler.Filter = D3D12_FILTER_MIN_MAG_MIP_POINT;
+        sampler.AddressU = D3D12_TEXTURE_ADDRESS_MODE_BORDER;
+        sampler.AddressV = D3D12_TEXTURE_ADDRESS_MODE_BORDER;
+        sampler.AddressW = D3D12_TEXTURE_ADDRESS_MODE_BORDER;
+        sampler.MipLODBias = 0;
+        sampler.MaxAnisotropy = 0;
+        sampler.ComparisonFunc = D3D12_COMPARISON_FUNC_NEVER;
+        sampler.BorderColor = D3D12_STATIC_BORDER_COLOR_TRANSPARENT_BLACK;
+        sampler.MinLOD = 0.0f;
+        sampler.MaxLOD = D3D12_FLOAT32_MAX;
+        sampler.ShaderRegister = 0;
+        sampler.RegisterSpace = 0;
+        sampler.ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
+	} 
+
+    CD3DX12_VERSIONED_ROOT_SIGNATURE_DESC rootSignatureDesc {};
+    {
+        // rootSignatureDesc.Init_1_1(3, rootParameters, 1, &sampler, D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
+        rootSignatureDesc.Init_1_1( 3, rootParameters, 1, &sampler, D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT );
+    }
+
+    ComPtr<ID3DBlob> signature;
+    ComPtr<ID3DBlob> error;
+
+    //create root signature
+    D3D12_FEATURE_DATA_ROOT_SIGNATURE featureData = {};
+    // This is the highest version the sample supports. If CheckFeatureSupport succeeds, the HighestVersion returned will not be greater than this.
+    featureData.HighestVersion = D3D_ROOT_SIGNATURE_VERSION_1_1;
+    if(FAILED(device->CheckFeatureSupport(D3D12_FEATURE_ROOT_SIGNATURE, &featureData, sizeof(featureData)))) {
+        featureData.HighestVersion = D3D_ROOT_SIGNATURE_VERSION_1_0;
+    }
+
+    result = D3DX12SerializeVersionedRootSignature( &rootSignatureDesc, featureData.HighestVersion, &signature, &error);
+    if(FAILED(result)) {
+        const char *msg = (const char *)error->GetBufferPointer();
+        OutputDebugStringA(msg);
+        return false;
+    }
+
+    result = device->CreateRootSignature(0, signature->GetBufferPointer(), signature->GetBufferSize(), IID_PPV_ARGS(&_pipelineRootSignature));
+    if(FAILED(result)) return false;
+
+    ID3DBlob *vertexShader = nullptr;
+    ID3DBlob *fragmentShader = nullptr;
+    ID3DBlob *errorBuffer = nullptr;
+
+    auto file = _archive->open("shaders/triangleDelux/vertexShader.hlsl", 1);
+    if(!file) return false;
+
+    result = D3DCompile(file->constData(), file->size(),
+                    "vertexShader.hlsl",
+                    nullptr, nullptr,
+                    "VsMain", "vs_5_0", 
+                    D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION,
+                    0, &vertexShader, &errorBuffer);
+    if(FAILED(result)) {
+        OutputDebugStringA((char *)errorBuffer->GetBufferPointer());
+        return false;
+    }
+
+    file->release();
+
+    file = _archive->open("shaders/triangleDelux/fragmentShader.hlsl", 1);
+    if(!file) return false;
+    result = D3DCompile(file->constData(), file->size(),
+                "fragmentShader.hlsl",
+                nullptr, nullptr,
+                "PsMain", "vs_5_0", 
+                D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION,
+                0, &fragmentShader, &errorBuffer);
+    if(FAILED(result)) {
+        OutputDebugStringA((char *)errorBuffer->GetBufferPointer());
+        return false;
+    }
+
+    D3D12_SHADER_BYTECODE vertexShaderByteCode= {};
+    {
+        vertexShaderByteCode.BytecodeLength = vertexShader->GetBufferSize();
+        vertexShaderByteCode.pShaderBytecode = vertexShader->GetBufferPointer();
+    }
+
+    D3D12_SHADER_BYTECODE pixelShaderByteCode =  {};
+    {
+        pixelShaderByteCode.BytecodeLength = fragmentShader->GetBufferSize();
+        pixelShaderByteCode.pShaderBytecode = fragmentShader->GetBufferPointer();
+    }
+
+    D3D12_INPUT_ELEMENT_DESC inputLayout[] = {
+        { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
+        {
+            "TEXCOORD",                                  // Semantic Name
+            0,			                                // Semantic Index
+            DXGI_FORMAT_R32G32_FLOAT,                   // Format
+            1,                                          // Slot Index
+            0,                                          // Offset
+            D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, // InputSlotClass
+            0                                           // step rate
+        }
+    };
+
+    D3D12_INPUT_LAYOUT_DESC inputLayoutDesc = {}; 
+    {
+        inputLayoutDesc.NumElements = 2;
+        inputLayoutDesc.pInputElementDescs = &inputLayout[0];
+    }
+
+    DXGI_SAMPLE_DESC samplerDesc = {};
+    {
+        samplerDesc.Count = 1;
+    }
+
+    //create pipeline state
+    D3D12_GRAPHICS_PIPELINE_STATE_DESC pipelineStateDesc = {};
+    {
+        auto& desc = pipelineStateDesc;
+        desc.InputLayout = inputLayoutDesc;
+        desc.pRootSignature = _pipelineRootSignature;
+        desc.VS = vertexShaderByteCode;
+        desc.PS = pixelShaderByteCode;
+        desc.SampleDesc = samplerDesc;
+        desc.BlendState = CD3DX12_BLEND_DESC(D3D12_DEFAULT);
+        desc.DepthStencilState = CD3DX12_DEPTH_STENCIL_DESC(D3D12_DEFAULT);
+        desc.DepthStencilState.DepthEnable = false;
+        desc.DepthStencilState.StencilEnable = false;
+        desc.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
+        desc.RasterizerState.CullMode = D3D12_CULL_MODE::D3D12_CULL_MODE_NONE;
+        desc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM;
+        desc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+        desc.NumRenderTargets = 1;
+        desc.SampleMask = ~0;
+    }
+
+
+    result = device->CreateGraphicsPipelineState(&pipelineStateDesc, IID_PPV_ARGS(&_pipelineStateObject));
+    if(FAILED(result)) return false;
+
+    // a triangle
+    struct  Vertex
+    {
+        DirectX::XMFLOAT3 position;
+        DirectX::XMFLOAT2 uv;
+    };
+
+    Vertex vertexData[] = {
+        { { 0.0f, 0.5f, 0.5f }, { 0.5f, 0.0f } },
+        { { 0.5f, -0.5f, 0.5f }, { 1.0f, 1.0f } },
+        { { -0.5f, -0.5f, 0.5f }, { 0.0f, 1.0f } },
+    };
+
+    int vertexBufferSize = sizeof(vertexData);
+       
+    this->_vertexBuffer = _device.createVertexBuffer(vertexData, vertexBufferSize);
+    { 
+        // create vertex buffer view
+		this->_vertexBufferView.BufferLocation = 0;
+		this->_vertexBufferView.SizeInBytes = sizeof(vertexData);
+		this->_vertexBufferView.StrideInBytes = sizeof(Vertex);
+	}
+
+    this->_simpleTexture = _device.createTexture();
+    // create a vertex buffer view for the triangle. 
+    // We get the GPU memory address to the vertex pointer using the GetGPUVirtualAddress() method
+    _vertexBufferView.BufferLocation = _vertexBuffer->GetGPUVirtualAddress();
+    _vertexBufferView.StrideInBytes = sizeof(Vertex);
+    _vertexBufferView.SizeInBytes = vertexBufferSize;
+
     return true;
 }
 
 
 void TriangleDelux::resize(uint32_t width, uint32_t height)
 {
+     _viewPort.TopLeftX = 0;
+     _viewPort.TopLeftY = 0;
+     _viewPort.Width = (float)(width);
+     _viewPort.Height = (float)(height);
+     _viewPort.MinDepth = 0.0f;
+     _viewPort.MaxDepth = 1.0f;
 
+     _viewScissor.left = 0;
+     _viewScissor.top = 0;
+     _viewScissor.right = width;
+     _viewScissor.bottom = height;
+
+    if(!this->_swapChain) {
+        HRESULT result = 0;
+
+        DXGI_MODE_DESC displayModeDesc = {}; 
+        {
+            displayModeDesc.Width = width;
+            displayModeDesc.Height = height;
+            displayModeDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM; // 不需要提前获取支持什么格式？ 对于vk来说是必走流程
+        }
+
+        DXGI_SAMPLE_DESC samplerDesc = {};
+        {
+            samplerDesc.Count = 1;
+        }
+
+        _swapChain = _device.createSwapChian((HWND)_hwnd, width, height);
+
+        ComPtr<ID3D12Device> device = (ComPtr<ID3D12Device>)_device;
+
+        D3D12_DESCRIPTOR_HEAP_DESC rtvHeapDesc = {}; {
+            rtvHeapDesc.NumDescriptors = MaxFlightCount;
+            rtvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;
+            rtvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
+        }
+
+        result = device->CreateDescriptorHeap(&rtvHeapDesc, IID_PPV_ARGS(&_rtvDescrpitorHeap));
+        if(FAILED(result)) return;
+
+        _rtvDescriptorSize = device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
+
+        // 7. create render targets & render target view
+        // Create a RTV for each buffer (double buffering is two buffers, tripple buffering is 3).
+        D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle = _rtvDescrpitorHeap->GetCPUDescriptorHandleForHeapStart();
+        for (int i = 0; i < MaxFlightCount; i++) {
+            // first we get the n'th buffer in the swap chain and store it in the n'th
+            // position of our ID3D12Resource array
+            HRESULT rst = _swapChain->GetBuffer( i, IID_PPV_ARGS(&_renderTargets[i]));
+            _renderTargets[i]->SetName(L"swapchain render target buffer");
+            if (FAILED(rst)) {
+                return;
+            }
+            // the we "create" a render target view which binds the swap chain buffer (ID3D12Resource[n]) to the rtv handle
+            device->CreateRenderTargetView(_renderTargets[i].Get(), nullptr, { rtvHandle.ptr + _rtvDescriptorSize * i });
+        }
+    }
+    else {
+         ComPtr<ID3D12Device> device = (ComPtr<ID3D12Device>)_device;
+         D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle = _rtvDescrpitorHeap->GetCPUDescriptorHandleForHeapStart();
+         //wait for graphics queue
+         _device.flushGraphicsQueue();
+
+        for (uint32_t flightIndex = 0; flightIndex < MaxFlightCount; ++flightIndex) {
+            _renderTargets[flightIndex].Reset();
+        }
+
+        HRESULT rst = _swapChain->ResizeBuffers( MaxFlightCount, width, height, DXGI_FORMAT_R8G8B8A8_UNORM, 0 );
+        if( FAILED(rst)) OutputDebugString(L"Error!");
+
+        // get render target buffer & re-create render target view
+        for (uint32_t flightIndex = 0; flightIndex < MaxFlightCount; ++flightIndex) {
+            _swapChain->GetBuffer(flightIndex, IID_PPV_ARGS(&_renderTargets[flightIndex]));
+            _renderTargets[flightIndex]->SetName(L"swapchain render target buffer");
+            device->CreateRenderTargetView(_renderTargets[flightIndex].Get(), nullptr, { rtvHandle.ptr + _rtvDescriptorSize * flightIndex });
+        }
+    }
 }
 
 void TriangleDelux::release()
 {
-
+    for (uint32_t flightIndex = 0; flightIndex < MaxFlightCount; ++flightIndex) {
+		_device.waitForFlight( flightIndex );
+	}
+	_swapChain->Release();
+	_swapChain = nullptr;
+	_rtvDescrpitorHeap->Release();
+	_rtvDescrpitorHeap = nullptr;
+	//	
+    printf("destroyed");
 }
 
 void TriangleDelux::tick()
 {
+    if(!_swapChain) return;
+
+    HRESULT result;
+
+    _flightIndex = _swapChain->GetCurrentBackBufferIndex();
+    _device.waitForFlight(_flightIndex);
+
+    ComPtr<ID3D12GraphicsCommandList> commandList = _device.onTick(0, _flightIndex);
+    
+    //transform the render target's layout
+    D3D12_RESOURCE_BARRIER barrier;
+    {
+        barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
+        barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+        barrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
+        barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_RENDER_TARGET;
+        barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_PRESENT;
+    }
+
+    commandList->ResourceBarrier(1, &barrier);
+    CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHandle(_rtvDescrpitorHeap->GetCPUDescriptorHandleForHeapStart(), _flightIndex, _rtvDescriptorSize);
+    commandList->OMSetRenderTargets(1, &rtvHandle, FALSE, nullptr);
+    const float clearColor[] = { 0.0f, 0.2f, 0.4f, 1.0f };
+    commandList->ClearRenderTargetView(rtvHandle, clearColor, 0, nullptr);
+
+    //transfrom the render target's layout
+
+    commandList->SetGraphicsRootSignature(_pipelineRootSignature);
+    commandList->SetPipelineState(_pipelineStateObject);
+    commandList->RSSetViewports(1, &_viewPort);
+    commandList->RSSetScissorRects(1, &_viewScissor);
+    commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+    commandList->IASetVertexBuffers(0, 1, &_vertexBufferView);
+    commandList->DrawInstanced(3, 1, 0, 0); //fianlly draw 3 vertices (draw the triangle)
+
+    std::swap(barrier.Transition.StateAfter, barrier.Transition.StateBefore);
+    commandList->ResourceBarrier(1, &barrier);
+
+    result = commandList->Close();
+    _device.executeCommand(commandList);
+
+    result = _swapChain->Present(1, 0);
 
 }
 
