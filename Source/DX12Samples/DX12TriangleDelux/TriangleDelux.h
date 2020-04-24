@@ -3,8 +3,11 @@
 #include <dxgi.h>
 #include <dxgi1_4.h>
 #include <d3d12.h>
+// #include "d3dx12.h"
+#include "../ThirdPart/d3dx12.h"
 #include <algorithm>
 #include <wrl/client.h>
+
 
 
 constexpr uint32_t MaxFlightCount = 3;
@@ -82,9 +85,20 @@ private:
 
     ComPtr<ID3D12Resource>                  _vertexBuffer;
     D3D12_VERTEX_BUFFER_VIEW                _vertexBufferView;
+    
+
+    ComPtr<ID3D12DescriptorHeap>            _samplerDescriptorHeap;
+    uint32_t                                _samplerDescriptorSize;
+
+    //constant buffer
+    ComPtr<ID3D12Resource>                  _constantBuffer;
+    CD3DX12_GPU_DESCRIPTOR_HANDLE           _constantBufferGPUDescriptorHandle;
+    size_t                                  _constantBufferFlightSize;
+
+    //texture
     ComPtr<ID3D12Resource>                  _simpleTexture;
-
-
+    CD3DX12_GPU_DESCRIPTOR_HANDLE           _simpleTextureViewGPUDescriptorHandle;
+    D3D12_GPU_DESCRIPTOR_HANDLE             _samplerGPUDescriptorHandle;
 
 public:
     explicit TriangleDelux(/* args */);

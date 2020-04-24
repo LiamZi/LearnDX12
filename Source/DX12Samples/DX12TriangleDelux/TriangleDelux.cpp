@@ -1,7 +1,7 @@
 #include "TriangleDelux.h"
 #include <d3dcompiler.h>
 #include <DirectXMath.h>
-#include "../ThirdPart/d3dx12.h"
+
 #include <Nix/IO/Archive.h>
 
 
@@ -36,19 +36,25 @@ bool DeviceDX12::initialize()
     result = D3D12CreateDevice(_hardwareAdapter.Get(), D3D_FEATURE_LEVEL_11_0, IID_PPV_ARGS(&_device));
     if(FAILED(result)) return false;
 
+    //create graphics command queue
+    D3D12_COMMAND_QUEUE_DESC queueDesc = {};
+    {
+        queueDesc.Flags = D3D12_COMMAND_QUEUE_FLAG_NONE;
+        queueDesc.Type = D3D12_COMMAND_LIST_TYPE_DIRECT;
+    }
+
+
+    result = _device->CreateCommandQueue(&queueDesc, IID_PPV_ARGS(&_graphicsCommandQueue));
+    if(FAILED(result)) return false;
 
     //craete graphics command allocator;
     for(uint32_t i = 0; i < MaxFlightCount; ++i) {
-        auto currCommandAllocator = _graphicsCommandAllocator[i];
-        if(!currCommandAllocator) continue;
-        _device->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, IID_PPV_ARGS(&currCommandAllocator));
-        currCommandAllocator->Reset();
+        _device->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, IID_PPV_ARGS(&_graphicsCommandAllocator[i]));
+        _graphicsCommandAllocator[i]->Reset();
 
         //create command list
-        auto currCommandList = _graphicsCommandLists[i];
-        if(!currCommandList) continue;
-        _device->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, currCommandAllocator.Get(), nullptr, IID_PPV_ARGS(&currCommandList));
-        currCommandList->Close();
+        _device->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, _graphicsCommandAllocator[i].Get(), nullptr, IID_PPV_ARGS(&_graphicsCommandLists[i]));
+        _graphicsCommandLists[i]->Close();
 
         //create fence and init fence values;
         _device->CreateFence(0, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&_graphicsFences[i]));
@@ -58,20 +64,11 @@ bool DeviceDX12::initialize()
     //create graphics fence event
     _graphicsFenceEvent = CreateEvent(nullptr, FALSE, FALSE, nullptr); 
 
-    //create graphics command queue
-    D3D12_COMMAND_QUEUE_DESC queueDesc = {};
-    {
-        queueDesc.Flags = D3D12_COMMAND_QUEUE_FLAG_NONE;
-        queueDesc.Type = D3D12_COMMAND_LIST_TYPE_DIRECT;
-    }
-
-    result = _device->CreateCommandQueue(&queueDesc, IID_PPV_ARGS(&_graphicsCommandQueue));
-    if(FAILED(result)) return false;
-
     //crate copy command queue, command list, commnad allocator, fence, fence event
     queueDesc.Type = D3D12_COMMAND_LIST_TYPE_DIRECT;
     result = _device->CreateCommandQueue(&queueDesc, IID_PPV_ARGS(&_uploadQueue));
     if(FAILED(result)) return false;
+
 
     result = _device->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, IID_PPV_ARGS(&_uploadCommandAllocator));
     if(result) return false;
@@ -79,6 +76,7 @@ bool DeviceDX12::initialize()
     result = _device->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, _uploadCommandAllocator.Get(), nullptr, IID_PPV_ARGS(&_uploadCommandList));
     if(FAILED(result)) return false;
     _uploadCommandList->Close();
+    _device->CreateFence(0, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&_uploadFence));
     _uploadFenceValue = 0;
     _uploadFenceEvent = CreateEvent(nullptr, FALSE, FALSE, nullptr);
 
@@ -90,7 +88,7 @@ void DeviceDX12::executeCommand(ComPtr<ID3D12GraphicsCommandList> &commandList)
     ID3D12CommandList *lists[] = { commandList.Get() };
     _graphicsCommandQueue->ExecuteCommandLists(1, lists);
     auto result = _graphicsCommandQueue->Signal(_graphicsFences[_flightIndex].Get(), _graphicsFenceValues[_flightIndex]);
-    if(result) _running = false;
+    if(FAILED(result)) _running = false;
 }
 
 ComPtr<IDXGISwapChain3> DeviceDX12::createSwapChian(HWND hwnd, uint32_t width, uint32_t height)
@@ -102,7 +100,9 @@ ComPtr<IDXGISwapChain3> DeviceDX12::createSwapChian(HWND hwnd, uint32_t width, u
         swapChianDesc.Width = width;
         swapChianDesc.Height = height;
         swapChianDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-        swapChianDesc.BufferUsage = DXGI_SWAP_EFFECT_FLIP_DISCARD;
+        // swapChianDesc.BufferUsage = DXGI_SWAP_EFFECT_FLIP_DISCARD;
+        swapChianDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
+        swapChianDesc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;
         swapChianDesc.SampleDesc.Count = 1;
     }
 
@@ -127,12 +127,21 @@ ComPtr<IDXGISwapChain3> DeviceDX12::createSwapChian(HWND hwnd, uint32_t width, u
 
 void DeviceDX12::waitForFlight(uint32_t flight)
 {
-    if(_graphicsFences[flight]->GetCompletedValue() < _graphicsFenceValues[flight]) {
-        auto result = _graphicsFences[flight]->SetEventOnCompletion(_graphicsFenceValues[flight], _graphicsFenceEvent);
-        if(FAILED(result)) _running = false;
-    }
+    // if(_graphicsFences[flight]->GetCompletedValue() < _graphicsFenceValues[flight]) {
+    //     auto result = _graphicsFences[flight]->SetEventOnCompletion(_graphicsFenceValues[flight], _graphicsFenceEvent);
+    //     if(FAILED(result)) _running = false;
+    // }
 
-    WaitForSingleObject(_graphicsFenceEvent, INFINITE);
+    // WaitForSingleObject(_graphicsFenceEvent, INFINITE);
+
+    if (_graphicsFences[flight]->GetCompletedValue() < _graphicsFenceValues[flight]) {
+		HRESULT rst;
+		rst = _graphicsFences[flight]->SetEventOnCompletion(_graphicsFenceValues[flight], _graphicsFenceEvent);
+		if (FAILED(rst)) {
+			_running = false;
+		}
+		WaitForSingleObject(_graphicsFenceEvent, INFINITE);
+	}
 }
 
 
@@ -194,7 +203,7 @@ void DeviceDX12::uploadBuffer(ComPtr<ID3D12Resource> buffer, const void *data, s
 
     //upload heap
     _device->CreateCommittedResource(
-        &CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT),
+        &CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD),
         D3D12_HEAP_FLAG_NONE,
         &CD3DX12_RESOURCE_DESC::Buffer(length),
         D3D12_RESOURCE_STATE_GENERIC_READ, 
@@ -280,18 +289,18 @@ ComPtr<ID3D12Resource> DeviceDX12::createTexture()
     _device->GetCopyableFootprints(&textureDesc, 0, 1, 0, &footPrint, nullptr, nullptr, &requiredSize);
     //create staging buffer
     ComPtr<ID3D12Resource> stagingBuffer = nullptr;
-    uint32_t pixelData[] = {
-        0xffffffff, 0x000000ff, 0xffffffff, 0x000000ff, 0xffffffff, 0x000000ff, 0xffffffff, 0x000000ff,
-		0x000000ff, 0xffffffff, 0x000000ff, 0xffffffff, 0x000000ff, 0xffffffff, 0x000000ff, 0xffffffff,
-		0xffffffff, 0x000000ff, 0xffffffff, 0x000000ff, 0xffffffff, 0x000000ff, 0xffffffff, 0x000000ff,
-		0x000000ff, 0xffffffff, 0x000000ff, 0xffffffff, 0x000000ff, 0xffffffff, 0x000000ff, 0xffffffff,
-		0xffffffff, 0x000000ff, 0xffffffff, 0x000000ff, 0xffffffff, 0x000000ff, 0xffffffff, 0x000000ff,
-		0x000000ff, 0xffffffff, 0x000000ff, 0xffffffff, 0x000000ff, 0xffffffff, 0x000000ff, 0xffffffff,
-		0xffffffff, 0x000000ff, 0xffffffff, 0x000000ff, 0xffffffff, 0x000000ff, 0xffffffff, 0x000000ff,
-		0x000000ff, 0xffffffff, 0x000000ff, 0xffffffff, 0x000000ff, 0xffffffff, 0x000000ff, 0xffffffff,
-    };
+	uint32_t pixelData[8][64] = {
+        { 0xffffffff, 0x000000ff, 0xffffffff, 0x000000ff, 0xffffffff, 0x000000ff, 0xffffffff, 0x000000ff},
+        { 0x000000ff, 0xffffffff, 0x000000ff, 0xffffffff, 0x000000ff, 0xffffffff, 0x000000ff, 0xffffffff},
+        { 0xffffffff, 0x000000ff, 0xffffffff, 0x000000ff, 0xffffffff, 0x000000ff, 0xffffffff, 0x000000ff},
+        { 0x000000ff, 0xffffffff, 0x000000ff, 0xffffffff, 0x000000ff, 0xffffffff, 0x000000ff, 0xffffffff},
+        { 0xffffffff, 0x000000ff, 0xffffffff, 0x000000ff, 0xffffffff, 0x000000ff, 0xffffffff, 0x000000ff},
+        { 0x000000ff, 0xffffffff, 0x000000ff, 0xffffffff, 0x000000ff, 0xffffffff, 0x000000ff, 0xffffffff},
+        { 0xffffffff, 0x000000ff, 0xffffffff, 0x000000ff, 0xffffffff, 0x000000ff, 0xffffffff, 0x000000ff},
+        { 0x000000ff, 0xffffffff, 0x000000ff, 0xffffffff, 0x000000ff, 0xffffffff, 0x000000ff, 0xffffffff}		
+	};
 
-    _device->CreateCommittedResource(&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT),
+    _device->CreateCommittedResource(&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD),
                                     D3D12_HEAP_FLAG_NONE,
                                     &CD3DX12_RESOURCE_DESC::Buffer(requiredSize),
                                     D3D12_RESOURCE_STATE_GENERIC_READ,
@@ -365,52 +374,116 @@ bool TriangleDelux::initialize(void *wnd, Nix::IArchive *arch)
 
     ComPtr<ID3D12Device> device = (ComPtr<ID3D12Device>)_device;
 
+    this->_simpleTexture = _device.createTexture();
+
     D3D12_DESCRIPTOR_HEAP_DESC srvHeapDesc = {};
     {
-        srvHeapDesc.NumDescriptors = 1;
+        srvHeapDesc.NumDescriptors = 2;
         srvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
         srvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
         result = device->CreateDescriptorHeap(&srvHeapDesc, IID_PPV_ARGS(&_pipelineDescriptorHeap));
-        if(FAILED(result)) return false;
+		if( FAILED(result)) return false;
+	}
+
+    auto cbvSrvDescriptorSize = device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+
+    result = device->CreateCommittedResource(&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD),
+                                        D3D12_HEAP_FLAG_NONE,
+                                        &CD3DX12_RESOURCE_DESC::Buffer(256 * 2),
+                                        D3D12_RESOURCE_STATE_GENERIC_READ,
+                                        nullptr,
+                                        IID_PPV_ARGS(&_constantBuffer));
+    if(FAILED(result)) return false;
+
+    void *mappedPtr = nullptr;
+    _constantBuffer->Map(0, nullptr, &mappedPtr);
+    float offset[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
+    memcpy(mappedPtr, &offset, sizeof(offset));
+    _constantBuffer->Unmap(0, nullptr);
+
+    _constantBuffer->SetName(L"Contant Buffer");
+
+    D3D12_CONSTANT_BUFFER_VIEW_DESC cbufferViewDesc = {};
+    {
+        cbufferViewDesc.BufferLocation = _constantBuffer->GetGPUVirtualAddress();
+        cbufferViewDesc.SizeInBytes = 256 * 2;
     }
 
-    CD3DX12_DESCRIPTOR_RANGE1 vertexDescriptorRanges[1];
+    // 在 heap 上创建需要使用 CPU handle，但是在渲染绑定的时候绑定的是 GPU handle
+    // CD3DX12_CPU_DESCRIPTOR_HANDLE pipelineCPUDescriptorHandlerStart(_pipelineDescriptorHeap->GetCPUDescriptorHandleForHeapStart());
+    // CD3DX12_GPU_DESCRIPTOR_HANDLE pipelineGPUDescriptorHandlerStart(_pipelineDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
+    CD3DX12_CPU_DESCRIPTOR_HANDLE pipelineCPUDescriptorHandlerStart( _pipelineDescriptorHeap->GetCPUDescriptorHandleForHeapStart() );
+	CD3DX12_GPU_DESCRIPTOR_HANDLE pipelineGPUDescriptorHandlerStart( _pipelineDescriptorHeap->GetGPUDescriptorHandleForHeapStart() );
+    //save gpu handle
+
+    _simpleTextureViewGPUDescriptorHandle = pipelineGPUDescriptorHandlerStart;
+    _constantBufferGPUDescriptorHandle= pipelineGPUDescriptorHandlerStart.Offset(cbvSrvDescriptorSize);
+
+
+    D3D12_SHADER_RESOURCE_VIEW_DESC textureResourceViewDesc = {};
     {
-        //vertex constant buffer / uniform
-        vertexDescriptorRanges[0].Init(D3D12_DESCRIPTOR_RANGE_TYPE_CBV,     // type        
-                                    1,                                      // descriptor count
-                                    0,                                      // base register
-                                    0,                                      // register space
-                                    D3D12_DESCRIPTOR_RANGE_FLAG_DATA_STATIC // descriptor range flag
-        );
+        textureResourceViewDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+        textureResourceViewDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+        textureResourceViewDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
+        textureResourceViewDesc.Texture2D.MipLevels = 1;
     }
+
+    //creator texture view
+    device->CreateShaderResourceView(_simpleTexture.Get(), &textureResourceViewDesc, pipelineCPUDescriptorHandlerStart);
+
+    //creator constant buffer view
+    // device->CreateConstantBufferView(&cbufferViewDesc, pipelineCPUDescriptorHandlerStart.Offset(cbvSrvDescriptorSize));
+    device->CreateConstantBufferView( &cbufferViewDesc, pipelineCPUDescriptorHandlerStart.Offset(cbvSrvDescriptorSize));
+
+	CD3DX12_DESCRIPTOR_RANGE1 vertexDescriptorRanges[1];{
+		// vertex constant buffer / uniform
+		vertexDescriptorRanges[0].Init(
+			D3D12_DESCRIPTOR_RANGE_TYPE_CBV,			// type
+			1,											// descriptor count
+			0,											// base register
+			0,											// register space
+			D3D12_DESCRIPTOR_RANGE_FLAG_DATA_STATIC 	// descriptor range flag
+		);
+	}
+    // D3D12_DESCRIPTOR_RANGE1 vertexRanges;
+    // {
+    //     vertexRanges.RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_CBV;
+    //     vertexRanges.NumDescriptors = 1;
+    //     vertexRanges.BaseShaderRegister = 0;
+    //     vertexRanges.RegisterSpace = 0;
+    //     vertexRanges.Flags = D3D12_DESCRIPTOR_RANGE_FLAG_DATA_STATIC;
+    //     vertexRanges.OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
+    // }
+
+    
 
     CD3DX12_DESCRIPTOR_RANGE1 pixelDescriptorRanges[2];
     {
-        //fragment texture
-        pixelDescriptorRanges[0].Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV,      // descriptor typ
-                                    1,                                      // descriptor count
-                                    0,                                      // base shader register
-                                    0,                                      // register space
-                                    D3D12_DESCRIPTOR_RANGE_FLAG_DATA_STATIC // descriptor data type
-        );
-
-        //fragment sampler
-        pixelDescriptorRanges[1].Init(
-                                D3D12_DESCRIPTOR_RANGE_TYPE_SAMPLER,        //descriptor type
-                                1,                                          // descriptor count
-                                0,                                          // base shader register
-                                0,                                          // register space
-                                D3D12_DESCRIPTOR_RANGE_FLAG_DESCRIPTORS_VOLATILE //descriptor data type
-        );
-    }
+		// fragment texture
+		pixelDescriptorRanges[0].Init(
+			D3D12_DESCRIPTOR_RANGE_TYPE_SRV,				// descriptor type
+			1,												// descriptor count
+			0,												// base shader register
+			0,												// register space
+			D3D12_DESCRIPTOR_RANGE_FLAG_DATA_STATIC			// descriptor data type
+		);
+		// fragment sampler
+		pixelDescriptorRanges[1].Init(
+			D3D12_DESCRIPTOR_RANGE_TYPE_SAMPLER,			// descriptor type
+			1,												// descriptor count
+			1,												// base shader register
+			0,												// register space
+			D3D12_DESCRIPTOR_RANGE_FLAG_DESCRIPTORS_VOLATILE// descriptor data type
+		);
+	}
 
     constexpr int vertexRangeCount = sizeof(vertexDescriptorRanges) / sizeof(CD3DX12_DESCRIPTOR_RANGE1);
+    // constexpr int vertexRangeCount = 1;
 	constexpr int pixelRangeCount = sizeof(pixelDescriptorRanges) / sizeof(CD3DX12_DESCRIPTOR_RANGE1);
 
-	CD3DX12_ROOT_PARAMETER1 rootParameters[3];
-    {
+    CD3DX12_ROOT_PARAMETER1 rootParameters[3];{
 		rootParameters[0].InitAsDescriptorTable( vertexRangeCount , &vertexDescriptorRanges[0], D3D12_SHADER_VISIBILITY_VERTEX );
+        // rootParameters[0].InitAsDescriptorTable( vertexRangeCount , &vertexRanges, D3D12_SHADER_VISIBILITY_VERTEX );
 		rootParameters[1].InitAsDescriptorTable( 1 , &pixelDescriptorRanges[0], D3D12_SHADER_VISIBILITY_PIXEL );
 		rootParameters[2].InitAsDescriptorTable( 1 , &pixelDescriptorRanges[1], D3D12_SHADER_VISIBILITY_PIXEL );
 	}
@@ -429,34 +502,44 @@ bool TriangleDelux::initialize(void *wnd, Nix::IArchive *arch)
         sampler.ShaderRegister = 0;
         sampler.RegisterSpace = 0;
         sampler.ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
-	} 
+	}   
+
 
     CD3DX12_VERSIONED_ROOT_SIGNATURE_DESC rootSignatureDesc {};
+    // CD3DX12_ROOT_SIGNATURE_DESC rootSignatureDesc{};
     {
-        // rootSignatureDesc.Init_1_1(3, rootParameters, 1, &sampler, D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
-        rootSignatureDesc.Init_1_1( 3, rootParameters, 1, &sampler, D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT );
-    }
+		rootSignatureDesc.Init_1_1( 3, rootParameters, 1, &sampler, D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT );
+        // rootSignatureDesc.Init(0, nullptr, 0, nullptr, D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
+	}
 
-    ComPtr<ID3DBlob> signature;
-    ComPtr<ID3DBlob> error;
+
+    // ComPtr<ID3DBlob> signature;
+    // ComPtr<ID3DBlob> error;
+    ID3DBlob *signature = nullptr;
+    ID3DBlob *error = nullptr;
 
     //create root signature
     D3D12_FEATURE_DATA_ROOT_SIGNATURE featureData = {};
-    // This is the highest version the sample supports. If CheckFeatureSupport succeeds, the HighestVersion returned will not be greater than this.
+
     featureData.HighestVersion = D3D_ROOT_SIGNATURE_VERSION_1_1;
-    if(FAILED(device->CheckFeatureSupport(D3D12_FEATURE_ROOT_SIGNATURE, &featureData, sizeof(featureData)))) {
-        featureData.HighestVersion = D3D_ROOT_SIGNATURE_VERSION_1_0;
-    }
+	if ( FAILED(device->CheckFeatureSupport(D3D12_FEATURE_ROOT_SIGNATURE, &featureData, sizeof(featureData)))) {
+		featureData.HighestVersion = D3D_ROOT_SIGNATURE_VERSION_1_0;
+	}
 
     result = D3DX12SerializeVersionedRootSignature( &rootSignatureDesc, featureData.HighestVersion, &signature, &error);
-    if(FAILED(result)) {
-        const char *msg = (const char *)error->GetBufferPointer();
-        OutputDebugStringA(msg);
+    // result = D3D12SerializeRootSignature(&rootSignatureDesc, D3D_ROOT_SIGNATURE_VERSION_1, &signature, &error);
+
+    if (FAILED(result)) {
+		const char * msg = (const char *)error->GetBufferPointer();
+		OutputDebugStringA(msg);
+		return false;
+	}
+
+    // result = device->CreateRootSignature(0, signature->GetBufferPointer(), signature->GetBufferSize(), IID_PPV_ARGS(&_pipelineRootSignature));
+    result = device->CreateRootSignature( 0, signature->GetBufferPointer(), signature->GetBufferSize(), IID_PPV_ARGS(&_pipelineRootSignature));
+    if(FAILED(result))  { 
         return false;
     }
-
-    result = device->CreateRootSignature(0, signature->GetBufferPointer(), signature->GetBufferSize(), IID_PPV_ARGS(&_pipelineRootSignature));
-    if(FAILED(result)) return false;
 
     ID3DBlob *vertexShader = nullptr;
     ID3DBlob *fragmentShader = nullptr;
@@ -483,9 +566,10 @@ bool TriangleDelux::initialize(void *wnd, Nix::IArchive *arch)
     result = D3DCompile(file->constData(), file->size(),
                 "fragmentShader.hlsl",
                 nullptr, nullptr,
-                "PsMain", "vs_5_0", 
+                "PsMain", "ps_5_0", 
                 D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION,
                 0, &fragmentShader, &errorBuffer);
+
     if(FAILED(result)) {
         OutputDebugStringA((char *)errorBuffer->GetBufferPointer());
         return false;
@@ -510,7 +594,7 @@ bool TriangleDelux::initialize(void *wnd, Nix::IArchive *arch)
             0,			                                // Semantic Index
             DXGI_FORMAT_R32G32_FLOAT,                   // Format
             1,                                          // Slot Index
-            0,                                          // Offset
+            12,                                          // Offset
             D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, // InputSlotClass
             0                                           // step rate
         }
@@ -565,6 +649,7 @@ bool TriangleDelux::initialize(void *wnd, Nix::IArchive *arch)
         { { -0.5f, -0.5f, 0.5f }, { 0.0f, 1.0f } },
     };
 
+
     int vertexBufferSize = sizeof(vertexData);
        
     this->_vertexBuffer = _device.createVertexBuffer(vertexData, vertexBufferSize);
@@ -575,7 +660,7 @@ bool TriangleDelux::initialize(void *wnd, Nix::IArchive *arch)
 		this->_vertexBufferView.StrideInBytes = sizeof(Vertex);
 	}
 
-    this->_simpleTexture = _device.createTexture();
+   
     // create a vertex buffer view for the triangle. 
     // We get the GPU memory address to the vertex pointer using the GetGPUVirtualAddress() method
     _vertexBufferView.BufferLocation = _vertexBuffer->GetGPUVirtualAddress();
@@ -638,12 +723,45 @@ void TriangleDelux::resize(uint32_t width, uint32_t height)
             // position of our ID3D12Resource array
             HRESULT rst = _swapChain->GetBuffer( i, IID_PPV_ARGS(&_renderTargets[i]));
             _renderTargets[i]->SetName(L"swapchain render target buffer");
-            if (FAILED(rst)) {
-                return;
-            }
+            if (FAILED(rst)) return;
             // the we "create" a render target view which binds the swap chain buffer (ID3D12Resource[n]) to the rtv handle
             device->CreateRenderTargetView(_renderTargets[i].Get(), nullptr, { rtvHandle.ptr + _rtvDescriptorSize * i });
         }
+
+        //create sampler heap
+        D3D12_DESCRIPTOR_HEAP_DESC samplerHeapDesc = {};
+        {
+            samplerHeapDesc.NumDescriptors = 1;
+            samplerHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_SAMPLER;
+            samplerHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
+        }
+
+        result = device->CreateDescriptorHeap(&samplerHeapDesc, IID_PPV_ARGS(&_samplerDescriptorHeap));
+        if(FAILED(result)) return;
+
+        _samplerDescriptorSize = device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_SAMPLER);
+        _samplerGPUDescriptorHandle = _samplerDescriptorHeap->GetGPUDescriptorHandleForHeapStart();
+
+        D3D12_SAMPLER_DESC sampler = {};
+        {
+            sampler.Filter = D3D12_FILTER_MIN_MAG_MIP_POINT;
+            sampler.AddressU = D3D12_TEXTURE_ADDRESS_MODE_BORDER;
+            sampler.AddressV = D3D12_TEXTURE_ADDRESS_MODE_BORDER;
+            sampler.AddressW = D3D12_TEXTURE_ADDRESS_MODE_BORDER;
+            sampler.MipLODBias = 0;
+            sampler.MaxAnisotropy = 0;
+            sampler.ComparisonFunc = D3D12_COMPARISON_FUNC_NEVER;
+            sampler.BorderColor[0] = D3D12_STATIC_BORDER_COLOR_TRANSPARENT_BLACK;
+            sampler.BorderColor[1] = D3D12_STATIC_BORDER_COLOR_TRANSPARENT_BLACK;
+            sampler.BorderColor[2] = D3D12_STATIC_BORDER_COLOR_TRANSPARENT_BLACK;
+            sampler.BorderColor[3] = D3D12_STATIC_BORDER_COLOR_TRANSPARENT_BLACK;
+            sampler.MinLOD = 0.0f;
+            sampler.MaxLOD = D3D12_FLOAT32_MAX;
+        } 
+
+        D3D12_CPU_DESCRIPTOR_HANDLE samplerHandle = _samplerDescriptorHeap->GetCPUDescriptorHandleForHeapStart();
+        device->CreateSampler(&sampler, samplerHandle);
+
     }
     else {
          ComPtr<ID3D12Device> device = (ComPtr<ID3D12Device>)_device;
@@ -697,6 +815,7 @@ void TriangleDelux::tick()
         barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
         barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
         barrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
+        barrier.Transition.pResource = _renderTargets[_flightIndex].Get();
         barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_RENDER_TARGET;
         barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_PRESENT;
     }
@@ -710,6 +829,21 @@ void TriangleDelux::tick()
     //transfrom the render target's layout
 
     commandList->SetGraphicsRootSignature(_pipelineRootSignature);
+
+    ID3D12DescriptorHeap* heaps[] = {
+        _pipelineDescriptorHeap.Get(),
+        _samplerDescriptorHeap.Get()
+    };
+
+    commandList->SetDescriptorHeaps( 2, heaps );
+
+    // 第[0]个是 const buffer view descriptor
+    commandList->SetGraphicsRootDescriptorTable(0, _constantBufferGPUDescriptorHandle );
+    // 第[1] 个是 texture view descriptor
+    commandList->SetGraphicsRootDescriptorTable(1, _simpleTextureViewGPUDescriptorHandle );
+    // 第[2] 个是 sampler descriptor
+    commandList->SetGraphicsRootDescriptorTable(2, _samplerGPUDescriptorHandle);
+
     commandList->SetPipelineState(_pipelineStateObject);
     commandList->RSSetViewports(1, &_viewPort);
     commandList->RSSetScissorRects(1, &_viewScissor);
