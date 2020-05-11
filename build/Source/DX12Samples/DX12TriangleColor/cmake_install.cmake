@@ -1,4 +1,4 @@
-# Install script for directory: D:/LearningDX12/Source/DX12Samples/DX12TriangleColor
+# Install script for directory: D:/GitHub/LearnDX12/Source/DX12Samples/DX12TriangleColor
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)

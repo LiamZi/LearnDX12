@@ -201,7 +201,7 @@ void HelloDX12::release() {
     printf("destroyed");
 }
 
-void HelloDX12::tick() {
+void HelloDX12::draw() {
     if (!m_swapchain) return;
 
     {
@@ -274,7 +274,12 @@ void HelloDX12::tick() {
     }
 }
 
-const char * HelloDX12::title() {
+void HelloDX12::tick(double dt)
+{
+    
+}
+
+char * HelloDX12::title() {
     return "DX12 Clear Screen";
 }
 	

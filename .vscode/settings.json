@@ -23,6 +23,9 @@
         "istream": "cpp",
         "ostream": "cpp",
         "tuple": "cpp",
-        "utility": "cpp"
+        "utility": "cpp",
+        "iostream": "cpp",
+        "string": "cpp",
+        "xutility": "cpp"
     }
 }

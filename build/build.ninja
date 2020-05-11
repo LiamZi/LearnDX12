@@ -147,7 +147,7 @@ build ExperimentalTest: phony CMakeFiles\ExperimentalTest
 # Utility command for package_source
 
 build CMakeFiles\package_source.util: CUSTOM_COMMAND
-  COMMAND = cmd.exe /C "cd /D D:\LearningDX12\build && "C:\Program Files\CMake\bin\cpack.exe" --config ./CPackSourceConfig.cmake D:/LearningDX12/build/CPackSourceConfig.cmake"
+  COMMAND = cmd.exe /C "cd /D D:\GitHub\LearnDX12\build && "C:\Program Files\CMake\bin\cpack.exe" --config ./CPackSourceConfig.cmake D:/GitHub/LearnDX12/build/CPackSourceConfig.cmake"
   DESC = Run CPack packaging tool for source...
   pool = console
   restat = 1
@@ -219,7 +219,7 @@ build ContinuousCoverage: phony CMakeFiles\ContinuousCoverage
 # Utility command for package
 
 build CMakeFiles\package.util: CUSTOM_COMMAND all
-  COMMAND = cmd.exe /C "cd /D D:\LearningDX12\build && "C:\Program Files\CMake\bin\cpack.exe" --config ./CPackConfig.cmake"
+  COMMAND = cmd.exe /C "cd /D D:\GitHub\LearnDX12\build && "C:\Program Files\CMake\bin\cpack.exe" --config ./CPackConfig.cmake"
   DESC = Run CPack packaging tool...
   pool = console
   restat = 1
@@ -231,7 +231,7 @@ build package: phony CMakeFiles\package.util
 # Utility command for test
 
 build CMakeFiles\test.util: CUSTOM_COMMAND
-  COMMAND = cmd.exe /C "cd /D D:\LearningDX12\build && "C:\Program Files\CMake\bin\ctest.exe" --force-new-ctest-process "
+  COMMAND = cmd.exe /C "cd /D D:\GitHub\LearnDX12\build && "C:\Program Files\CMake\bin\ctest.exe" --force-new-ctest-process "
   DESC = Running tests...
   pool = console
   restat = 1
@@ -243,7 +243,7 @@ build test: phony CMakeFiles\test.util
 # Utility command for edit_cache
 
 build CMakeFiles\edit_cache.util: CUSTOM_COMMAND
-  COMMAND = cmd.exe /C "cd /D D:\LearningDX12\build && "C:\Program Files\CMake\bin\cmake-gui.exe" -SD:\LearningDX12 -BD:\LearningDX12\build"
+  COMMAND = cmd.exe /C "cd /D D:\GitHub\LearnDX12\build && "C:\Program Files\CMake\bin\cmake-gui.exe" -SD:\GitHub\LearnDX12 -BD:\GitHub\LearnDX12\build"
   DESC = Running CMake cache editor...
   pool = console
   restat = 1
@@ -255,7 +255,7 @@ build edit_cache: phony CMakeFiles\edit_cache.util
 # Utility command for rebuild_cache
 
 build CMakeFiles\rebuild_cache.util: CUSTOM_COMMAND
-  COMMAND = cmd.exe /C "cd /D D:\LearningDX12\build && "C:\Program Files\CMake\bin\cmake.exe" --regenerate-during-build -SD:\LearningDX12 -BD:\LearningDX12\build"
+  COMMAND = cmd.exe /C "cd /D D:\GitHub\LearnDX12\build && "C:\Program Files\CMake\bin\cmake.exe" --regenerate-during-build -SD:\GitHub\LearnDX12 -BD:\GitHub\LearnDX12\build"
   DESC = Running CMake to regenerate build system...
   pool = console
   restat = 1
@@ -267,7 +267,7 @@ build rebuild_cache: phony CMakeFiles\rebuild_cache.util
 # Custom command for CMakeFiles\NightlyMemoryCheck
 
 build CMakeFiles\NightlyMemoryCheck: CUSTOM_COMMAND
-  COMMAND = cmd.exe /C "cd /D D:\LearningDX12\build && "C:\Program Files\CMake\bin\ctest.exe" -D NightlyMemoryCheck"
+  COMMAND = cmd.exe /C "cd /D D:\GitHub\LearnDX12\build && "C:\Program Files\CMake\bin\ctest.exe" -D NightlyMemoryCheck"
   pool = console
 
 
@@ -275,7 +275,7 @@ build CMakeFiles\NightlyMemoryCheck: CUSTOM_COMMAND
 # Custom command for CMakeFiles\Experimental
 
 build CMakeFiles\Experimental: CUSTOM_COMMAND
-  COMMAND = cmd.exe /C "cd /D D:\LearningDX12\build && "C:\Program Files\CMake\bin\ctest.exe" -D Experimental"
+  COMMAND = cmd.exe /C "cd /D D:\GitHub\LearnDX12\build && "C:\Program Files\CMake\bin\ctest.exe" -D Experimental"
   pool = console
 
 
@@ -283,7 +283,7 @@ build CMakeFiles\Experimental: CUSTOM_COMMAND
 # Custom command for CMakeFiles\NightlySubmit
 
 build CMakeFiles\NightlySubmit: CUSTOM_COMMAND
-  COMMAND = cmd.exe /C "cd /D D:\LearningDX12\build && "C:\Program Files\CMake\bin\ctest.exe" -D NightlySubmit"
+  COMMAND = cmd.exe /C "cd /D D:\GitHub\LearnDX12\build && "C:\Program Files\CMake\bin\ctest.exe" -D NightlySubmit"
   pool = console
 
 
@@ -291,7 +291,7 @@ build CMakeFiles\NightlySubmit: CUSTOM_COMMAND
 # Custom command for CMakeFiles\NightlyConfigure
 
 build CMakeFiles\NightlyConfigure: CUSTOM_COMMAND
-  COMMAND = cmd.exe /C "cd /D D:\LearningDX12\build && "C:\Program Files\CMake\bin\ctest.exe" -D NightlyConfigure"
+  COMMAND = cmd.exe /C "cd /D D:\GitHub\LearnDX12\build && "C:\Program Files\CMake\bin\ctest.exe" -D NightlyConfigure"
   pool = console
 
 
@@ -299,7 +299,7 @@ build CMakeFiles\NightlyConfigure: CUSTOM_COMMAND
 # Custom command for CMakeFiles\NightlyBuild
 
 build CMakeFiles\NightlyBuild: CUSTOM_COMMAND
-  COMMAND = cmd.exe /C "cd /D D:\LearningDX12\build && "C:\Program Files\CMake\bin\ctest.exe" -D NightlyBuild"
+  COMMAND = cmd.exe /C "cd /D D:\GitHub\LearnDX12\build && "C:\Program Files\CMake\bin\ctest.exe" -D NightlyBuild"
   pool = console
 
 
@@ -307,7 +307,7 @@ build CMakeFiles\NightlyBuild: CUSTOM_COMMAND
 # Custom command for CMakeFiles\NightlyStart
 
 build CMakeFiles\NightlyStart: CUSTOM_COMMAND
-  COMMAND = cmd.exe /C "cd /D D:\LearningDX12\build && "C:\Program Files\CMake\bin\ctest.exe" -D NightlyStart"
+  COMMAND = cmd.exe /C "cd /D D:\GitHub\LearnDX12\build && "C:\Program Files\CMake\bin\ctest.exe" -D NightlyStart"
   pool = console
 
 
@@ -315,7 +315,7 @@ build CMakeFiles\NightlyStart: CUSTOM_COMMAND
 # Custom command for CMakeFiles\Continuous
 
 build CMakeFiles\Continuous: CUSTOM_COMMAND
-  COMMAND = cmd.exe /C "cd /D D:\LearningDX12\build && "C:\Program Files\CMake\bin\ctest.exe" -D Continuous"
+  COMMAND = cmd.exe /C "cd /D D:\GitHub\LearnDX12\build && "C:\Program Files\CMake\bin\ctest.exe" -D Continuous"
   pool = console
 
 
@@ -323,7 +323,7 @@ build CMakeFiles\Continuous: CUSTOM_COMMAND
 # Custom command for CMakeFiles\NightlyTest
 
 build CMakeFiles\NightlyTest: CUSTOM_COMMAND
-  COMMAND = cmd.exe /C "cd /D D:\LearningDX12\build && "C:\Program Files\CMake\bin\ctest.exe" -D NightlyTest"
+  COMMAND = cmd.exe /C "cd /D D:\GitHub\LearnDX12\build && "C:\Program Files\CMake\bin\ctest.exe" -D NightlyTest"
   pool = console
 
 
@@ -331,7 +331,7 @@ build CMakeFiles\NightlyTest: CUSTOM_COMMAND
 # Custom command for CMakeFiles\Nightly
 
 build CMakeFiles\Nightly: CUSTOM_COMMAND
-  COMMAND = cmd.exe /C "cd /D D:\LearningDX12\build && "C:\Program Files\CMake\bin\ctest.exe" -D Nightly"
+  COMMAND = cmd.exe /C "cd /D D:\GitHub\LearnDX12\build && "C:\Program Files\CMake\bin\ctest.exe" -D Nightly"
   pool = console
 
 
@@ -339,7 +339,7 @@ build CMakeFiles\Nightly: CUSTOM_COMMAND
 # Custom command for CMakeFiles\NightlyUpdate
 
 build CMakeFiles\NightlyUpdate: CUSTOM_COMMAND
-  COMMAND = cmd.exe /C "cd /D D:\LearningDX12\build && "C:\Program Files\CMake\bin\ctest.exe" -D NightlyUpdate"
+  COMMAND = cmd.exe /C "cd /D D:\GitHub\LearnDX12\build && "C:\Program Files\CMake\bin\ctest.exe" -D NightlyUpdate"
   pool = console
 
 
@@ -347,7 +347,7 @@ build CMakeFiles\NightlyUpdate: CUSTOM_COMMAND
 # Custom command for CMakeFiles\NightlyCoverage
 
 build CMakeFiles\NightlyCoverage: CUSTOM_COMMAND
-  COMMAND = cmd.exe /C "cd /D D:\LearningDX12\build && "C:\Program Files\CMake\bin\ctest.exe" -D NightlyCoverage"
+  COMMAND = cmd.exe /C "cd /D D:\GitHub\LearnDX12\build && "C:\Program Files\CMake\bin\ctest.exe" -D NightlyCoverage"
   pool = console
 
 
@@ -355,7 +355,7 @@ build CMakeFiles\NightlyCoverage: CUSTOM_COMMAND
 # Custom command for CMakeFiles\NightlyMemCheck
 
 build CMakeFiles\NightlyMemCheck: CUSTOM_COMMAND
-  COMMAND = cmd.exe /C "cd /D D:\LearningDX12\build && "C:\Program Files\CMake\bin\ctest.exe" -D NightlyMemCheck"
+  COMMAND = cmd.exe /C "cd /D D:\GitHub\LearnDX12\build && "C:\Program Files\CMake\bin\ctest.exe" -D NightlyMemCheck"
   pool = console
 
 
@@ -363,7 +363,7 @@ build CMakeFiles\NightlyMemCheck: CUSTOM_COMMAND
 # Custom command for CMakeFiles\ExperimentalBuild
 
 build CMakeFiles\ExperimentalBuild: CUSTOM_COMMAND
-  COMMAND = cmd.exe /C "cd /D D:\LearningDX12\build && "C:\Program Files\CMake\bin\ctest.exe" -D ExperimentalBuild"
+  COMMAND = cmd.exe /C "cd /D D:\GitHub\LearnDX12\build && "C:\Program Files\CMake\bin\ctest.exe" -D ExperimentalBuild"
   pool = console
 
 
@@ -371,7 +371,7 @@ build CMakeFiles\ExperimentalBuild: CUSTOM_COMMAND
 # Custom command for CMakeFiles\ExperimentalStart
 
 build CMakeFiles\ExperimentalStart: CUSTOM_COMMAND
-  COMMAND = cmd.exe /C "cd /D D:\LearningDX12\build && "C:\Program Files\CMake\bin\ctest.exe" -D ExperimentalStart"
+  COMMAND = cmd.exe /C "cd /D D:\GitHub\LearnDX12\build && "C:\Program Files\CMake\bin\ctest.exe" -D ExperimentalStart"
   pool = console
 
 
@@ -379,7 +379,7 @@ build CMakeFiles\ExperimentalStart: CUSTOM_COMMAND
 # Custom command for CMakeFiles\ExperimentalUpdate
 
 build CMakeFiles\ExperimentalUpdate: CUSTOM_COMMAND
-  COMMAND = cmd.exe /C "cd /D D:\LearningDX12\build && "C:\Program Files\CMake\bin\ctest.exe" -D ExperimentalUpdate"
+  COMMAND = cmd.exe /C "cd /D D:\GitHub\LearnDX12\build && "C:\Program Files\CMake\bin\ctest.exe" -D ExperimentalUpdate"
   pool = console
 
 
@@ -387,7 +387,7 @@ build CMakeFiles\ExperimentalUpdate: CUSTOM_COMMAND
 # Custom command for CMakeFiles\ContinuousMemCheck
 
 build CMakeFiles\ContinuousMemCheck: CUSTOM_COMMAND
-  COMMAND = cmd.exe /C "cd /D D:\LearningDX12\build && "C:\Program Files\CMake\bin\ctest.exe" -D ContinuousMemCheck"
+  COMMAND = cmd.exe /C "cd /D D:\GitHub\LearnDX12\build && "C:\Program Files\CMake\bin\ctest.exe" -D ContinuousMemCheck"
   pool = console
 
 
@@ -395,7 +395,7 @@ build CMakeFiles\ContinuousMemCheck: CUSTOM_COMMAND
 # Custom command for CMakeFiles\ExperimentalConfigure
 
 build CMakeFiles\ExperimentalConfigure: CUSTOM_COMMAND
-  COMMAND = cmd.exe /C "cd /D D:\LearningDX12\build && "C:\Program Files\CMake\bin\ctest.exe" -D ExperimentalConfigure"
+  COMMAND = cmd.exe /C "cd /D D:\GitHub\LearnDX12\build && "C:\Program Files\CMake\bin\ctest.exe" -D ExperimentalConfigure"
   pool = console
 
 
@@ -403,7 +403,7 @@ build CMakeFiles\ExperimentalConfigure: CUSTOM_COMMAND
 # Custom command for CMakeFiles\ExperimentalTest
 
 build CMakeFiles\ExperimentalTest: CUSTOM_COMMAND
-  COMMAND = cmd.exe /C "cd /D D:\LearningDX12\build && "C:\Program Files\CMake\bin\ctest.exe" -D ExperimentalTest"
+  COMMAND = cmd.exe /C "cd /D D:\GitHub\LearnDX12\build && "C:\Program Files\CMake\bin\ctest.exe" -D ExperimentalTest"
   pool = console
 
 
@@ -411,7 +411,7 @@ build CMakeFiles\ExperimentalTest: CUSTOM_COMMAND
 # Custom command for CMakeFiles\ExperimentalCoverage
 
 build CMakeFiles\ExperimentalCoverage: CUSTOM_COMMAND
-  COMMAND = cmd.exe /C "cd /D D:\LearningDX12\build && "C:\Program Files\CMake\bin\ctest.exe" -D ExperimentalCoverage"
+  COMMAND = cmd.exe /C "cd /D D:\GitHub\LearnDX12\build && "C:\Program Files\CMake\bin\ctest.exe" -D ExperimentalCoverage"
   pool = console
 
 
@@ -419,7 +419,7 @@ build CMakeFiles\ExperimentalCoverage: CUSTOM_COMMAND
 # Custom command for CMakeFiles\ExperimentalMemCheck
 
 build CMakeFiles\ExperimentalMemCheck: CUSTOM_COMMAND
-  COMMAND = cmd.exe /C "cd /D D:\LearningDX12\build && "C:\Program Files\CMake\bin\ctest.exe" -D ExperimentalMemCheck"
+  COMMAND = cmd.exe /C "cd /D D:\GitHub\LearnDX12\build && "C:\Program Files\CMake\bin\ctest.exe" -D ExperimentalMemCheck"
   pool = console
 
 
@@ -427,7 +427,7 @@ build CMakeFiles\ExperimentalMemCheck: CUSTOM_COMMAND
 # Custom command for CMakeFiles\ExperimentalSubmit
 
 build CMakeFiles\ExperimentalSubmit: CUSTOM_COMMAND
-  COMMAND = cmd.exe /C "cd /D D:\LearningDX12\build && "C:\Program Files\CMake\bin\ctest.exe" -D ExperimentalSubmit"
+  COMMAND = cmd.exe /C "cd /D D:\GitHub\LearnDX12\build && "C:\Program Files\CMake\bin\ctest.exe" -D ExperimentalSubmit"
   pool = console
 
 
@@ -435,7 +435,7 @@ build CMakeFiles\ExperimentalSubmit: CUSTOM_COMMAND
 # Custom command for CMakeFiles\ContinuousStart
 
 build CMakeFiles\ContinuousStart: CUSTOM_COMMAND
-  COMMAND = cmd.exe /C "cd /D D:\LearningDX12\build && "C:\Program Files\CMake\bin\ctest.exe" -D ContinuousStart"
+  COMMAND = cmd.exe /C "cd /D D:\GitHub\LearnDX12\build && "C:\Program Files\CMake\bin\ctest.exe" -D ContinuousStart"
   pool = console
 
 
@@ -443,7 +443,7 @@ build CMakeFiles\ContinuousStart: CUSTOM_COMMAND
 # Custom command for CMakeFiles\ContinuousUpdate
 
 build CMakeFiles\ContinuousUpdate: CUSTOM_COMMAND
-  COMMAND = cmd.exe /C "cd /D D:\LearningDX12\build && "C:\Program Files\CMake\bin\ctest.exe" -D ContinuousUpdate"
+  COMMAND = cmd.exe /C "cd /D D:\GitHub\LearnDX12\build && "C:\Program Files\CMake\bin\ctest.exe" -D ContinuousUpdate"
   pool = console
 
 
@@ -451,7 +451,7 @@ build CMakeFiles\ContinuousUpdate: CUSTOM_COMMAND
 # Custom command for CMakeFiles\ContinuousSubmit
 
 build CMakeFiles\ContinuousSubmit: CUSTOM_COMMAND
-  COMMAND = cmd.exe /C "cd /D D:\LearningDX12\build && "C:\Program Files\CMake\bin\ctest.exe" -D ContinuousSubmit"
+  COMMAND = cmd.exe /C "cd /D D:\GitHub\LearnDX12\build && "C:\Program Files\CMake\bin\ctest.exe" -D ContinuousSubmit"
   pool = console
 
 
@@ -459,7 +459,7 @@ build CMakeFiles\ContinuousSubmit: CUSTOM_COMMAND
 # Custom command for CMakeFiles\ContinuousConfigure
 
 build CMakeFiles\ContinuousConfigure: CUSTOM_COMMAND
-  COMMAND = cmd.exe /C "cd /D D:\LearningDX12\build && "C:\Program Files\CMake\bin\ctest.exe" -D ContinuousConfigure"
+  COMMAND = cmd.exe /C "cd /D D:\GitHub\LearnDX12\build && "C:\Program Files\CMake\bin\ctest.exe" -D ContinuousConfigure"
   pool = console
 
 
@@ -467,7 +467,7 @@ build CMakeFiles\ContinuousConfigure: CUSTOM_COMMAND
 # Custom command for CMakeFiles\ContinuousBuild
 
 build CMakeFiles\ContinuousBuild: CUSTOM_COMMAND
-  COMMAND = cmd.exe /C "cd /D D:\LearningDX12\build && "C:\Program Files\CMake\bin\ctest.exe" -D ContinuousBuild"
+  COMMAND = cmd.exe /C "cd /D D:\GitHub\LearnDX12\build && "C:\Program Files\CMake\bin\ctest.exe" -D ContinuousBuild"
   pool = console
 
 
@@ -475,7 +475,7 @@ build CMakeFiles\ContinuousBuild: CUSTOM_COMMAND
 # Custom command for CMakeFiles\ContinuousTest
 
 build CMakeFiles\ContinuousTest: CUSTOM_COMMAND
-  COMMAND = cmd.exe /C "cd /D D:\LearningDX12\build && "C:\Program Files\CMake\bin\ctest.exe" -D ContinuousTest"
+  COMMAND = cmd.exe /C "cd /D D:\GitHub\LearnDX12\build && "C:\Program Files\CMake\bin\ctest.exe" -D ContinuousTest"
   pool = console
 
 
@@ -483,12 +483,12 @@ build CMakeFiles\ContinuousTest: CUSTOM_COMMAND
 # Custom command for CMakeFiles\ContinuousCoverage
 
 build CMakeFiles\ContinuousCoverage: CUSTOM_COMMAND
-  COMMAND = cmd.exe /C "cd /D D:\LearningDX12\build && "C:\Program Files\CMake\bin\ctest.exe" -D ContinuousCoverage"
+  COMMAND = cmd.exe /C "cd /D D:\GitHub\LearnDX12\build && "C:\Program Files\CMake\bin\ctest.exe" -D ContinuousCoverage"
   pool = console
 
 # =============================================================================
 # Write statements declared in CMakeLists.txt:
-# D:/LearningDX12/CMakeLists.txt
+# D:/GitHub/LearnDX12/CMakeLists.txt
 # =============================================================================
 
 
@@ -496,7 +496,7 @@ build CMakeFiles\ContinuousCoverage: CUSTOM_COMMAND
 # Utility command for package
 
 build Source\CMakeFiles\package.util: CUSTOM_COMMAND Source\all
-  COMMAND = cmd.exe /C "cd /D D:\LearningDX12\build && "C:\Program Files\CMake\bin\cpack.exe" --config ./CPackConfig.cmake"
+  COMMAND = cmd.exe /C "cd /D D:\GitHub\LearnDX12\build && "C:\Program Files\CMake\bin\cpack.exe" --config ./CPackConfig.cmake"
   DESC = Run CPack packaging tool...
   pool = console
   restat = 1
@@ -508,7 +508,7 @@ build Source\package: phony Source\CMakeFiles\package.util
 # Utility command for package_source
 
 build Source\CMakeFiles\package_source.util: CUSTOM_COMMAND
-  COMMAND = cmd.exe /C "cd /D D:\LearningDX12\build && "C:\Program Files\CMake\bin\cpack.exe" --config ./CPackSourceConfig.cmake D:/LearningDX12/build/CPackSourceConfig.cmake"
+  COMMAND = cmd.exe /C "cd /D D:\GitHub\LearnDX12\build && "C:\Program Files\CMake\bin\cpack.exe" --config ./CPackSourceConfig.cmake D:/GitHub/LearnDX12/build/CPackSourceConfig.cmake"
   DESC = Run CPack packaging tool for source...
   pool = console
   restat = 1
@@ -520,7 +520,7 @@ build Source\package_source: phony Source\CMakeFiles\package_source.util
 # Utility command for rebuild_cache
 
 build Source\CMakeFiles\rebuild_cache.util: CUSTOM_COMMAND
-  COMMAND = cmd.exe /C "cd /D D:\LearningDX12\build\Source && "C:\Program Files\CMake\bin\cmake.exe" --regenerate-during-build -SD:\LearningDX12 -BD:\LearningDX12\build"
+  COMMAND = cmd.exe /C "cd /D D:\GitHub\LearnDX12\build\Source && "C:\Program Files\CMake\bin\cmake.exe" --regenerate-during-build -SD:\GitHub\LearnDX12 -BD:\GitHub\LearnDX12\build"
   DESC = Running CMake to regenerate build system...
   pool = console
   restat = 1
@@ -532,7 +532,7 @@ build Source\rebuild_cache: phony Source\CMakeFiles\rebuild_cache.util
 # Utility command for test
 
 build Source\CMakeFiles\test.util: CUSTOM_COMMAND
-  COMMAND = cmd.exe /C "cd /D D:\LearningDX12\build\Source && "C:\Program Files\CMake\bin\ctest.exe" --force-new-ctest-process "
+  COMMAND = cmd.exe /C "cd /D D:\GitHub\LearnDX12\build\Source && "C:\Program Files\CMake\bin\ctest.exe" --force-new-ctest-process "
   DESC = Running tests...
   pool = console
   restat = 1
@@ -544,7 +544,7 @@ build Source\test: phony Source\CMakeFiles\test.util
 # Utility command for edit_cache
 
 build Source\CMakeFiles\edit_cache.util: CUSTOM_COMMAND
-  COMMAND = cmd.exe /C "cd /D D:\LearningDX12\build\Source && "C:\Program Files\CMake\bin\cmake-gui.exe" -SD:\LearningDX12 -BD:\LearningDX12\build"
+  COMMAND = cmd.exe /C "cd /D D:\GitHub\LearnDX12\build\Source && "C:\Program Files\CMake\bin\cmake-gui.exe" -SD:\GitHub\LearnDX12 -BD:\GitHub\LearnDX12\build"
   DESC = Running CMake cache editor...
   pool = console
   restat = 1
@@ -553,7 +553,7 @@ build Source\edit_cache: phony Source\CMakeFiles\edit_cache.util
 
 # =============================================================================
 # Write statements declared in CMakeLists.txt:
-# D:/LearningDX12/Source/CMakeLists.txt
+# D:/GitHub/LearnDX12/Source/CMakeLists.txt
 # =============================================================================
 
 
@@ -561,7 +561,7 @@ build Source\edit_cache: phony Source\CMakeFiles\edit_cache.util
 # Utility command for package
 
 build Source\DX12Samples\CMakeFiles\package.util: CUSTOM_COMMAND Source\DX12Samples\all
-  COMMAND = cmd.exe /C "cd /D D:\LearningDX12\build && "C:\Program Files\CMake\bin\cpack.exe" --config ./CPackConfig.cmake"
+  COMMAND = cmd.exe /C "cd /D D:\GitHub\LearnDX12\build && "C:\Program Files\CMake\bin\cpack.exe" --config ./CPackConfig.cmake"
   DESC = Run CPack packaging tool...
   pool = console
   restat = 1
@@ -573,7 +573,7 @@ build Source\DX12Samples\package: phony Source\DX12Samples\CMakeFiles\package.ut
 # Utility command for package_source
 
 build Source\DX12Samples\CMakeFiles\package_source.util: CUSTOM_COMMAND
-  COMMAND = cmd.exe /C "cd /D D:\LearningDX12\build && "C:\Program Files\CMake\bin\cpack.exe" --config ./CPackSourceConfig.cmake D:/LearningDX12/build/CPackSourceConfig.cmake"
+  COMMAND = cmd.exe /C "cd /D D:\GitHub\LearnDX12\build && "C:\Program Files\CMake\bin\cpack.exe" --config ./CPackSourceConfig.cmake D:/GitHub/LearnDX12/build/CPackSourceConfig.cmake"
   DESC = Run CPack packaging tool for source...
   pool = console
   restat = 1
@@ -585,7 +585,7 @@ build Source\DX12Samples\package_source: phony Source\DX12Samples\CMakeFiles\pac
 # Utility command for rebuild_cache
 
 build Source\DX12Samples\CMakeFiles\rebuild_cache.util: CUSTOM_COMMAND
-  COMMAND = cmd.exe /C "cd /D D:\LearningDX12\build\Source\DX12Samples && "C:\Program Files\CMake\bin\cmake.exe" --regenerate-during-build -SD:\LearningDX12 -BD:\LearningDX12\build"
+  COMMAND = cmd.exe /C "cd /D D:\GitHub\LearnDX12\build\Source\DX12Samples && "C:\Program Files\CMake\bin\cmake.exe" --regenerate-during-build -SD:\GitHub\LearnDX12 -BD:\GitHub\LearnDX12\build"
   DESC = Running CMake to regenerate build system...
   pool = console
   restat = 1
@@ -597,7 +597,7 @@ build Source\DX12Samples\rebuild_cache: phony Source\DX12Samples\CMakeFiles\rebu
 # Utility command for test
 
 build Source\DX12Samples\CMakeFiles\test.util: CUSTOM_COMMAND
-  COMMAND = cmd.exe /C "cd /D D:\LearningDX12\build\Source\DX12Samples && "C:\Program Files\CMake\bin\ctest.exe" --force-new-ctest-process "
+  COMMAND = cmd.exe /C "cd /D D:\GitHub\LearnDX12\build\Source\DX12Samples && "C:\Program Files\CMake\bin\ctest.exe" --force-new-ctest-process "
   DESC = Running tests...
   pool = console
   restat = 1
@@ -609,7 +609,7 @@ build Source\DX12Samples\test: phony Source\DX12Samples\CMakeFiles\test.util
 # Utility command for edit_cache
 
 build Source\DX12Samples\CMakeFiles\edit_cache.util: CUSTOM_COMMAND
-  COMMAND = cmd.exe /C "cd /D D:\LearningDX12\build\Source\DX12Samples && "C:\Program Files\CMake\bin\cmake-gui.exe" -SD:\LearningDX12 -BD:\LearningDX12\build"
+  COMMAND = cmd.exe /C "cd /D D:\GitHub\LearnDX12\build\Source\DX12Samples && "C:\Program Files\CMake\bin\cmake-gui.exe" -SD:\GitHub\LearnDX12 -BD:\GitHub\LearnDX12\build"
   DESC = Running CMake cache editor...
   pool = console
   restat = 1
@@ -618,7 +618,7 @@ build Source\DX12Samples\edit_cache: phony Source\DX12Samples\CMakeFiles\edit_ca
 
 # =============================================================================
 # Write statements declared in CMakeLists.txt:
-# D:/LearningDX12/Source/DX12Samples/CMakeLists.txt
+# D:/GitHub/LearnDX12/Source/DX12Samples/CMakeLists.txt
 # =============================================================================
 
 
@@ -626,7 +626,7 @@ build Source\DX12Samples\edit_cache: phony Source\DX12Samples\CMakeFiles\edit_ca
 # Utility command for edit_cache
 
 build Source\DX12Samples\DX12Test\CMakeFiles\edit_cache.util: CUSTOM_COMMAND
-  COMMAND = cmd.exe /C "cd /D D:\LearningDX12\build\Source\DX12Samples\DX12Test && "C:\Program Files\CMake\bin\cmake-gui.exe" -SD:\LearningDX12 -BD:\LearningDX12\build"
+  COMMAND = cmd.exe /C "cd /D D:\GitHub\LearnDX12\build\Source\DX12Samples\DX12Test && "C:\Program Files\CMake\bin\cmake-gui.exe" -SD:\GitHub\LearnDX12 -BD:\GitHub\LearnDX12\build"
   DESC = Running CMake cache editor...
   pool = console
   restat = 1
@@ -640,9 +640,9 @@ build Source\DX12Samples\DX12Test\edit_cache: phony Source\DX12Samples\DX12Test\
 #############################################
 # Order-only phony target for HelloDX12
 
-build cmake_object_order_depends_target_HelloDX12_DEBUG: phony || cmake_object_order_depends_target_Nix_DEBUG
+build cmake_object_order_depends_target_HelloDX12: phony || cmake_object_order_depends_target_Nix
 
-build Source\DX12Samples\DX12Test\CMakeFiles\HelloDX12.dir\__\__\Platform\Windows\WinMain\WinMain.cpp.obj: CXX_COMPILER__HelloDX12_Debug ..\Source\Platform\Windows\WinMain\WinMain.cpp || cmake_object_order_depends_target_HelloDX12_DEBUG
+build Source\DX12Samples\DX12Test\CMakeFiles\HelloDX12.dir\__\__\Platform\Windows\WinMain\WinMain.cpp.obj: CXX_COMPILER__HelloDX12_Debug ..\Source\Platform\Windows\WinMain\WinMain.cpp || cmake_object_order_depends_target_HelloDX12
   DEFINES = -DUNICODE -D_CRT_SECURE_NO_WARINGS -D_UNICODE
   FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1
   INCLUDES = -I..\include -I..\Source\Common -I..\Source\Utility -I..\Source\ThirdPart
@@ -651,7 +651,7 @@ build Source\DX12Samples\DX12Test\CMakeFiles\HelloDX12.dir\__\__\Platform\Window
   TARGET_COMPILE_PDB = Source\DX12Samples\DX12Test\CMakeFiles\HelloDX12.dir\
   TARGET_PDB = ..\bin\Windows\x64\HelloDX12.pdb
 
-build Source\DX12Samples\DX12Test\CMakeFiles\HelloDX12.dir\HelloDX12.cpp.obj: CXX_COMPILER__HelloDX12_Debug ..\Source\DX12Samples\DX12Test\HelloDX12.cpp || cmake_object_order_depends_target_HelloDX12_DEBUG
+build Source\DX12Samples\DX12Test\CMakeFiles\HelloDX12.dir\HelloDX12.cpp.obj: CXX_COMPILER__HelloDX12_Debug ..\Source\DX12Samples\DX12Test\HelloDX12.cpp || cmake_object_order_depends_target_HelloDX12
   DEFINES = -DUNICODE -D_CRT_SECURE_NO_WARINGS -D_UNICODE
   FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1
   INCLUDES = -I..\include -I..\Source\Common -I..\Source\Utility -I..\Source\ThirdPart
@@ -672,7 +672,7 @@ build ..\bin\Windows\x64\HelloDX12.exe: CXX_EXECUTABLE_LINKER__HelloDX12_Debug S
   FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1
   LINK_FLAGS = /machine:x64 /debug /INCREMENTAL /subsystem:windows
   LINK_LIBRARIES = d3d12.lib  dxgi.lib  d3dcompiler.lib  Source\ThirdPart\Nix\Nix.lib  kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib
-  LINK_PATH = -LIBPATH:D:\LearningDX12\lib\Windows\x64
+  LINK_PATH = -LIBPATH:D:\GitHub\LearnDX12\lib\Windows\x64
   OBJECT_DIR = Source\DX12Samples\DX12Test\CMakeFiles\HelloDX12.dir
   POST_BUILD = cd .
   PRE_LINK = cd .
@@ -686,7 +686,7 @@ build ..\bin\Windows\x64\HelloDX12.exe: CXX_EXECUTABLE_LINKER__HelloDX12_Debug S
 # Utility command for package
 
 build Source\DX12Samples\DX12Test\CMakeFiles\package.util: CUSTOM_COMMAND Source\DX12Samples\DX12Test\all
-  COMMAND = cmd.exe /C "cd /D D:\LearningDX12\build && "C:\Program Files\CMake\bin\cpack.exe" --config ./CPackConfig.cmake"
+  COMMAND = cmd.exe /C "cd /D D:\GitHub\LearnDX12\build && "C:\Program Files\CMake\bin\cpack.exe" --config ./CPackConfig.cmake"
   DESC = Run CPack packaging tool...
   pool = console
   restat = 1
@@ -698,7 +698,7 @@ build Source\DX12Samples\DX12Test\package: phony Source\DX12Samples\DX12Test\CMa
 # Utility command for package_source
 
 build Source\DX12Samples\DX12Test\CMakeFiles\package_source.util: CUSTOM_COMMAND
-  COMMAND = cmd.exe /C "cd /D D:\LearningDX12\build && "C:\Program Files\CMake\bin\cpack.exe" --config ./CPackSourceConfig.cmake D:/LearningDX12/build/CPackSourceConfig.cmake"
+  COMMAND = cmd.exe /C "cd /D D:\GitHub\LearnDX12\build && "C:\Program Files\CMake\bin\cpack.exe" --config ./CPackSourceConfig.cmake D:/GitHub/LearnDX12/build/CPackSourceConfig.cmake"
   DESC = Run CPack packaging tool for source...
   pool = console
   restat = 1
@@ -710,7 +710,7 @@ build Source\DX12Samples\DX12Test\package_source: phony Source\DX12Samples\DX12T
 # Utility command for rebuild_cache
 
 build Source\DX12Samples\DX12Test\CMakeFiles\rebuild_cache.util: CUSTOM_COMMAND
-  COMMAND = cmd.exe /C "cd /D D:\LearningDX12\build\Source\DX12Samples\DX12Test && "C:\Program Files\CMake\bin\cmake.exe" --regenerate-during-build -SD:\LearningDX12 -BD:\LearningDX12\build"
+  COMMAND = cmd.exe /C "cd /D D:\GitHub\LearnDX12\build\Source\DX12Samples\DX12Test && "C:\Program Files\CMake\bin\cmake.exe" --regenerate-during-build -SD:\GitHub\LearnDX12 -BD:\GitHub\LearnDX12\build"
   DESC = Running CMake to regenerate build system...
   pool = console
   restat = 1
@@ -722,7 +722,7 @@ build Source\DX12Samples\DX12Test\rebuild_cache: phony Source\DX12Samples\DX12Te
 # Utility command for test
 
 build Source\DX12Samples\DX12Test\CMakeFiles\test.util: CUSTOM_COMMAND
-  COMMAND = cmd.exe /C "cd /D D:\LearningDX12\build\Source\DX12Samples\DX12Test && "C:\Program Files\CMake\bin\ctest.exe" --force-new-ctest-process "
+  COMMAND = cmd.exe /C "cd /D D:\GitHub\LearnDX12\build\Source\DX12Samples\DX12Test && "C:\Program Files\CMake\bin\ctest.exe" --force-new-ctest-process "
   DESC = Running tests...
   pool = console
   restat = 1
@@ -731,7 +731,7 @@ build Source\DX12Samples\DX12Test\test: phony Source\DX12Samples\DX12Test\CMakeF
 
 # =============================================================================
 # Write statements declared in CMakeLists.txt:
-# D:/LearningDX12/Source/DX12Samples/CMakeLists.txt
+# D:/GitHub/LearnDX12/Source/DX12Samples/CMakeLists.txt
 # =============================================================================
 
 # =============================================================================
@@ -741,9 +741,9 @@ build Source\DX12Samples\DX12Test\test: phony Source\DX12Samples\DX12Test\CMakeF
 #############################################
 # Order-only phony target for HelloTriangle
 
-build cmake_object_order_depends_target_HelloTriangle_DEBUG: phony || cmake_object_order_depends_target_Nix_DEBUG
+build cmake_object_order_depends_target_HelloTriangle: phony || cmake_object_order_depends_target_Nix
 
-build Source\DX12Samples\DX12Triangle\CMakeFiles\HelloTriangle.dir\__\__\Platform\Windows\WinMain\WinMain.cpp.obj: CXX_COMPILER__HelloTriangle_Debug ..\Source\Platform\Windows\WinMain\WinMain.cpp || cmake_object_order_depends_target_HelloTriangle_DEBUG
+build Source\DX12Samples\DX12Triangle\CMakeFiles\HelloTriangle.dir\__\__\Platform\Windows\WinMain\WinMain.cpp.obj: CXX_COMPILER__HelloTriangle_Debug ..\Source\Platform\Windows\WinMain\WinMain.cpp || cmake_object_order_depends_target_HelloTriangle
   DEFINES = -DUNICODE -D_CRT_SECURE_NO_WARINGS -D_UNICODE
   FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1
   INCLUDES = -I..\include -I..\Source\Common -I..\Source\Utility -I..\Source\ThirdPart
@@ -752,7 +752,7 @@ build Source\DX12Samples\DX12Triangle\CMakeFiles\HelloTriangle.dir\__\__\Platfor
   TARGET_COMPILE_PDB = Source\DX12Samples\DX12Triangle\CMakeFiles\HelloTriangle.dir\
   TARGET_PDB = ..\bin\Windows\x64\HelloTriangle.pdb
 
-build Source\DX12Samples\DX12Triangle\CMakeFiles\HelloTriangle.dir\HelloTriangle.cpp.obj: CXX_COMPILER__HelloTriangle_Debug ..\Source\DX12Samples\DX12Triangle\HelloTriangle.cpp || cmake_object_order_depends_target_HelloTriangle_DEBUG
+build Source\DX12Samples\DX12Triangle\CMakeFiles\HelloTriangle.dir\HelloTriangle.cpp.obj: CXX_COMPILER__HelloTriangle_Debug ..\Source\DX12Samples\DX12Triangle\HelloTriangle.cpp || cmake_object_order_depends_target_HelloTriangle
   DEFINES = -DUNICODE -D_CRT_SECURE_NO_WARINGS -D_UNICODE
   FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1
   INCLUDES = -I..\include -I..\Source\Common -I..\Source\Utility -I..\Source\ThirdPart
@@ -773,7 +773,7 @@ build ..\bin\Windows\x64\HelloTriangle.exe: CXX_EXECUTABLE_LINKER__HelloTriangle
   FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1
   LINK_FLAGS = /machine:x64 /debug /INCREMENTAL /subsystem:windows
   LINK_LIBRARIES = d3d12.lib  dxgi.lib  d3dcompiler.lib  Source\ThirdPart\Nix\Nix.lib  kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib
-  LINK_PATH = -LIBPATH:D:\LearningDX12\lib\Windows\x64
+  LINK_PATH = -LIBPATH:D:\GitHub\LearnDX12\lib\Windows\x64
   OBJECT_DIR = Source\DX12Samples\DX12Triangle\CMakeFiles\HelloTriangle.dir
   POST_BUILD = cd .
   PRE_LINK = cd .
@@ -787,7 +787,7 @@ build ..\bin\Windows\x64\HelloTriangle.exe: CXX_EXECUTABLE_LINKER__HelloTriangle
 # Utility command for package
 
 build Source\DX12Samples\DX12Triangle\CMakeFiles\package.util: CUSTOM_COMMAND Source\DX12Samples\DX12Triangle\all
-  COMMAND = cmd.exe /C "cd /D D:\LearningDX12\build && "C:\Program Files\CMake\bin\cpack.exe" --config ./CPackConfig.cmake"
+  COMMAND = cmd.exe /C "cd /D D:\GitHub\LearnDX12\build && "C:\Program Files\CMake\bin\cpack.exe" --config ./CPackConfig.cmake"
   DESC = Run CPack packaging tool...
   pool = console
   restat = 1
@@ -799,7 +799,7 @@ build Source\DX12Samples\DX12Triangle\package: phony Source\DX12Samples\DX12Tria
 # Utility command for package_source
 
 build Source\DX12Samples\DX12Triangle\CMakeFiles\package_source.util: CUSTOM_COMMAND
-  COMMAND = cmd.exe /C "cd /D D:\LearningDX12\build && "C:\Program Files\CMake\bin\cpack.exe" --config ./CPackSourceConfig.cmake D:/LearningDX12/build/CPackSourceConfig.cmake"
+  COMMAND = cmd.exe /C "cd /D D:\GitHub\LearnDX12\build && "C:\Program Files\CMake\bin\cpack.exe" --config ./CPackSourceConfig.cmake D:/GitHub/LearnDX12/build/CPackSourceConfig.cmake"
   DESC = Run CPack packaging tool for source...
   pool = console
   restat = 1
@@ -811,7 +811,7 @@ build Source\DX12Samples\DX12Triangle\package_source: phony Source\DX12Samples\D
 # Utility command for rebuild_cache
 
 build Source\DX12Samples\DX12Triangle\CMakeFiles\rebuild_cache.util: CUSTOM_COMMAND
-  COMMAND = cmd.exe /C "cd /D D:\LearningDX12\build\Source\DX12Samples\DX12Triangle && "C:\Program Files\CMake\bin\cmake.exe" --regenerate-during-build -SD:\LearningDX12 -BD:\LearningDX12\build"
+  COMMAND = cmd.exe /C "cd /D D:\GitHub\LearnDX12\build\Source\DX12Samples\DX12Triangle && "C:\Program Files\CMake\bin\cmake.exe" --regenerate-during-build -SD:\GitHub\LearnDX12 -BD:\GitHub\LearnDX12\build"
   DESC = Running CMake to regenerate build system...
   pool = console
   restat = 1
@@ -823,7 +823,7 @@ build Source\DX12Samples\DX12Triangle\rebuild_cache: phony Source\DX12Samples\DX
 # Utility command for test
 
 build Source\DX12Samples\DX12Triangle\CMakeFiles\test.util: CUSTOM_COMMAND
-  COMMAND = cmd.exe /C "cd /D D:\LearningDX12\build\Source\DX12Samples\DX12Triangle && "C:\Program Files\CMake\bin\ctest.exe" --force-new-ctest-process "
+  COMMAND = cmd.exe /C "cd /D D:\GitHub\LearnDX12\build\Source\DX12Samples\DX12Triangle && "C:\Program Files\CMake\bin\ctest.exe" --force-new-ctest-process "
   DESC = Running tests...
   pool = console
   restat = 1
@@ -835,7 +835,7 @@ build Source\DX12Samples\DX12Triangle\test: phony Source\DX12Samples\DX12Triangl
 # Utility command for edit_cache
 
 build Source\DX12Samples\DX12Triangle\CMakeFiles\edit_cache.util: CUSTOM_COMMAND
-  COMMAND = cmd.exe /C "cd /D D:\LearningDX12\build\Source\DX12Samples\DX12Triangle && "C:\Program Files\CMake\bin\cmake-gui.exe" -SD:\LearningDX12 -BD:\LearningDX12\build"
+  COMMAND = cmd.exe /C "cd /D D:\GitHub\LearnDX12\build\Source\DX12Samples\DX12Triangle && "C:\Program Files\CMake\bin\cmake-gui.exe" -SD:\GitHub\LearnDX12 -BD:\GitHub\LearnDX12\build"
   DESC = Running CMake cache editor...
   pool = console
   restat = 1
@@ -844,7 +844,7 @@ build Source\DX12Samples\DX12Triangle\edit_cache: phony Source\DX12Samples\DX12T
 
 # =============================================================================
 # Write statements declared in CMakeLists.txt:
-# D:/LearningDX12/Source/DX12Samples/CMakeLists.txt
+# D:/GitHub/LearnDX12/Source/DX12Samples/CMakeLists.txt
 # =============================================================================
 
 # =============================================================================
@@ -854,9 +854,9 @@ build Source\DX12Samples\DX12Triangle\edit_cache: phony Source\DX12Samples\DX12T
 #############################################
 # Order-only phony target for HelloTriangleColor
 
-build cmake_object_order_depends_target_HelloTriangleColor_DEBUG: phony || cmake_object_order_depends_target_Nix_DEBUG
+build cmake_object_order_depends_target_HelloTriangleColor: phony || cmake_object_order_depends_target_Nix
 
-build Source\DX12Samples\DX12TriangleColor\CMakeFiles\HelloTriangleColor.dir\__\__\Platform\Windows\WinMain\WinMain.cpp.obj: CXX_COMPILER__HelloTriangleColor_Debug ..\Source\Platform\Windows\WinMain\WinMain.cpp || cmake_object_order_depends_target_HelloTriangleColor_DEBUG
+build Source\DX12Samples\DX12TriangleColor\CMakeFiles\HelloTriangleColor.dir\__\__\Platform\Windows\WinMain\WinMain.cpp.obj: CXX_COMPILER__HelloTriangleColor_Debug ..\Source\Platform\Windows\WinMain\WinMain.cpp || cmake_object_order_depends_target_HelloTriangleColor
   DEFINES = -DUNICODE -D_CRT_SECURE_NO_WARINGS -D_UNICODE
   FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1
   INCLUDES = -I..\include -I..\Source\Common -I..\Source\Utility -I..\Source\ThirdPart
@@ -865,7 +865,7 @@ build Source\DX12Samples\DX12TriangleColor\CMakeFiles\HelloTriangleColor.dir\__\
   TARGET_COMPILE_PDB = Source\DX12Samples\DX12TriangleColor\CMakeFiles\HelloTriangleColor.dir\
   TARGET_PDB = ..\bin\Windows\x64\HelloTriangleColor.pdb
 
-build Source\DX12Samples\DX12TriangleColor\CMakeFiles\HelloTriangleColor.dir\HelloTriangleColor.cpp.obj: CXX_COMPILER__HelloTriangleColor_Debug ..\Source\DX12Samples\DX12TriangleColor\HelloTriangleColor.cpp || cmake_object_order_depends_target_HelloTriangleColor_DEBUG
+build Source\DX12Samples\DX12TriangleColor\CMakeFiles\HelloTriangleColor.dir\HelloTriangleColor.cpp.obj: CXX_COMPILER__HelloTriangleColor_Debug ..\Source\DX12Samples\DX12TriangleColor\HelloTriangleColor.cpp || cmake_object_order_depends_target_HelloTriangleColor
   DEFINES = -DUNICODE -D_CRT_SECURE_NO_WARINGS -D_UNICODE
   FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1
   INCLUDES = -I..\include -I..\Source\Common -I..\Source\Utility -I..\Source\ThirdPart
@@ -886,7 +886,7 @@ build ..\bin\Windows\x64\HelloTriangleColor.exe: CXX_EXECUTABLE_LINKER__HelloTri
   FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1
   LINK_FLAGS = /machine:x64 /debug /INCREMENTAL /subsystem:windows
   LINK_LIBRARIES = d3d12.lib  dxgi.lib  d3dcompiler.lib  Source\ThirdPart\Nix\Nix.lib  kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib
-  LINK_PATH = -LIBPATH:D:\LearningDX12\lib\Windows\x64
+  LINK_PATH = -LIBPATH:D:\GitHub\LearnDX12\lib\Windows\x64
   OBJECT_DIR = Source\DX12Samples\DX12TriangleColor\CMakeFiles\HelloTriangleColor.dir
   POST_BUILD = cd .
   PRE_LINK = cd .
@@ -900,7 +900,7 @@ build ..\bin\Windows\x64\HelloTriangleColor.exe: CXX_EXECUTABLE_LINKER__HelloTri
 # Utility command for package
 
 build Source\DX12Samples\DX12TriangleColor\CMakeFiles\package.util: CUSTOM_COMMAND Source\DX12Samples\DX12TriangleColor\all
-  COMMAND = cmd.exe /C "cd /D D:\LearningDX12\build && "C:\Program Files\CMake\bin\cpack.exe" --config ./CPackConfig.cmake"
+  COMMAND = cmd.exe /C "cd /D D:\GitHub\LearnDX12\build && "C:\Program Files\CMake\bin\cpack.exe" --config ./CPackConfig.cmake"
   DESC = Run CPack packaging tool...
   pool = console
   restat = 1
@@ -912,7 +912,7 @@ build Source\DX12Samples\DX12TriangleColor\package: phony Source\DX12Samples\DX1
 # Utility command for package_source
 
 build Source\DX12Samples\DX12TriangleColor\CMakeFiles\package_source.util: CUSTOM_COMMAND
-  COMMAND = cmd.exe /C "cd /D D:\LearningDX12\build && "C:\Program Files\CMake\bin\cpack.exe" --config ./CPackSourceConfig.cmake D:/LearningDX12/build/CPackSourceConfig.cmake"
+  COMMAND = cmd.exe /C "cd /D D:\GitHub\LearnDX12\build && "C:\Program Files\CMake\bin\cpack.exe" --config ./CPackSourceConfig.cmake D:/GitHub/LearnDX12/build/CPackSourceConfig.cmake"
   DESC = Run CPack packaging tool for source...
   pool = console
   restat = 1
@@ -924,7 +924,7 @@ build Source\DX12Samples\DX12TriangleColor\package_source: phony Source\DX12Samp
 # Utility command for rebuild_cache
 
 build Source\DX12Samples\DX12TriangleColor\CMakeFiles\rebuild_cache.util: CUSTOM_COMMAND
-  COMMAND = cmd.exe /C "cd /D D:\LearningDX12\build\Source\DX12Samples\DX12TriangleColor && "C:\Program Files\CMake\bin\cmake.exe" --regenerate-during-build -SD:\LearningDX12 -BD:\LearningDX12\build"
+  COMMAND = cmd.exe /C "cd /D D:\GitHub\LearnDX12\build\Source\DX12Samples\DX12TriangleColor && "C:\Program Files\CMake\bin\cmake.exe" --regenerate-during-build -SD:\GitHub\LearnDX12 -BD:\GitHub\LearnDX12\build"
   DESC = Running CMake to regenerate build system...
   pool = console
   restat = 1
@@ -936,7 +936,7 @@ build Source\DX12Samples\DX12TriangleColor\rebuild_cache: phony Source\DX12Sampl
 # Utility command for test
 
 build Source\DX12Samples\DX12TriangleColor\CMakeFiles\test.util: CUSTOM_COMMAND
-  COMMAND = cmd.exe /C "cd /D D:\LearningDX12\build\Source\DX12Samples\DX12TriangleColor && "C:\Program Files\CMake\bin\ctest.exe" --force-new-ctest-process "
+  COMMAND = cmd.exe /C "cd /D D:\GitHub\LearnDX12\build\Source\DX12Samples\DX12TriangleColor && "C:\Program Files\CMake\bin\ctest.exe" --force-new-ctest-process "
   DESC = Running tests...
   pool = console
   restat = 1
@@ -948,7 +948,7 @@ build Source\DX12Samples\DX12TriangleColor\test: phony Source\DX12Samples\DX12Tr
 # Utility command for edit_cache
 
 build Source\DX12Samples\DX12TriangleColor\CMakeFiles\edit_cache.util: CUSTOM_COMMAND
-  COMMAND = cmd.exe /C "cd /D D:\LearningDX12\build\Source\DX12Samples\DX12TriangleColor && "C:\Program Files\CMake\bin\cmake-gui.exe" -SD:\LearningDX12 -BD:\LearningDX12\build"
+  COMMAND = cmd.exe /C "cd /D D:\GitHub\LearnDX12\build\Source\DX12Samples\DX12TriangleColor && "C:\Program Files\CMake\bin\cmake-gui.exe" -SD:\GitHub\LearnDX12 -BD:\GitHub\LearnDX12\build"
   DESC = Running CMake cache editor...
   pool = console
   restat = 1
@@ -957,7 +957,7 @@ build Source\DX12Samples\DX12TriangleColor\edit_cache: phony Source\DX12Samples\
 
 # =============================================================================
 # Write statements declared in CMakeLists.txt:
-# D:/LearningDX12/Source/DX12Samples/CMakeLists.txt
+# D:/GitHub/LearnDX12/Source/DX12Samples/CMakeLists.txt
 # =============================================================================
 
 # =============================================================================
@@ -967,9 +967,9 @@ build Source\DX12Samples\DX12TriangleColor\edit_cache: phony Source\DX12Samples\
 #############################################
 # Order-only phony target for TriangleDelux
 
-build cmake_object_order_depends_target_TriangleDelux_DEBUG: phony || cmake_object_order_depends_target_Nix_DEBUG
+build cmake_object_order_depends_target_TriangleDelux: phony || cmake_object_order_depends_target_Nix
 
-build Source\DX12Samples\DX12TriangleDelux\CMakeFiles\TriangleDelux.dir\__\__\Platform\Windows\WinMain\WinMain.cpp.obj: CXX_COMPILER__TriangleDelux_Debug ..\Source\Platform\Windows\WinMain\WinMain.cpp || cmake_object_order_depends_target_TriangleDelux_DEBUG
+build Source\DX12Samples\DX12TriangleDelux\CMakeFiles\TriangleDelux.dir\__\__\Platform\Windows\WinMain\WinMain.cpp.obj: CXX_COMPILER__TriangleDelux_Debug ..\Source\Platform\Windows\WinMain\WinMain.cpp || cmake_object_order_depends_target_TriangleDelux
   DEFINES = -DUNICODE -D_CRT_SECURE_NO_WARINGS -D_UNICODE
   FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1
   INCLUDES = -I..\include -I..\Source\Common -I..\Source\Utility -I..\Source\ThirdPart
@@ -978,7 +978,7 @@ build Source\DX12Samples\DX12TriangleDelux\CMakeFiles\TriangleDelux.dir\__\__\Pl
   TARGET_COMPILE_PDB = Source\DX12Samples\DX12TriangleDelux\CMakeFiles\TriangleDelux.dir\
   TARGET_PDB = ..\bin\Windows\x64\TriangleDelux.pdb
 
-build Source\DX12Samples\DX12TriangleDelux\CMakeFiles\TriangleDelux.dir\TriangleDelux.cpp.obj: CXX_COMPILER__TriangleDelux_Debug ..\Source\DX12Samples\DX12TriangleDelux\TriangleDelux.cpp || cmake_object_order_depends_target_TriangleDelux_DEBUG
+build Source\DX12Samples\DX12TriangleDelux\CMakeFiles\TriangleDelux.dir\TriangleDelux.cpp.obj: CXX_COMPILER__TriangleDelux_Debug ..\Source\DX12Samples\DX12TriangleDelux\TriangleDelux.cpp || cmake_object_order_depends_target_TriangleDelux
   DEFINES = -DUNICODE -D_CRT_SECURE_NO_WARINGS -D_UNICODE
   FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1
   INCLUDES = -I..\include -I..\Source\Common -I..\Source\Utility -I..\Source\ThirdPart
@@ -999,7 +999,7 @@ build ..\bin\Windows\x64\TriangleDelux.exe: CXX_EXECUTABLE_LINKER__TriangleDelux
   FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1
   LINK_FLAGS = /machine:x64 /debug /INCREMENTAL /subsystem:windows
   LINK_LIBRARIES = d3d12.lib  dxgi.lib  d3dcompiler.lib  Source\ThirdPart\Nix\Nix.lib  kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib
-  LINK_PATH = -LIBPATH:D:\LearningDX12\lib\Windows\x64
+  LINK_PATH = -LIBPATH:D:\GitHub\LearnDX12\lib\Windows\x64
   OBJECT_DIR = Source\DX12Samples\DX12TriangleDelux\CMakeFiles\TriangleDelux.dir
   POST_BUILD = cd .
   PRE_LINK = cd .
@@ -1013,7 +1013,7 @@ build ..\bin\Windows\x64\TriangleDelux.exe: CXX_EXECUTABLE_LINKER__TriangleDelux
 # Utility command for package
 
 build Source\DX12Samples\DX12TriangleDelux\CMakeFiles\package.util: CUSTOM_COMMAND Source\DX12Samples\DX12TriangleDelux\all
-  COMMAND = cmd.exe /C "cd /D D:\LearningDX12\build && "C:\Program Files\CMake\bin\cpack.exe" --config ./CPackConfig.cmake"
+  COMMAND = cmd.exe /C "cd /D D:\GitHub\LearnDX12\build && "C:\Program Files\CMake\bin\cpack.exe" --config ./CPackConfig.cmake"
   DESC = Run CPack packaging tool...
   pool = console
   restat = 1
@@ -1025,7 +1025,7 @@ build Source\DX12Samples\DX12TriangleDelux\package: phony Source\DX12Samples\DX1
 # Utility command for package_source
 
 build Source\DX12Samples\DX12TriangleDelux\CMakeFiles\package_source.util: CUSTOM_COMMAND
-  COMMAND = cmd.exe /C "cd /D D:\LearningDX12\build && "C:\Program Files\CMake\bin\cpack.exe" --config ./CPackSourceConfig.cmake D:/LearningDX12/build/CPackSourceConfig.cmake"
+  COMMAND = cmd.exe /C "cd /D D:\GitHub\LearnDX12\build && "C:\Program Files\CMake\bin\cpack.exe" --config ./CPackSourceConfig.cmake D:/GitHub/LearnDX12/build/CPackSourceConfig.cmake"
   DESC = Run CPack packaging tool for source...
   pool = console
   restat = 1
@@ -1037,7 +1037,7 @@ build Source\DX12Samples\DX12TriangleDelux\package_source: phony Source\DX12Samp
 # Utility command for rebuild_cache
 
 build Source\DX12Samples\DX12TriangleDelux\CMakeFiles\rebuild_cache.util: CUSTOM_COMMAND
-  COMMAND = cmd.exe /C "cd /D D:\LearningDX12\build\Source\DX12Samples\DX12TriangleDelux && "C:\Program Files\CMake\bin\cmake.exe" --regenerate-during-build -SD:\LearningDX12 -BD:\LearningDX12\build"
+  COMMAND = cmd.exe /C "cd /D D:\GitHub\LearnDX12\build\Source\DX12Samples\DX12TriangleDelux && "C:\Program Files\CMake\bin\cmake.exe" --regenerate-during-build -SD:\GitHub\LearnDX12 -BD:\GitHub\LearnDX12\build"
   DESC = Running CMake to regenerate build system...
   pool = console
   restat = 1
@@ -1049,7 +1049,7 @@ build Source\DX12Samples\DX12TriangleDelux\rebuild_cache: phony Source\DX12Sampl
 # Utility command for test
 
 build Source\DX12Samples\DX12TriangleDelux\CMakeFiles\test.util: CUSTOM_COMMAND
-  COMMAND = cmd.exe /C "cd /D D:\LearningDX12\build\Source\DX12Samples\DX12TriangleDelux && "C:\Program Files\CMake\bin\ctest.exe" --force-new-ctest-process "
+  COMMAND = cmd.exe /C "cd /D D:\GitHub\LearnDX12\build\Source\DX12Samples\DX12TriangleDelux && "C:\Program Files\CMake\bin\ctest.exe" --force-new-ctest-process "
   DESC = Running tests...
   pool = console
   restat = 1
@@ -1061,7 +1061,7 @@ build Source\DX12Samples\DX12TriangleDelux\test: phony Source\DX12Samples\DX12Tr
 # Utility command for edit_cache
 
 build Source\DX12Samples\DX12TriangleDelux\CMakeFiles\edit_cache.util: CUSTOM_COMMAND
-  COMMAND = cmd.exe /C "cd /D D:\LearningDX12\build\Source\DX12Samples\DX12TriangleDelux && "C:\Program Files\CMake\bin\cmake-gui.exe" -SD:\LearningDX12 -BD:\LearningDX12\build"
+  COMMAND = cmd.exe /C "cd /D D:\GitHub\LearnDX12\build\Source\DX12Samples\DX12TriangleDelux && "C:\Program Files\CMake\bin\cmake-gui.exe" -SD:\GitHub\LearnDX12 -BD:\GitHub\LearnDX12\build"
   DESC = Running CMake cache editor...
   pool = console
   restat = 1
@@ -1070,7 +1070,7 @@ build Source\DX12Samples\DX12TriangleDelux\edit_cache: phony Source\DX12Samples\
 
 # =============================================================================
 # Write statements declared in CMakeLists.txt:
-# D:/LearningDX12/Source/CMakeLists.txt
+# D:/GitHub/LearnDX12/Source/CMakeLists.txt
 # =============================================================================
 
 
@@ -1078,7 +1078,7 @@ build Source\DX12Samples\DX12TriangleDelux\edit_cache: phony Source\DX12Samples\
 # Utility command for package
 
 build Source\ThirdPart\CMakeFiles\package.util: CUSTOM_COMMAND Source\ThirdPart\all
-  COMMAND = cmd.exe /C "cd /D D:\LearningDX12\build && "C:\Program Files\CMake\bin\cpack.exe" --config ./CPackConfig.cmake"
+  COMMAND = cmd.exe /C "cd /D D:\GitHub\LearnDX12\build && "C:\Program Files\CMake\bin\cpack.exe" --config ./CPackConfig.cmake"
   DESC = Run CPack packaging tool...
   pool = console
   restat = 1
@@ -1090,7 +1090,7 @@ build Source\ThirdPart\package: phony Source\ThirdPart\CMakeFiles\package.util
 # Utility command for package_source
 
 build Source\ThirdPart\CMakeFiles\package_source.util: CUSTOM_COMMAND
-  COMMAND = cmd.exe /C "cd /D D:\LearningDX12\build && "C:\Program Files\CMake\bin\cpack.exe" --config ./CPackSourceConfig.cmake D:/LearningDX12/build/CPackSourceConfig.cmake"
+  COMMAND = cmd.exe /C "cd /D D:\GitHub\LearnDX12\build && "C:\Program Files\CMake\bin\cpack.exe" --config ./CPackSourceConfig.cmake D:/GitHub/LearnDX12/build/CPackSourceConfig.cmake"
   DESC = Run CPack packaging tool for source...
   pool = console
   restat = 1
@@ -1102,7 +1102,7 @@ build Source\ThirdPart\package_source: phony Source\ThirdPart\CMakeFiles\package
 # Utility command for rebuild_cache
 
 build Source\ThirdPart\CMakeFiles\rebuild_cache.util: CUSTOM_COMMAND
-  COMMAND = cmd.exe /C "cd /D D:\LearningDX12\build\Source\ThirdPart && "C:\Program Files\CMake\bin\cmake.exe" --regenerate-during-build -SD:\LearningDX12 -BD:\LearningDX12\build"
+  COMMAND = cmd.exe /C "cd /D D:\GitHub\LearnDX12\build\Source\ThirdPart && "C:\Program Files\CMake\bin\cmake.exe" --regenerate-during-build -SD:\GitHub\LearnDX12 -BD:\GitHub\LearnDX12\build"
   DESC = Running CMake to regenerate build system...
   pool = console
   restat = 1
@@ -1114,7 +1114,7 @@ build Source\ThirdPart\rebuild_cache: phony Source\ThirdPart\CMakeFiles\rebuild_
 # Utility command for test
 
 build Source\ThirdPart\CMakeFiles\test.util: CUSTOM_COMMAND
-  COMMAND = cmd.exe /C "cd /D D:\LearningDX12\build\Source\ThirdPart && "C:\Program Files\CMake\bin\ctest.exe" --force-new-ctest-process "
+  COMMAND = cmd.exe /C "cd /D D:\GitHub\LearnDX12\build\Source\ThirdPart && "C:\Program Files\CMake\bin\ctest.exe" --force-new-ctest-process "
   DESC = Running tests...
   pool = console
   restat = 1
@@ -1126,7 +1126,7 @@ build Source\ThirdPart\test: phony Source\ThirdPart\CMakeFiles\test.util
 # Utility command for edit_cache
 
 build Source\ThirdPart\CMakeFiles\edit_cache.util: CUSTOM_COMMAND
-  COMMAND = cmd.exe /C "cd /D D:\LearningDX12\build\Source\ThirdPart && "C:\Program Files\CMake\bin\cmake-gui.exe" -SD:\LearningDX12 -BD:\LearningDX12\build"
+  COMMAND = cmd.exe /C "cd /D D:\GitHub\LearnDX12\build\Source\ThirdPart && "C:\Program Files\CMake\bin\cmake-gui.exe" -SD:\GitHub\LearnDX12 -BD:\GitHub\LearnDX12\build"
   DESC = Running CMake cache editor...
   pool = console
   restat = 1
@@ -1135,7 +1135,7 @@ build Source\ThirdPart\edit_cache: phony Source\ThirdPart\CMakeFiles\edit_cache.
 
 # =============================================================================
 # Write statements declared in CMakeLists.txt:
-# D:/LearningDX12/Source/ThirdPart/CMakeLists.txt
+# D:/GitHub/LearnDX12/Source/ThirdPart/CMakeLists.txt
 # =============================================================================
 
 
@@ -1143,7 +1143,7 @@ build Source\ThirdPart\edit_cache: phony Source\ThirdPart\CMakeFiles\edit_cache.
 # Utility command for edit_cache
 
 build Source\ThirdPart\Nix\CMakeFiles\edit_cache.util: CUSTOM_COMMAND
-  COMMAND = cmd.exe /C "cd /D D:\LearningDX12\build\Source\ThirdPart\Nix && "C:\Program Files\CMake\bin\cmake-gui.exe" -SD:\LearningDX12 -BD:\LearningDX12\build"
+  COMMAND = cmd.exe /C "cd /D D:\GitHub\LearnDX12\build\Source\ThirdPart\Nix && "C:\Program Files\CMake\bin\cmake-gui.exe" -SD:\GitHub\LearnDX12 -BD:\GitHub\LearnDX12\build"
   DESC = Running CMake cache editor...
   pool = console
   restat = 1
@@ -1157,9 +1157,9 @@ build Source\ThirdPart\Nix\edit_cache: phony Source\ThirdPart\Nix\CMakeFiles\edi
 #############################################
 # Order-only phony target for Nix
 
-build cmake_object_order_depends_target_Nix_DEBUG: phony || Source\ThirdPart\Nix\CMakeFiles\Nix.dir
+build cmake_object_order_depends_target_Nix: phony || Source\ThirdPart\Nix\CMakeFiles\Nix.dir
 
-build Source\ThirdPart\Nix\CMakeFiles\Nix.dir\IO\Archive.obj: CXX_COMPILER__Nix_Debug ..\Source\ThirdPart\Nix\IO\Archive.cpp || cmake_object_order_depends_target_Nix_DEBUG
+build Source\ThirdPart\Nix\CMakeFiles\Nix.dir\IO\Archive.obj: CXX_COMPILER__Nix_Debug ..\Source\ThirdPart\Nix\IO\Archive.cpp || cmake_object_order_depends_target_Nix
   DEFINES = -D_CRT_SECURE_NO_WARINGS
   FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1
   INCLUDES = -I..\include -I..\Source\Common -I..\Source\ThirdPart\Nix
@@ -1168,7 +1168,7 @@ build Source\ThirdPart\Nix\CMakeFiles\Nix.dir\IO\Archive.obj: CXX_COMPILER__Nix_
   TARGET_COMPILE_PDB = Source\ThirdPart\Nix\CMakeFiles\Nix.dir\Nix.pdb
   TARGET_PDB = Source\ThirdPart\Nix\Nix.pdb
 
-build Source\ThirdPart\Nix\CMakeFiles\Nix.dir\String\Encoding.obj: CXX_COMPILER__Nix_Debug ..\Source\ThirdPart\Nix\String\Encoding.cpp || cmake_object_order_depends_target_Nix_DEBUG
+build Source\ThirdPart\Nix\CMakeFiles\Nix.dir\String\Encoding.obj: CXX_COMPILER__Nix_Debug ..\Source\ThirdPart\Nix\String\Encoding.cpp || cmake_object_order_depends_target_Nix
   DEFINES = -D_CRT_SECURE_NO_WARINGS
   FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1
   INCLUDES = -I..\include -I..\Source\Common -I..\Source\ThirdPart\Nix
@@ -1177,7 +1177,7 @@ build Source\ThirdPart\Nix\CMakeFiles\Nix.dir\String\Encoding.obj: CXX_COMPILER_
   TARGET_COMPILE_PDB = Source\ThirdPart\Nix\CMakeFiles\Nix.dir\Nix.pdb
   TARGET_PDB = Source\ThirdPart\Nix\Nix.pdb
 
-build Source\ThirdPart\Nix\CMakeFiles\Nix.dir\String\Path.obj: CXX_COMPILER__Nix_Debug ..\Source\ThirdPart\Nix\String\Path.cpp || cmake_object_order_depends_target_Nix_DEBUG
+build Source\ThirdPart\Nix\CMakeFiles\Nix.dir\String\Path.obj: CXX_COMPILER__Nix_Debug ..\Source\ThirdPart\Nix\String\Path.cpp || cmake_object_order_depends_target_Nix
   DEFINES = -D_CRT_SECURE_NO_WARINGS
   FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1
   INCLUDES = -I..\include -I..\Source\Common -I..\Source\ThirdPart\Nix
@@ -1186,12 +1186,21 @@ build Source\ThirdPart\Nix\CMakeFiles\Nix.dir\String\Path.obj: CXX_COMPILER__Nix
   TARGET_COMPILE_PDB = Source\ThirdPart\Nix\CMakeFiles\Nix.dir\Nix.pdb
   TARGET_PDB = Source\ThirdPart\Nix\Nix.pdb
 
-build Source\ThirdPart\Nix\CMakeFiles\Nix.dir\Memory\BuddySystemAllocator.obj: CXX_COMPILER__Nix_Debug ..\Source\ThirdPart\Nix\Memory\BuddySystemAllocator.cpp || cmake_object_order_depends_target_Nix_DEBUG
+build Source\ThirdPart\Nix\CMakeFiles\Nix.dir\Memory\BuddySystemAllocator.obj: CXX_COMPILER__Nix_Debug ..\Source\ThirdPart\Nix\Memory\BuddySystemAllocator.cpp || cmake_object_order_depends_target_Nix
   DEFINES = -D_CRT_SECURE_NO_WARINGS
   FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1
   INCLUDES = -I..\include -I..\Source\Common -I..\Source\ThirdPart\Nix
   OBJECT_DIR = Source\ThirdPart\Nix\CMakeFiles\Nix.dir
   OBJECT_FILE_DIR = Source\ThirdPart\Nix\CMakeFiles\Nix.dir\Memory
+  TARGET_COMPILE_PDB = Source\ThirdPart\Nix\CMakeFiles\Nix.dir\Nix.pdb
+  TARGET_PDB = Source\ThirdPart\Nix\Nix.pdb
+
+build Source\ThirdPart\Nix\CMakeFiles\Nix.dir\Timer\Timer.obj: CXX_COMPILER__Nix_Debug ..\Source\ThirdPart\Nix\Timer\Timer.cpp || cmake_object_order_depends_target_Nix
+  DEFINES = -D_CRT_SECURE_NO_WARINGS
+  FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1
+  INCLUDES = -I..\include -I..\Source\Common -I..\Source\ThirdPart\Nix
+  OBJECT_DIR = Source\ThirdPart\Nix\CMakeFiles\Nix.dir
+  OBJECT_FILE_DIR = Source\ThirdPart\Nix\CMakeFiles\Nix.dir\Timer
   TARGET_COMPILE_PDB = Source\ThirdPart\Nix\CMakeFiles\Nix.dir\Nix.pdb
   TARGET_PDB = Source\ThirdPart\Nix\Nix.pdb
 
@@ -1203,7 +1212,7 @@ build Source\ThirdPart\Nix\CMakeFiles\Nix.dir\Memory\BuddySystemAllocator.obj: C
 #############################################
 # Link the static library Source\ThirdPart\Nix\Nix.lib
 
-build Source\ThirdPart\Nix\Nix.lib: CXX_STATIC_LIBRARY_LINKER__Nix_Debug Source\ThirdPart\Nix\CMakeFiles\Nix.dir\IO\Archive.obj Source\ThirdPart\Nix\CMakeFiles\Nix.dir\String\Encoding.obj Source\ThirdPart\Nix\CMakeFiles\Nix.dir\String\Path.obj Source\ThirdPart\Nix\CMakeFiles\Nix.dir\Memory\BuddySystemAllocator.obj
+build Source\ThirdPart\Nix\Nix.lib: CXX_STATIC_LIBRARY_LINKER__Nix_Debug Source\ThirdPart\Nix\CMakeFiles\Nix.dir\IO\Archive.obj Source\ThirdPart\Nix\CMakeFiles\Nix.dir\String\Encoding.obj Source\ThirdPart\Nix\CMakeFiles\Nix.dir\String\Path.obj Source\ThirdPart\Nix\CMakeFiles\Nix.dir\Memory\BuddySystemAllocator.obj Source\ThirdPart\Nix\CMakeFiles\Nix.dir\Timer\Timer.obj
   LANGUAGE_COMPILE_FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1
   LINK_FLAGS = /machine:x64
   OBJECT_DIR = Source\ThirdPart\Nix\CMakeFiles\Nix.dir
@@ -1218,7 +1227,7 @@ build Source\ThirdPart\Nix\Nix.lib: CXX_STATIC_LIBRARY_LINKER__Nix_Debug Source\
 # Utility command for package
 
 build Source\ThirdPart\Nix\CMakeFiles\package.util: CUSTOM_COMMAND Source\ThirdPart\Nix\all
-  COMMAND = cmd.exe /C "cd /D D:\LearningDX12\build && "C:\Program Files\CMake\bin\cpack.exe" --config ./CPackConfig.cmake"
+  COMMAND = cmd.exe /C "cd /D D:\GitHub\LearnDX12\build && "C:\Program Files\CMake\bin\cpack.exe" --config ./CPackConfig.cmake"
   DESC = Run CPack packaging tool...
   pool = console
   restat = 1
@@ -1230,7 +1239,7 @@ build Source\ThirdPart\Nix\package: phony Source\ThirdPart\Nix\CMakeFiles\packag
 # Utility command for package_source
 
 build Source\ThirdPart\Nix\CMakeFiles\package_source.util: CUSTOM_COMMAND
-  COMMAND = cmd.exe /C "cd /D D:\LearningDX12\build && "C:\Program Files\CMake\bin\cpack.exe" --config ./CPackSourceConfig.cmake D:/LearningDX12/build/CPackSourceConfig.cmake"
+  COMMAND = cmd.exe /C "cd /D D:\GitHub\LearnDX12\build && "C:\Program Files\CMake\bin\cpack.exe" --config ./CPackSourceConfig.cmake D:/GitHub/LearnDX12/build/CPackSourceConfig.cmake"
   DESC = Run CPack packaging tool for source...
   pool = console
   restat = 1
@@ -1242,7 +1251,7 @@ build Source\ThirdPart\Nix\package_source: phony Source\ThirdPart\Nix\CMakeFiles
 # Utility command for rebuild_cache
 
 build Source\ThirdPart\Nix\CMakeFiles\rebuild_cache.util: CUSTOM_COMMAND
-  COMMAND = cmd.exe /C "cd /D D:\LearningDX12\build\Source\ThirdPart\Nix && "C:\Program Files\CMake\bin\cmake.exe" --regenerate-during-build -SD:\LearningDX12 -BD:\LearningDX12\build"
+  COMMAND = cmd.exe /C "cd /D D:\GitHub\LearnDX12\build\Source\ThirdPart\Nix && "C:\Program Files\CMake\bin\cmake.exe" --regenerate-during-build -SD:\GitHub\LearnDX12 -BD:\GitHub\LearnDX12\build"
   DESC = Running CMake to regenerate build system...
   pool = console
   restat = 1
@@ -1254,7 +1263,7 @@ build Source\ThirdPart\Nix\rebuild_cache: phony Source\ThirdPart\Nix\CMakeFiles\
 # Utility command for test
 
 build Source\ThirdPart\Nix\CMakeFiles\test.util: CUSTOM_COMMAND
-  COMMAND = cmd.exe /C "cd /D D:\LearningDX12\build\Source\ThirdPart\Nix && "C:\Program Files\CMake\bin\ctest.exe" --force-new-ctest-process "
+  COMMAND = cmd.exe /C "cd /D D:\GitHub\LearnDX12\build\Source\ThirdPart\Nix && "C:\Program Files\CMake\bin\ctest.exe" --force-new-ctest-process "
   DESC = Running tests...
   pool = console
   restat = 1
@@ -1290,63 +1299,63 @@ build TriangleDelux.exe: phony ..\bin\Windows\x64\TriangleDelux.exe
 # =============================================================================
 
 #############################################
-# Folder: D:/LearningDX12/build
+# Folder: D:/GitHub/LearnDX12/build
 
 build all: phony Source\all
 
 # =============================================================================
 
 #############################################
-# Folder: D:/LearningDX12/build/Source
+# Folder: D:/GitHub/LearnDX12/build/Source
 
 build Source\all: phony Source\DX12Samples\all Source\ThirdPart\all
 
 # =============================================================================
 
 #############################################
-# Folder: D:/LearningDX12/build/Source/DX12Samples
+# Folder: D:/GitHub/LearnDX12/build/Source/DX12Samples
 
 build Source\DX12Samples\all: phony Source\DX12Samples\DX12Test\all Source\DX12Samples\DX12Triangle\all Source\DX12Samples\DX12TriangleColor\all Source\DX12Samples\DX12TriangleDelux\all
 
 # =============================================================================
 
 #############################################
-# Folder: D:/LearningDX12/build/Source/DX12Samples/DX12Test
+# Folder: D:/GitHub/LearnDX12/build/Source/DX12Samples/DX12Test
 
 build Source\DX12Samples\DX12Test\all: phony ..\bin\Windows\x64\HelloDX12.exe
 
 # =============================================================================
 
 #############################################
-# Folder: D:/LearningDX12/build/Source/DX12Samples/DX12Triangle
+# Folder: D:/GitHub/LearnDX12/build/Source/DX12Samples/DX12Triangle
 
 build Source\DX12Samples\DX12Triangle\all: phony ..\bin\Windows\x64\HelloTriangle.exe
 
 # =============================================================================
 
 #############################################
-# Folder: D:/LearningDX12/build/Source/DX12Samples/DX12TriangleColor
+# Folder: D:/GitHub/LearnDX12/build/Source/DX12Samples/DX12TriangleColor
 
 build Source\DX12Samples\DX12TriangleColor\all: phony ..\bin\Windows\x64\HelloTriangleColor.exe
 
 # =============================================================================
 
 #############################################
-# Folder: D:/LearningDX12/build/Source/DX12Samples/DX12TriangleDelux
+# Folder: D:/GitHub/LearnDX12/build/Source/DX12Samples/DX12TriangleDelux
 
 build Source\DX12Samples\DX12TriangleDelux\all: phony ..\bin\Windows\x64\TriangleDelux.exe
 
 # =============================================================================
 
 #############################################
-# Folder: D:/LearningDX12/build/Source/ThirdPart
+# Folder: D:/GitHub/LearnDX12/build/Source/ThirdPart
 
 build Source\ThirdPart\all: phony Source\ThirdPart\Nix\all
 
 # =============================================================================
 
 #############################################
-# Folder: D:/LearningDX12/build/Source/ThirdPart/Nix
+# Folder: D:/GitHub/LearnDX12/build/Source/ThirdPart/Nix
 
 build Source\ThirdPart\Nix\all: phony Source\ThirdPart\Nix\Nix.lib
 
@@ -1362,14 +1371,14 @@ build Source\ThirdPart\Nix\all: phony Source\ThirdPart\Nix\Nix.lib
 #############################################
 # Re-run CMake if any of its inputs changed.
 
-build build.ninja: RERUN_CMAKE | ..\CMakeLists.txt ..\Source\CMakeLists.txt ..\Source\DX12Samples\CMakeLists.txt ..\Source\DX12Samples\DX12Test\CMakeLists.txt ..\Source\DX12Samples\DX12TriangleColor\CMakeLists.txt ..\Source\DX12Samples\DX12TriangleDelux\CMakeLists.txt ..\Source\DX12Samples\DX12Triangle\CMakeLists.txt ..\Source\ThirdPart\CMakeLists.txt ..\Source\ThirdPart\Nix\CMakeLists.txt C$:\Program$ Files\CMake\share\cmake-3.17\Modules\CMakeCInformation.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Modules\CMakeCXXInformation.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Modules\CMakeCommonLanguageInclude.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Modules\CMakeGenericSystem.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Modules\CMakeInitializeConfigs.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Modules\CMakeLanguageInformation.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Modules\CMakeRCInformation.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Modules\CMakeSystemSpecificInformation.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Modules\CMakeSystemSpecificInitialize.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Modules\CPack.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Modules\CPackComponent.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Modules\CTest.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Modules\CTestTargets.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Modules\CTestUseLaunchers.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Modules\Compiler\CMakeCommonCompilerMacros.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Modules\Compiler\MSVC-C.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Modules\Compiler\MSVC-CXX.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Modules\DartConfiguration.tcl.in C$:\Program$ Files\CMake\share\cmake-3.17\Modules\Platform\Windows-MSVC-C.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Modules\Platform\Windows-MSVC-CXX.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Modules\Platform\Windows-MSVC.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Modules\Platform\Windows.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Modules\Platform\WindowsPaths.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Templates\CPackConfig.cmake.in CMakeCache.txt CMakeFiles\3.17.1\CMakeCCompiler.cmake CMakeFiles\3.17.1\CMakeCXXCompiler.cmake CMakeFiles\3.17.1\CMakeRCCompiler.cmake CMakeFiles\3.17.1\CMakeSystem.cmake
+build build.ninja: RERUN_CMAKE | ..\CMakeLists.txt ..\Source\CMakeLists.txt ..\Source\DX12Samples\CMakeLists.txt ..\Source\DX12Samples\DX12Test\CMakeLists.txt ..\Source\DX12Samples\DX12TriangleColor\CMakeLists.txt ..\Source\DX12Samples\DX12TriangleDelux\CMakeLists.txt ..\Source\DX12Samples\DX12Triangle\CMakeLists.txt ..\Source\ThirdPart\CMakeLists.txt ..\Source\ThirdPart\Nix\CMakeLists.txt C$:\Program$ Files\CMake\share\cmake-3.17\Modules\CMakeCInformation.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Modules\CMakeCXXInformation.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Modules\CMakeCommonLanguageInclude.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Modules\CMakeGenericSystem.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Modules\CMakeInitializeConfigs.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Modules\CMakeLanguageInformation.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Modules\CMakeRCInformation.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Modules\CMakeSystemSpecificInformation.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Modules\CMakeSystemSpecificInitialize.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Modules\CPack.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Modules\CPackComponent.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Modules\CTest.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Modules\CTestTargets.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Modules\CTestUseLaunchers.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Modules\Compiler\CMakeCommonCompilerMacros.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Modules\Compiler\MSVC-C.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Modules\Compiler\MSVC-CXX.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Modules\DartConfiguration.tcl.in C$:\Program$ Files\CMake\share\cmake-3.17\Modules\Platform\Windows-MSVC-C.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Modules\Platform\Windows-MSVC-CXX.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Modules\Platform\Windows-MSVC.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Modules\Platform\Windows.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Modules\Platform\WindowsPaths.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Templates\CPackConfig.cmake.in CMakeCache.txt CMakeFiles\3.17.2\CMakeCCompiler.cmake CMakeFiles\3.17.2\CMakeCXXCompiler.cmake CMakeFiles\3.17.2\CMakeRCCompiler.cmake CMakeFiles\3.17.2\CMakeSystem.cmake
   pool = console
 
 
 #############################################
 # A missing CMake input file is not an error.
 
-build ..\CMakeLists.txt ..\Source\CMakeLists.txt ..\Source\DX12Samples\CMakeLists.txt ..\Source\DX12Samples\DX12Test\CMakeLists.txt ..\Source\DX12Samples\DX12TriangleColor\CMakeLists.txt ..\Source\DX12Samples\DX12TriangleDelux\CMakeLists.txt ..\Source\DX12Samples\DX12Triangle\CMakeLists.txt ..\Source\ThirdPart\CMakeLists.txt ..\Source\ThirdPart\Nix\CMakeLists.txt C$:\Program$ Files\CMake\share\cmake-3.17\Modules\CMakeCInformation.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Modules\CMakeCXXInformation.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Modules\CMakeCommonLanguageInclude.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Modules\CMakeGenericSystem.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Modules\CMakeInitializeConfigs.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Modules\CMakeLanguageInformation.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Modules\CMakeRCInformation.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Modules\CMakeSystemSpecificInformation.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Modules\CMakeSystemSpecificInitialize.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Modules\CPack.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Modules\CPackComponent.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Modules\CTest.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Modules\CTestTargets.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Modules\CTestUseLaunchers.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Modules\Compiler\CMakeCommonCompilerMacros.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Modules\Compiler\MSVC-C.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Modules\Compiler\MSVC-CXX.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Modules\DartConfiguration.tcl.in C$:\Program$ Files\CMake\share\cmake-3.17\Modules\Platform\Windows-MSVC-C.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Modules\Platform\Windows-MSVC-CXX.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Modules\Platform\Windows-MSVC.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Modules\Platform\Windows.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Modules\Platform\WindowsPaths.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Templates\CPackConfig.cmake.in CMakeCache.txt CMakeFiles\3.17.1\CMakeCCompiler.cmake CMakeFiles\3.17.1\CMakeCXXCompiler.cmake CMakeFiles\3.17.1\CMakeRCCompiler.cmake CMakeFiles\3.17.1\CMakeSystem.cmake: phony
+build ..\CMakeLists.txt ..\Source\CMakeLists.txt ..\Source\DX12Samples\CMakeLists.txt ..\Source\DX12Samples\DX12Test\CMakeLists.txt ..\Source\DX12Samples\DX12TriangleColor\CMakeLists.txt ..\Source\DX12Samples\DX12TriangleDelux\CMakeLists.txt ..\Source\DX12Samples\DX12Triangle\CMakeLists.txt ..\Source\ThirdPart\CMakeLists.txt ..\Source\ThirdPart\Nix\CMakeLists.txt C$:\Program$ Files\CMake\share\cmake-3.17\Modules\CMakeCInformation.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Modules\CMakeCXXInformation.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Modules\CMakeCommonLanguageInclude.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Modules\CMakeGenericSystem.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Modules\CMakeInitializeConfigs.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Modules\CMakeLanguageInformation.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Modules\CMakeRCInformation.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Modules\CMakeSystemSpecificInformation.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Modules\CMakeSystemSpecificInitialize.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Modules\CPack.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Modules\CPackComponent.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Modules\CTest.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Modules\CTestTargets.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Modules\CTestUseLaunchers.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Modules\Compiler\CMakeCommonCompilerMacros.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Modules\Compiler\MSVC-C.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Modules\Compiler\MSVC-CXX.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Modules\DartConfiguration.tcl.in C$:\Program$ Files\CMake\share\cmake-3.17\Modules\Platform\Windows-MSVC-C.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Modules\Platform\Windows-MSVC-CXX.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Modules\Platform\Windows-MSVC.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Modules\Platform\Windows.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Modules\Platform\WindowsPaths.cmake C$:\Program$ Files\CMake\share\cmake-3.17\Templates\CPackConfig.cmake.in CMakeCache.txt CMakeFiles\3.17.2\CMakeCCompiler.cmake CMakeFiles\3.17.2\CMakeCXXCompiler.cmake CMakeFiles\3.17.2\CMakeRCCompiler.cmake CMakeFiles\3.17.2\CMakeSystem.cmake: phony
 
 
 #############################################

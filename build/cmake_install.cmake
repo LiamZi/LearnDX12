@@ -1,4 +1,4 @@
-# Install script for directory: D:/LearningDX12
+# Install script for directory: D:/GitHub/LearnDX12
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -34,7 +34,7 @@ endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for each subdirectory.
-  include("D:/LearningDX12/build/Source/cmake_install.cmake")
+  include("D:/GitHub/LearnDX12/build/Source/cmake_install.cmake")
 
 endif()
 
@@ -46,5 +46,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "D:/LearningDX12/build/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "D:/GitHub/LearnDX12/build/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")

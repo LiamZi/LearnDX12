@@ -1,4 +1,4 @@
-#include <NixApplication.h>
+#include <NixApplication.hpp>
 //#include <nix/io/archieve.h>
 #include <cstdio>
 #include <dxgi.h>
@@ -33,8 +33,9 @@ public:
 	virtual bool initialize(void* _wnd, Nix::IArchive*) override;
 	virtual void resize(uint32_t _width, uint32_t _height) override;
 	virtual void release() override;
-	virtual void tick() override;
-	virtual const char * title() override;
+	virtual void tick(double dt) override;
+    virtual void draw() override;
+	virtual char * title() override;
 	virtual uint32_t rendererType() override;
 };
 
