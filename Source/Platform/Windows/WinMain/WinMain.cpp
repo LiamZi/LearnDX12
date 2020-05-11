@@ -1,6 +1,6 @@
 #include <windows.h>
 #include "Resource.h"
-#include <NixApplication.h>
+#include <NixApplication.hpp>
 #include <Nix/io/archive.h>
 #include <string>
 #include <regex>
@@ -46,34 +46,7 @@ int APIENTRY wWinMain
 
 	HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_EMPLTYWINDOW));
 	//
-	MSG msg;
-/* program main loop */
-	bool bQuit = false;
-	while (!bQuit)
-	{
-		/* check for messages */
-		if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
-		{
-			/* handle or dispatch messages */
-			if (msg.message == WM_QUIT)
-			{
-				bQuit = TRUE;
-			}
-			else
-			{
-				TranslateMessage(&msg);
-				DispatchMessage(&msg);
-			}
-		}
-		else
-		{
-			object->tick();
-			//eglSwapBuffers(context.display, context.surface);
-			Sleep(0);
-		}
-	}
-
-	return (int)msg.wParam;
+	return object->run();
 }
 
 

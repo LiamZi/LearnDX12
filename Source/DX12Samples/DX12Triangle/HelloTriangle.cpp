@@ -21,8 +21,7 @@ const char fragShader[] = R"(
 )";
 
 HelloTriangle::HelloTriangle(/* args */)
-:m_hwnd(NULL)
-,m_dxgiFactory(NULL)
+:m_dxgiFactory(NULL)
 ,m_dxgiAdapter(NULL)
 ,m_dxgiDevice(NULL)
 ,m_commandQueue(NULL)
@@ -425,7 +424,7 @@ void HelloTriangle::release()
     printf("destroyed.");
 }
 
-void HelloTriangle::tick()
+void HelloTriangle::draw()
 {
     if(!m_swapchain) return;
 
@@ -495,7 +494,12 @@ void HelloTriangle::tick()
     }
 }
 
-const char *HelloTriangle::title()
+void HelloTriangle::tick(double dt)
+{
+    
+}
+
+char *HelloTriangle::title()
 {
     return "Hello DX12 Triangle.";
 }

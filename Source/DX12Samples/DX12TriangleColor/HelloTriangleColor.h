@@ -7,7 +7,7 @@
  * @FilePath: \LearnDX12\Source\DX12Samples\DX12TriangleColor\HelloTriangle.h
  */
 
-#include <NixApplication.h>
+#include <NixApplication.hpp>
 #include <cstdio>
 #include <dxgi.h>
 #include <dxgi1_4.h>
@@ -26,12 +26,13 @@ public:
 	virtual bool initialize(void* _wnd, Nix::IArchive*) override;
 	virtual void resize(uint32_t _width, uint32_t _height) override;
 	virtual void release() override;
-	virtual void tick() override;
-	virtual const char * title() override;
+    virtual void tick(double dt) override;
+    virtual void draw() override;
+	virtual char * title() override;
 	virtual uint32_t rendererType() override;
 
 private:
-    void                    *m_hwnd;
+    // void                    *m_hwnd;
     IDXGIFactory4           *m_dxgiFactory;
     IDXGIAdapter1           *m_dxgiAdapter;
     ID3D12Device            *m_dxgiDevice;

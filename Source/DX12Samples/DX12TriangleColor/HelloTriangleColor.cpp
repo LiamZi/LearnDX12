@@ -17,8 +17,6 @@
 
 
 
-
-
 const char vertexShader[] = R"(
     float4 main(float3 pos : POSITION) : SV_POSITON
     {
@@ -34,8 +32,7 @@ const char fragShader[] = R"(
 )";
 
 HelloTriangle::HelloTriangle(/* args */)
-:m_hwnd(NULL)
-,m_dxgiFactory(NULL)
+:m_dxgiFactory(NULL)
 ,m_dxgiAdapter(NULL)
 ,m_dxgiDevice(NULL)
 ,m_commandQueue(NULL)
@@ -124,7 +121,7 @@ bool HelloTriangle::initialize(void *_wnd, Nix::IArchive* archive)
     if (FAILED(rst)) return false;
 
     // 5. swapchain / when windows is resize
-    this->m_hwnd = _wnd;// handle of the window
+    this->_hwnd = _wnd;// handle of the window
 
     // 6. create descriptor heap
     // describe an rtv descriptor heap and create
@@ -361,7 +358,7 @@ bool HelloTriangle::initialize(void *_wnd, Nix::IArchive* archive)
             swapchainDesc.BufferDesc = displayModeDesc;
             swapchainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
             swapchainDesc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;
-            swapchainDesc.OutputWindow = (HWND)m_hwnd;
+            swapchainDesc.OutputWindow = (HWND)_hwnd;
             swapchainDesc.SampleDesc = samplerDesc;
             swapchainDesc.Windowed = true;
         }
@@ -454,7 +451,7 @@ void HelloTriangle::release()
     printf("destroyed.");
 }
 
-void HelloTriangle::tick()
+void HelloTriangle::draw()
 {
     if(!m_swapchain) return;
 
@@ -525,7 +522,12 @@ void HelloTriangle::tick()
     }
 }
 
-const char *HelloTriangle::title()
+void HelloTriangle::tick(double dt)
+{
+    printf("test tick : %lf \n", dt);
+}
+
+char *HelloTriangle::title()
 {
     return "Hello DX12 Triangle Color.";
 }

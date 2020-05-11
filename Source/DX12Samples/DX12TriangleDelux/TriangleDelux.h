@@ -1,4 +1,4 @@
-#include <NixApplication.h>
+#include <NixApplication.hpp>
 #include <cstdio>
 #include <dxgi.h>
 #include <dxgi1_4.h>
@@ -66,7 +66,7 @@ class TriangleDelux : public NixApplication
 private:
     Nix::IArchive                           *_archive;
     DeviceDX12                              _device;
-    void                                    *_hwnd;
+    // void                                    *_hwnd;
     
     //initialize 
     ComPtr<IDXGISwapChain3>                 _swapChain;
@@ -107,8 +107,9 @@ public:
     virtual bool initialize(void *wnd, Nix::IArchive *);
     virtual void resize(uint32_t width, uint32_t height);
     virtual void release();
-    virtual void tick();
-    virtual const char *title();
+    virtual void tick(double dt) override;
+    virtual void draw() override;
+    virtual char *title();
     virtual uint32_t rendererType();
 
 };

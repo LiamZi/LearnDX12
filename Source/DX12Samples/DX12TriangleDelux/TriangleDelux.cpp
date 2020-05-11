@@ -432,8 +432,7 @@ bool TriangleDelux::initialize(void *wnd, Nix::IArchive *arch)
     device->CreateShaderResourceView(_simpleTexture.Get(), &textureResourceViewDesc, pipelineCPUDescriptorHandlerStart);
 
     //creator constant buffer view
-    // device->CreateConstantBufferView(&cbufferViewDesc, pipelineCPUDescriptorHandlerStart.Offset(cbvSrvDescriptorSize));
-    device->CreateConstantBufferView( &cbufferViewDesc, pipelineCPUDescriptorHandlerStart.Offset(cbvSrvDescriptorSize));
+    device->CreateConstantBufferView(&cbufferViewDesc, pipelineCPUDescriptorHandlerStart.Offset(cbvSrvDescriptorSize));
 
 	CD3DX12_DESCRIPTOR_RANGE1 vertexDescriptorRanges[1];{
 		// vertex constant buffer / uniform
@@ -445,17 +444,6 @@ bool TriangleDelux::initialize(void *wnd, Nix::IArchive *arch)
 			D3D12_DESCRIPTOR_RANGE_FLAG_DATA_STATIC 	// descriptor range flag
 		);
 	}
-    // D3D12_DESCRIPTOR_RANGE1 vertexRanges;
-    // {
-    //     vertexRanges.RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_CBV;
-    //     vertexRanges.NumDescriptors = 1;
-    //     vertexRanges.BaseShaderRegister = 0;
-    //     vertexRanges.RegisterSpace = 0;
-    //     vertexRanges.Flags = D3D12_DESCRIPTOR_RANGE_FLAG_DATA_STATIC;
-    //     vertexRanges.OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
-    // }
-
-    
 
     CD3DX12_DESCRIPTOR_RANGE1 pixelDescriptorRanges[2];
     {
@@ -483,7 +471,6 @@ bool TriangleDelux::initialize(void *wnd, Nix::IArchive *arch)
 
     CD3DX12_ROOT_PARAMETER1 rootParameters[3];{
 		rootParameters[0].InitAsDescriptorTable( vertexRangeCount , &vertexDescriptorRanges[0], D3D12_SHADER_VISIBILITY_VERTEX );
-        // rootParameters[0].InitAsDescriptorTable( vertexRangeCount , &vertexRanges, D3D12_SHADER_VISIBILITY_VERTEX );
 		rootParameters[1].InitAsDescriptorTable( 1 , &pixelDescriptorRanges[0], D3D12_SHADER_VISIBILITY_PIXEL );
 		rootParameters[2].InitAsDescriptorTable( 1 , &pixelDescriptorRanges[1], D3D12_SHADER_VISIBILITY_PIXEL );
 	}
@@ -506,10 +493,8 @@ bool TriangleDelux::initialize(void *wnd, Nix::IArchive *arch)
 
 
     CD3DX12_VERSIONED_ROOT_SIGNATURE_DESC rootSignatureDesc {};
-    // CD3DX12_ROOT_SIGNATURE_DESC rootSignatureDesc{};
     {
 		rootSignatureDesc.Init_1_1( 3, rootParameters, 1, &sampler, D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT );
-        // rootSignatureDesc.Init(0, nullptr, 0, nullptr, D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
 	}
 
 
@@ -545,11 +530,11 @@ bool TriangleDelux::initialize(void *wnd, Nix::IArchive *arch)
     ID3DBlob *fragmentShader = nullptr;
     ID3DBlob *errorBuffer = nullptr;
 
-    auto file = _archive->open("shaders/triangleDelux/vertexShader.hlsl", 1);
+    auto file = _archive->open("shaders/triangleDelux/VertexShader.hlsl", 1);
     if(!file) return false;
 
     result = D3DCompile(file->constData(), file->size(),
-                    "vertexShader.hlsl",
+                    "VertexShader.hlsl",
                     nullptr, nullptr,
                     "VsMain", "vs_5_0", 
                     D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION,
@@ -561,10 +546,10 @@ bool TriangleDelux::initialize(void *wnd, Nix::IArchive *arch)
 
     file->release();
 
-    file = _archive->open("shaders/triangleDelux/fragmentShader.hlsl", 1);
+    file = _archive->open("shaders/triangleDelux/FragmentShader.hlsl", 1);
     if(!file) return false;
     result = D3DCompile(file->constData(), file->size(),
-                "fragmentShader.hlsl",
+                "FragmentShader.hlsl",
                 nullptr, nullptr,
                 "PsMain", "ps_5_0", 
                 D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION,
@@ -798,7 +783,7 @@ void TriangleDelux::release()
     printf("destroyed");
 }
 
-void TriangleDelux::tick()
+void TriangleDelux::draw()
 {
     if(!_swapChain) return;
 
@@ -861,7 +846,12 @@ void TriangleDelux::tick()
 
 }
 
-const char *TriangleDelux::title()
+void TriangleDelux::tick(double dt)
+{
+    
+}
+
+char *TriangleDelux::title()
 {
     return " Triangle Delux For DX12 ";
 }
