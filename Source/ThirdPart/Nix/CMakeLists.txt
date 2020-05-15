@@ -15,6 +15,10 @@ set( NIX_SOURCE
 	${CMAKE_CURRENT_SOURCE_DIR}/Memory/BuddySystemAllocator.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/Timer/Timer.h
 	${CMAKE_CURRENT_SOURCE_DIR}/Timer/Timer.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/Utils/Utils.hpp
+	${CMAKE_CURRENT_SOURCE_DIR}/Utils/Utils.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/Math/MathHelper.h
+	${CMAKE_CURRENT_SOURCE_DIR}/Math/MathHelper.cpp
     )
 
 add_library( Nix STATIC 

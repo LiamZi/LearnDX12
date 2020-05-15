@@ -115,9 +115,9 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 		DeleteDC(hdcScreen);
 	}
 #define INCH 0.03937
-	float iTemp = iPhsX * iPhsX + iPhsY * iPhsY;
-	float fInch = sqrt(iTemp) * INCH;
-	iTemp = iX * iX + iY * iY;
+	float iTemp = (float)(iPhsX * iPhsX + iPhsY * iPhsY);
+	float fInch = (float)(sqrt(iTemp) * INCH);
+	iTemp = (float)(iX * iX + iY * iY);
 	float fPixel = sqrt(iTemp);
 
 	float iDPI = fPixel / fInch;    // dpi pixel/inch
@@ -132,102 +132,178 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
+	UINT cx = LOWORD(lParam);
+	UINT cy = HIWORD(lParam);
+
 	switch (message)
 	{
-	case WM_COMMAND:
-	{
-		int wmId = LOWORD(wParam);
-		switch (wmId)
+		case WM_ACTIVATE:
 		{
-		case IDM_ABOUT:
-			DialogBox(hInst, MAKEINTRESOURCE(IDD_ABOUTBOX), hWnd, About);
+			if(LOWORD(wParam) == WA_INACTIVE)
+			{
+				object->setAppPaused(true);
+				object->getTimer().stop();
+			}
+			else
+			{
+				object->setAppPaused(false);
+				object->getTimer().start();
+			}
+			return 0;
+		}
+		break;
+		case WM_COMMAND:
+		{
+			int wmId = LOWORD(wParam);
+			switch (wmId)
+			{
+			case IDM_ABOUT:
+				DialogBox(hInst, MAKEINTRESOURCE(IDD_ABOUTBOX), hWnd, About);
+				break;
+			case IDM_EXIT:
+				DestroyWindow(hWnd);
+				break;
+			case WM_KEYDOWN:
+			{
+				object->onKeyEvent((unsigned char)wParam, NixApplication::eKeyDown);
+				break;
+			}
+			default:
+				return DefWindowProc(hWnd, message, wParam, lParam);
+			}
+		}
+		break;
+		case WM_PAINT:
+		{
+			PAINTSTRUCT ps;
+			HDC hdc = BeginPaint(hWnd, &ps);
+			EndPaint(hWnd, &ps);
+		}
+		break;
+		case WM_DESTROY:
+			object->release();
+			PostQuitMessage(0);
 			break;
-		case IDM_EXIT:
-			DestroyWindow(hWnd);
+		case WM_SIZE:
+		{
+			// UINT cx = LOWORD(lParam);
+			// UINT cy = HIWORD(lParam);
+			if(!object) break;
+			switch (wParam)
+			{
+			case SIZE_MINIMIZED:
+			{
+				object->setAppPaused(true);
+				object->setMinimized(true);
+				object->setMaximized(false);
+				
+			}
+				break;
+			case SIZE_MAXIMIZED:
+			{
+				object->setAppPaused(false);
+				object->setMinimized(false);
+				object->setMaximized(true);
+				object->resize(cx, cy);
+			}
+				break;
+			case SIZE_RESTORED:
+			{
+				if(object->isMinimized())
+				{
+					object->setAppPaused(false);
+					object->setMinimized(false);
+				}
+				else if(object->isMaximized()) 
+				{
+					object->setAppPaused(false);
+					object->setMaximized(false);
+					
+				}
+				else if(object->isResizing()) 
+				{
+
+				}
+				
+				object->resize(cx, cy);
+			}
+				break;
+				
+			default:
+				break;
+			}
+			
+			break;
+		}
+		case WM_ENTERSIZEMOVE:
+		{
+			object->setAppPaused(true);
+			object->setResizing(true);
+			object->getTimer().stop();
+		}
+			break;
+		case WM_EXITSIZEMOVE:
+		{
+			object->setAppPaused(false);
+			object->setResizing(false);
+			object->getTimer().start();
+			object->resize(cx, cy);
+		}
 			break;
 		case WM_KEYDOWN:
 		{
-			object->onKeyEvent(wParam, NixApplication::eKeyDown);
+			object->onKeyEvent((unsigned char)wParam, NixApplication::eKeyDown);
+			break;
+		}
+		case WM_KEYUP:
+		{
+			switch (wParam)
+			{
+			case VK_ESCAPE:
+			{
+				//PostQuitMessage(0);
+				break;
+			}
+			default:
+				object->onKeyEvent((unsigned char)wParam, NixApplication::eKeyUp);
+				break;
+			}
+			break;
+		}
+		case WM_MOUSEMOVE:
+		{
+			short x = LOWORD(lParam);
+			short y = HIWORD(lParam);
+			switch (wParam)
+			{
+			case MK_LBUTTON:
+				object->onMouseEvent(NixApplication::LButtonMouse, NixApplication::MouseMove, x, y);
+				break;
+			case MK_RBUTTON:
+				object->onMouseEvent(NixApplication::RButtonMouse, NixApplication::MouseMove, x, y);
+				break;
+			case MK_MBUTTON:
+				object->onMouseEvent(NixApplication::MButtonMouse, NixApplication::MouseMove, x, y);
+				break;
+			}
+			break;
+		}
+		case WM_RBUTTONDOWN:
+		{
+			short x = LOWORD(lParam);
+			short y = HIWORD(lParam);
+			object->onMouseEvent(NixApplication::RButtonMouse, NixApplication::MouseDown, x, y);
+			break;
+		}
+		case WM_RBUTTONUP:
+		{
+			short x = LOWORD(lParam);
+			short y = HIWORD(lParam);
+			object->onMouseEvent(NixApplication::RButtonMouse, NixApplication::MouseUp, x, y);
 			break;
 		}
 		default:
 			return DefWindowProc(hWnd, message, wParam, lParam);
-		}
-	}
-	break;
-	case WM_PAINT:
-	{
-		PAINTSTRUCT ps;
-		HDC hdc = BeginPaint(hWnd, &ps);
-		EndPaint(hWnd, &ps);
-	}
-	break;
-	case WM_DESTROY:
-		object->release();
-		PostQuitMessage(0);
-		break;
-	case WM_SIZE:
-	{
-		UINT cx = LOWORD(lParam);
-		UINT cy = HIWORD(lParam);
-		//::GetClientRect();
-		object->resize(cx, cy);
-		break;
-	}
-	case WM_KEYDOWN:
-	{
-		object->onKeyEvent(wParam, NixApplication::eKeyDown);
-		break;
-	}
-	case WM_KEYUP:
-	{
-		switch (wParam)
-		{
-		case VK_ESCAPE:
-		{
-			//PostQuitMessage(0);
-			break;
-		}
-		default:
-			object->onKeyEvent(wParam, NixApplication::eKeyUp);
-			break;
-		}
-		break;
-	}
-	case WM_MOUSEMOVE:
-	{
-		short x = LOWORD(lParam);
-		short y = HIWORD(lParam);
-		switch (wParam)
-		{
-		case MK_LBUTTON:
-			object->onMouseEvent(NixApplication::LButtonMouse, NixApplication::MouseMove, x, y);
-			break;
-		case MK_RBUTTON:
-			object->onMouseEvent(NixApplication::RButtonMouse, NixApplication::MouseMove, x, y);
-			break;
-		case MK_MBUTTON:
-			object->onMouseEvent(NixApplication::MButtonMouse, NixApplication::MouseMove, x, y);
-			break;
-		}
-		break;
-	}
-	case WM_RBUTTONDOWN:
-	{
-		short x = LOWORD(lParam);
-		short y = HIWORD(lParam);
-		object->onMouseEvent(NixApplication::RButtonMouse, NixApplication::MouseDown, x, y);
-		break;
-	}
-	case WM_RBUTTONUP:
-	{
-		short x = LOWORD(lParam);
-		short y = HIWORD(lParam);
-		object->onMouseEvent(NixApplication::RButtonMouse, NixApplication::MouseUp, x, y);
-		break;
-	}
-	default:
-		return DefWindowProc(hWnd, message, wParam, lParam);
 	}
 	return 0;
 }

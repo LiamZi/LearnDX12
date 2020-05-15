@@ -14,7 +14,7 @@
 #include "../ThirdPart/Nix/Timer/Timer.h"
 
 #ifdef _WIN32
-#include <WINDOWS.h>
+#include <Windows.h>
 #else
 #endif
 
@@ -22,6 +22,9 @@ namespace Nix {
     class IRenderer;
     class IArchive;
 }
+
+static int frameCount = 0;
+static float timeElapsed = 0.0f;
 
 class NixApplication {
     
@@ -47,18 +50,19 @@ public:
         MouseUp,
     };
 
-    bool _appPaused = false;
 
 protected:
     Nix::Timer _timer;
     void *_hwnd;
+    bool _minimized = false;
+    bool _maximized = false;
+    bool _resizing = false;
+    bool _fullScreenState = false;
+    bool _appPaused = false;
 
 protected:
     void calculateFrameStats()
     {
-        static int frameCount = 0;
-        static float timeElapsed = 0.0f;
-
         frameCount++;
 
         if(_timer.totalTime() - timeElapsed >= 1.0f) {
@@ -71,6 +75,7 @@ protected:
             std::string title(title());
             auto text = title + "    fps: " + fpsStr + "    mspf: " + mspfStr;
             SetWindowTextA((HWND)_hwnd, text.c_str());
+            // printf("%s\n", text.c_str());
 
             frameCount = 0;
             timeElapsed += 1.0f;
@@ -87,7 +92,7 @@ public:
 
     virtual void resize(uint32_t width, uint32_t height) = 0;
     virtual void release() = 0;
-    virtual void tick(double dt) = 0;
+    virtual void tick(float dt) = 0;
     virtual void draw() = 0;
     virtual char *title() { return "App"; };
     virtual uint32_t rendererType() = 0;
@@ -97,10 +102,25 @@ public:
     virtual void onKeyEvent(unsigned char key, eKeyEvent event) {};
     virtual void onMouseEvent(eMouseButton btn, eMouseEvent event, int x, int y) {};
 
+public:
+    inline Nix::Timer &getTimer() { return _timer; }
+    inline void setAppPaused(const bool isPaused) { _appPaused = isPaused; }
+    inline bool isAppPaused() const { return _appPaused; }
+    inline void setMinimized(const bool isMinimized) { _minimized = isMinimized; }
+    inline bool isMinimized() const { return _minimized; }
+    inline void setMaximized(const bool isMaximized) { _maximized = isMaximized; }
+    inline bool isMaximized() const { return _maximized; }
+    inline void setResizing(const bool isResizing) { _resizing = isResizing; }
+    inline bool isResizing() const { return _resizing; }
+    inline void setFullScreen(const bool isFull) { _fullScreenState = isFull; }
+    inline bool isFullScreen() const { return _fullScreenState; }
+
+
     int run() {
         MSG msg = {0};
         /* program main loop */
         bool bQuit = false;
+        _timer.reset();
         while (!bQuit)
         {
             /* check for messages */
@@ -118,15 +138,18 @@ public:
                 }
             }
             else
-            {   _timer.tick();
+            {   
+                _timer.tick();
                 if(!_appPaused) {
                     calculateFrameStats();
                     tick(_timer.deltaTime());
                     draw();
+                    // printf("calc Frame stats run ... \n");
                 }
                 else {
                     //eglSwapBuffers(context.display, context.surface);
                     Sleep(100);
+                    // printf("Sleep 100. wait... \n");
                 }
             }
         }

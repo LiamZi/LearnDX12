@@ -35,6 +35,7 @@ namespace Nix
     uint32_t ucsle2utf8(const char *unic, size_t len, char **utf);
     uint32_t ucsle2gbk(const char *unic, size_t len, char **ascii);
     uint32_t gbk2utf8(const char *acsii, size_t len, char **utf);
+
     void clear_conv();
 
     // 从网上抄的一段代码改的

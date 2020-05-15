@@ -32,6 +32,8 @@ if(WIN32)
             set(TARGET_ARCH "x86")
         endif(CMAKE_CL_64)
     endif()
+
+    add_compile_options(/wd4819)
 elseif(APPLE)
 elseif(ANDROID)
 endif()

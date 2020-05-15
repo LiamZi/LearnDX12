@@ -3,11 +3,9 @@
 #include <dxgi.h>
 #include <dxgi1_4.h>
 #include <d3d12.h>
-// #include "d3dx12.h"
 #include "../ThirdPart/d3dx12.h"
 #include <algorithm>
 #include <wrl/client.h>
-
 
 
 constexpr uint32_t MaxFlightCount = 3;
@@ -16,7 +14,7 @@ using namespace Microsoft::WRL;
 
 class DeviceDX12 {
 public:
-    DeviceDX12() {};
+    explicit DeviceDX12() {};
 
     ComPtr<IDXGISwapChain3> createSwapChian(HWND hwnd, uint32_t width, uint32_t height);
     ComPtr<ID3D12GraphicsCommandList> onTick(uint64_t dt, uint32_t flightIndex);
