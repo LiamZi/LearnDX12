@@ -189,6 +189,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			// UINT cx = LOWORD(lParam);
 			// UINT cy = HIWORD(lParam);
 			if(!object) break;
+			object->setWidth(cx);
+			object->setHeight(cy);
+			
 			switch (wParam)
 			{
 			case SIZE_MINIMIZED:

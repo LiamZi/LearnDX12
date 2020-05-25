@@ -27,6 +27,7 @@ private:
     ComPtr<ID3D12CommandAllocator>          _uploadCommandAllocator;
     ComPtr<ID3D12GraphicsCommandList>       _uploadCommandList;
     ComPtr<ID3D12Fence>                     _uploadFence;
+    HANDLE                                  _uploadFenceEvent;
 
     //cpu and graphics fance
     ComPtr<ID3D12Fence>                     _graphicsFences[MaxFlightCount];
@@ -49,7 +50,7 @@ public:
     explicit Device(/* args */);
     ~Device();
 
-    ComPtr<IDXGISwapChain3> createSwapChian();
+    ComPtr<IDXGISwapChain3> createSwapChian(const uint32_t width, const uint32_t height);
 
     float AspectRatio() const { return static_cast<float>(_width) / _height; }
     void set4xMassState(const bool value);
@@ -58,16 +59,19 @@ public:
     void waitForFlight(uint32_t flight);
     ComPtr<ID3D12GraphicsCommandList> draw(uint32_t flightIndex, ComPtr<ID3D12PipelineState> &pipelineStete);
     void executeCommand(ComPtr<ID3D12GraphicsCommandList> &commandList);
+    
+    operator ComPtr<ID3D12Device> () const;
 
 protected:
     void logAdapters();
     void logAdapterOutputs(IDXGIAdapter *dapater);
     void logOutputDisplayModes(IDXGIOutput *output, DXGI_FORMAT format);
     void createCommnadObjectsAndFence();
+    void createUploadCommandObjectsAndFence();
     void check4xMsaaSupport();
 
-private:
-    bool initialize(HWND &hwnd, uint32_t width, uint32_t height);
+public:
+    bool initialize(HWND hwnd, uint32_t width = 0, uint32_t height = 0);
 };
 
 #endif

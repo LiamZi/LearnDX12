@@ -59,6 +59,8 @@ protected:
     bool _resizing = false;
     bool _fullScreenState = false;
     bool _appPaused = false;
+    uint32_t _width = 0;
+    uint32_t _height = 0;
 
 protected:
     void calculateFrameStats()
@@ -114,6 +116,10 @@ public:
     inline bool isResizing() const { return _resizing; }
     inline void setFullScreen(const bool isFull) { _fullScreenState = isFull; }
     inline bool isFullScreen() const { return _fullScreenState; }
+    inline void setWidth(const uint32_t width) { _width = width; }
+    inline uint32_t getWidth() const { return _width; }
+    inline void setHeight(const uint32_t height) { _height = height; }
+    inline uint32_t getHeight() const { return _height; }
 
 
     int run() {

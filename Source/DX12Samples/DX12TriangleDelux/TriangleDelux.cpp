@@ -820,7 +820,7 @@ void TriangleDelux::draw()
         _samplerDescriptorHeap.Get()
     };
 
-    commandList->SetDescriptorHeaps( 2, heaps );
+    commandList->SetDescriptorHeaps( 2, heaps ); 
 
     // 第[0]个是 const buffer view descriptor
     commandList->SetGraphicsRootDescriptorTable(0, _constantBufferGPUDescriptorHandle );

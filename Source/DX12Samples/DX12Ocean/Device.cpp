@@ -8,7 +8,7 @@ Device::~Device()
 {
 }
 
-bool Device::initialize(HWND &hwnd, uint32_t width, uint32_t height)
+bool Device::initialize(HWND hwnd, uint32_t width, uint32_t height)
 {
 #if defined(DEBUG) || defined(_DEBUG)
     {
@@ -35,6 +35,8 @@ bool Device::initialize(HWND &hwnd, uint32_t width, uint32_t height)
     }
 
     createCommnadObjectsAndFence();
+
+    createUploadCommandObjectsAndFence();
 
     //check 4x MSAA quality support for back buffer format.
     check4xMsaaSupport();
@@ -72,28 +74,41 @@ void Device::createCommnadObjectsAndFence()
 
     for (uint32_t i = 0; i < MaxFlightCount; ++i)
     {
-        _device->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, IID_PPV_ARGS(&_graphicsCommandAllocator[i]));
-        _graphicsCommandAllocator[i].Reset();
+        ThrowIfFailed(_device->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, IID_PPV_ARGS(_graphicsCommandAllocator[i].GetAddressOf())));
 
-        _device->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, _graphicsCommandAllocator[i].Get(), nullptr, IID_PPV_ARGS(&_graphicsCommandLists[i]));
+        ThrowIfFailed(_device->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, _graphicsCommandAllocator[i].Get(), nullptr, IID_PPV_ARGS(_graphicsCommandLists[i].GetAddressOf())));
         _graphicsCommandLists[i]->Close();
 
-        _device->CreateFence(0, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&_graphicsFences[i]));
-        _graphicsFences[i].Reset();
+        ThrowIfFailed(_device->CreateFence(0, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&_graphicsFences[i])));
     }
 
     //TODO: 感觉初始化这个EVENT 并没有什么效果。 以后再看。
     _graphicsFenceEvent = CreateEventEx(nullptr, FALSE, FALSE, EVENT_ALL_ACCESS);
 }
 
-ComPtr<IDXGISwapChain3> Device::createSwapChian()
+void Device::createUploadCommandObjectsAndFence()
+{
+    D3D12_COMMAND_QUEUE_DESC desc = {};
+    desc.Type = D3D12_COMMAND_LIST_TYPE_DIRECT;
+    desc.Flags = D3D12_COMMAND_QUEUE_FLAG_NONE;
+
+    ThrowIfFailed(_device->CreateCommandQueue(&desc, IID_PPV_ARGS(_uploadQueue.GetAddressOf())));
+    ThrowIfFailed(_device->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, IID_PPV_ARGS(_uploadCommandAllocator.GetAddressOf())));
+    ThrowIfFailed(_device->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, _uploadCommandAllocator.Get(), nullptr, IID_PPV_ARGS(_uploadCommandList.GetAddressOf())));
+    _uploadCommandList->Close();
+    ThrowIfFailed(_device->CreateFence(0, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(_uploadFence.GetAddressOf())));
+    _uploadFenceValue = 0;
+    _uploadFenceEvent =  CreateEventEx(nullptr, FALSE, FALSE, EVENT_ALL_ACCESS);
+}
+
+ComPtr<IDXGISwapChain3> Device::createSwapChian(const uint32_t width, const uint32_t height)
 {
     //create swap chain
     ComPtr<IDXGISwapChain> swapChian;
 
     DXGI_SWAP_CHAIN_DESC desc = {};
-    desc.BufferDesc.Width = _width;
-    desc.BufferDesc.Height = _height;
+    desc.BufferDesc.Width = width;
+    desc.BufferDesc.Height = height;
     desc.BufferDesc.RefreshRate.Numerator = 60;
     desc.BufferDesc.RefreshRate.Denominator = 1;
     desc.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
@@ -159,6 +174,18 @@ ComPtr<ID3D12GraphicsCommandList> Device::draw(uint32_t flightIndex, ComPtr<ID3D
     //TODO: cmdList reset need pipeline state.
     ThrowIfFailed(cmdList->Reset(cmdAllocator.Get(), state.Get()));
     return cmdList;
+}
+
+void Device::executeCommand(ComPtr<ID3D12GraphicsCommandList> &commandList)
+{
+    ID3D12CommandList *lists[] = { commandList.Get() };
+    _graphicsCommandQueue->ExecuteCommandLists(1, lists);
+    ThrowIfFailed(_graphicsCommandQueue->Signal(_graphicsFences[_flightIndex].Get(), _graphicsFenceValues[_flightIndex]));
+    // flushGraphicsCommandQueue();
+}
+
+Device::operator ComPtr<ID3D12Device> () const {
+    return _device;
 }
 
 
@@ -238,6 +265,6 @@ void Device::set4xMassState(bool value)
         _4xMsaaState = value;
 
         // Recreate the swapchain and buffers with new multisample settings.
-        createSwapChian();
+        createSwapChian(_width, _height);
     }
 }
