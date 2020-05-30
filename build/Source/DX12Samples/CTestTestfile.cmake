@@ -4,7 +4,4 @@
 # 
 # This file includes the relevant testing commands required for 
 # testing this directory and lists subdirectories to be tested as well.
-subdirs("DX12Test")
-subdirs("DX12Triangle")
-subdirs("DX12TriangleColor")
-subdirs("DX12TriangleDelux")
+subdirs("DX12Ocean")
