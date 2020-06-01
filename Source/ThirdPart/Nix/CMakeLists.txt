@@ -7,6 +7,7 @@ include_directories(
 project( Nix )
 
 set( NIX_SOURCE 
+	# ${CMAKE_CURRENT_SOURCE_DIR}/Common/Common.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/IO/archive.h
     ${CMAKE_CURRENT_SOURCE_DIR}/IO/archive.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/String/encoding.cpp

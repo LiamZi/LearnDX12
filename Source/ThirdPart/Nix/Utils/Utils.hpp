@@ -1,8 +1,7 @@
 #ifndef __UTILS_HPP__
 #define __UTILS_HPP__
 
-#include <windows.h>
-#include <string>
+#include <Common.hpp>
 
 namespace Nix {
 
@@ -13,8 +12,7 @@ inline std::wstring AnsiToWString(const std::string &str)
     return std::wstring(buffer);
 }
 
-class DxException
-{
+class DxException {
 public:
     HRESULT _errorCode = S_OK;
     std::wstring _functionName;
@@ -43,6 +41,24 @@ public:
 #ifndef ReleaseCom
 #define ReleaseCom(x) { if(x) { x->Release(); x = 0;}}
 #endif
+
+class Utils {
+
+    static uint32_t calcConstantBufferSize(uint32_t size)
+    {
+        return (size + 255) & ~255;
+    }
+
+    static Microsoft::WRL::ComPtr<ID3D12Resource> createBuffer(ID3D12Device *device, 
+                                            ID3D12GraphicsCommandList *cmdList, 
+                                            const void *data, uint64_t byteSize, 
+                                            Microsoft::WRL::ComPtr<ID3D12Resource> &uploadBuffer);
+
+    static Microsoft::WRL::ComPtr<ID3DBlob> compileShader(const std::wstring &filename, 
+                                            const D3D_SHADER_MACRO *defines, 
+                                            const std::string &entrypoint, 
+                                            const std::string &target);
+};
 
 }
 
