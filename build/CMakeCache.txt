@@ -24,9 +24,6 @@ BZRCOMMAND:FILEPATH=BZRCOMMAND-NOTFOUND
 // syntax should this version of CMake try to support.
 CMAKE_BACKWARDS_COMPATIBILITY:STRING=2.4
 
-//No help, variable specified on the command line.
-CMAKE_BUILD_TYPE:STRING=Debug
-
 //Semicolon separated list of supported configuration types, only
 // supports Debug, Release, MinSizeRel, and RelWithDebInfo, anything
 // else will be ignored.
@@ -277,6 +274,24 @@ GLESv2:FILEPATH=GLESv2-NOTFOUND
 //Path to a program.
 HGCOMMAND:FILEPATH=HGCOMMAND-NOTFOUND
 
+//Value Computed by CMake
+HelloDX12_BINARY_DIR:STATIC=D:/GitHub/LearnDX12/build/Source/DX12Samples/DX12Test
+
+//Value Computed by CMake
+HelloDX12_SOURCE_DIR:STATIC=D:/GitHub/LearnDX12/Source/DX12Samples/DX12Test
+
+//Value Computed by CMake
+HelloTriangleColor_BINARY_DIR:STATIC=D:/GitHub/LearnDX12/build/Source/DX12Samples/DX12TriangleColor
+
+//Value Computed by CMake
+HelloTriangleColor_SOURCE_DIR:STATIC=D:/GitHub/LearnDX12/Source/DX12Samples/DX12TriangleColor
+
+//Value Computed by CMake
+HelloTriangle_BINARY_DIR:STATIC=D:/GitHub/LearnDX12/build/Source/DX12Samples/DX12Triangle
+
+//Value Computed by CMake
+HelloTriangle_SOURCE_DIR:STATIC=D:/GitHub/LearnDX12/Source/DX12Samples/DX12Triangle
+
 //Single output directory for building all libraries.
 LIBRARY_OUTPUT_PATH:PATH=
 
@@ -311,7 +326,7 @@ OceanSimulator_SOURCE_DIR:STATIC=D:/GitHub/LearnDX12/Source/DX12Samples/DX12Ocea
 P4COMMAND:FILEPATH=P4COMMAND-NOTFOUND
 
 //Name of the computer/site where compile is being run
-SITE:STRING=DESKTOP-VC0S0G9
+SITE:STRING=DESKTOP-4RDMK0M
 
 //Path to the SLURM sbatch executable
 SLURM_SBATCH_COMMAND:FILEPATH=SLURM_SBATCH_COMMAND-NOTFOUND
@@ -327,6 +342,12 @@ SOURCE_SOURCE_DIR:STATIC=D:/GitHub/LearnDX12/Source
 
 //Path to a program.
 SVNCOMMAND:FILEPATH=SVNCOMMAND-NOTFOUND
+
+//Value Computed by CMake
+TriangleDelux_BINARY_DIR:STATIC=D:/GitHub/LearnDX12/build/Source/DX12Samples/DX12TriangleDelux
+
+//Value Computed by CMake
+TriangleDelux_SOURCE_DIR:STATIC=D:/GitHub/LearnDX12/Source/DX12Samples/DX12TriangleDelux
 
 
 ########################
@@ -415,7 +436,7 @@ CMAKE_MODULE_LINKER_FLAGS_RELWITHDEBINFO-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_MT
 CMAKE_MT-ADVANCED:INTERNAL=1
 //number of local generators
-CMAKE_NUMBER_OF_MAKEFILES:INTERNAL=6
+CMAKE_NUMBER_OF_MAKEFILES:INTERNAL=7
 //Platform information initialized
 CMAKE_PLATFORM_INFO_INITIALIZED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_RC_COMPILER

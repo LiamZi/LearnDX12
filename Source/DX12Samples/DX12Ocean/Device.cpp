@@ -34,9 +34,16 @@ bool Device::initialize(HWND hwnd, uint32_t width, uint32_t height)
         ThrowIfFailed(D3D12CreateDevice(warpAdapter.Get(), D3D_FEATURE_LEVEL_11_0, IID_PPV_ARGS(&_device)));
     }
 
-    createCommnadObjectsAndFence();
+    _rtvDescriptorSize = _device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
+    _dsvDescriptorSize = _device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_DSV);
+    _cbvSrvUavDescriptorSize = _device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 
+
+    createCommnadObjectsAndFence();
+    _swapChain = createSwapChian(1280, 720);
+    
     createUploadCommandObjectsAndFence();
+    createRtvAndDsvDescriptorHeaps();
 
     //check 4x MSAA quality support for back buffer format.
     check4xMsaaSupport();
@@ -182,6 +189,31 @@ void Device::executeCommand(ComPtr<ID3D12GraphicsCommandList> &commandList)
     _graphicsCommandQueue->ExecuteCommandLists(1, lists);
     ThrowIfFailed(_graphicsCommandQueue->Signal(_graphicsFences[_flightIndex].Get(), _graphicsFenceValues[_flightIndex]));
     // flushGraphicsCommandQueue();
+}
+
+void Device::createRtvAndDsvDescriptorHeaps()
+{
+    D3D12_DESCRIPTOR_HEAP_DESC rtvHeapDesc;
+    rtvHeapDesc.NumDescriptors = MaxFlightCount;
+    rtvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;
+    rtvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
+    rtvHeapDesc.NodeMask = 0;
+    ThrowIfFailed(_device->CreateDescriptorHeap(&rtvHeapDesc, IID_PPV_ARGS(_rtvHeap.GetAddressOf())));
+
+    // D3D12_DESCRIPTOR_HEAP_DESC dsvHeapDesc;
+    // dsvHeapDesc.NumDescriptors = 1;
+    // dsvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_DSV;
+    // dsvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
+    // dsvHeapDesc.NodeMask = 0;
+    // ThrowIfFailed(_device->CreateDescriptorHeap(&dsvHeapDesc, IID_PPV_ARGS(_dsvHeap.GetAddressOf())));
+
+    D3D12_DESCRIPTOR_HEAP_DESC dsvHeapDesc;
+    dsvHeapDesc.NumDescriptors = 1;
+    dsvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_DSV;
+    dsvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
+	dsvHeapDesc.NodeMask = 0;
+    ThrowIfFailed(_device->CreateDescriptorHeap(
+        &dsvHeapDesc, IID_PPV_ARGS(_dsvHeap.GetAddressOf())));
 }
 
 Device::operator ComPtr<ID3D12Device> () const {

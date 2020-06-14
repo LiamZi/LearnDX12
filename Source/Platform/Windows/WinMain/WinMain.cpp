@@ -81,7 +81,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 	frameThicknessY = GetSystemMetrics(SM_CYSIZEFRAME);
 
 	HWND hWnd = CreateWindowW(szWindowClass, L"HelloDX12", WS_OVERLAPPEDWINDOW,
-		CW_USEDEFAULT, 0, 800, 600, nullptr, nullptr, hInstance, nullptr);
+		CW_USEDEFAULT, 0, 1024, 600, nullptr, nullptr, hInstance, nullptr);
 
 	if (!hWnd) {
 		return FALSE;

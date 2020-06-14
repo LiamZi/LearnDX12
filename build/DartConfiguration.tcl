@@ -11,7 +11,7 @@ BuildDirectory: D:/GitHub/LearnDX12/build
 CostDataFile: 
 
 # Site is something like machine.domain, i.e. pragmatic.crd
-Site: DESKTOP-VC0S0G9
+Site: DESKTOP-4RDMK0M
 
 # Build name is osname-revision-compiler, i.e. Linux-2.4.2-2smp-c++
 BuildName: Win32-MSBuild
@@ -63,7 +63,7 @@ UpdateType: git
 
 # Compiler info
 Compiler: C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/VC/Tools/MSVC/14.26.28801/bin/Hostx86/x64/cl.exe
-CompilerVersion: 19.26.28805.0
+CompilerVersion: 19.26.28806.0
 
 # Dynamic analysis (MemCheck)
 PurifyCommand: 

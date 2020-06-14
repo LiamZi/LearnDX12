@@ -42,23 +42,37 @@ public:
 #define ReleaseCom(x) { if(x) { x->Release(); x = 0;}}
 #endif
 
-class Utils {
+    class Utils {
 
-    static uint32_t calcConstantBufferSize(uint32_t size)
-    {
-        return (size + 255) & ~255;
-    }
+    public:
 
-    static Microsoft::WRL::ComPtr<ID3D12Resource> createBuffer(ID3D12Device *device, 
-                                            ID3D12GraphicsCommandList *cmdList, 
-                                            const void *data, uint64_t byteSize, 
-                                            Microsoft::WRL::ComPtr<ID3D12Resource> &uploadBuffer);
+        static uint32_t calcConstantBufferSize(uint32_t size)
+        {
+            return (size + 255) & ~255;
+        }
 
-    static Microsoft::WRL::ComPtr<ID3DBlob> compileShader(const std::wstring &filename, 
-                                            const D3D_SHADER_MACRO *defines, 
-                                            const std::string &entrypoint, 
-                                            const std::string &target);
-};
+        
+
+        static Microsoft::WRL::ComPtr<ID3D12Resource> createBuffer(ID3D12Device *device, 
+                                                ID3D12GraphicsCommandList *cmdList, 
+                                                const void *data, uint64_t byteSize, 
+                                                Microsoft::WRL::ComPtr<ID3D12Resource> &uploadBuffer);
+
+        static Microsoft::WRL::ComPtr<ID3D12Resource> createUploadBuffer(Microsoft::WRL::ComPtr<ID3D12Device> &device,
+                                                Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> &uploadCmdList,
+                                                Microsoft::WRL::ComPtr<ID3D12CommandAllocator> &uploadCmdAllocator,
+                                                Microsoft::WRL::ComPtr<ID3D12CommandQueue> &uploadCmdQueue,
+                                                Microsoft::WRL::ComPtr<ID3D12Fence> &uploadFence,
+                                                uint64_t uploadFenceValue,
+                                                const void *data,
+                                                uint64_t byteSize, 
+                                                Microsoft::WRL::ComPtr<ID3D12Resource> &uploadBuffer);
+
+        static Microsoft::WRL::ComPtr<ID3DBlob> compileShader(const std::wstring &filename, 
+                                                const D3D_SHADER_MACRO *defines, 
+                                                const std::string &entrypoint, 
+                                                const std::string &target);
+    };
 
 }
 

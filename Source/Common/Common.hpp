@@ -24,6 +24,8 @@
 
 #include "../ThirdPart/d3dx12.h"
 #include "../ThirdPart/Nix/Utils/Utils.hpp"
+#include "../ThirdPart/Nix/Utils/UploadBuffer.hpp"
+#include "../ThirdPart/Nix/Math/MathHelper.h"
 
 
 

@@ -7,3 +7,4 @@ include_directories(
 
 add_subdirectory(DX12Samples)
 add_subdirectory(ThirdPart)
+add_subdirectory(Utility)

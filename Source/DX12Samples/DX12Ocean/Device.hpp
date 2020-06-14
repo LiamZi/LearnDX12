@@ -16,6 +16,7 @@ private:
     ComPtr<ID3D12Debug>                     _debugController;
     ComPtr<ID3D12Device>                    _device;
     ComPtr<IDXGIFactory4>                   _factory;
+    ComPtr<IDXGISwapChain3>                 _swapChain;
 
     //graphics queue
     ComPtr<ID3D12CommandQueue>              _graphicsCommandQueue;
@@ -29,13 +30,17 @@ private:
     ComPtr<ID3D12Fence>                     _uploadFence;
     HANDLE                                  _uploadFenceEvent;
 
+    ComPtr<ID3D12DescriptorHeap>            _rtvHeap;
+    ComPtr<ID3D12DescriptorHeap>            _dsvHeap;
+
     //cpu and graphics fance
     ComPtr<ID3D12Fence>                     _graphicsFences[MaxFlightCount];
     HANDLE                                  _graphicsFenceEvent;
     uint64_t                                _graphicsFenceValues[MaxFlightCount];
 
-    uint32_t                                _rtvDescriptorSize;
-    uint32_t                                _dsvDescriptorSize;
+    uint32_t                                _rtvDescriptorSize = 0;
+    uint32_t                                _dsvDescriptorSize = 0;
+    uint32_t                                _cbvSrvUavDescriptorSize = 0;
 
     uint32_t                                _4xMsaaQuality = 0;
     bool                                    _4xMsaaState = false;
@@ -46,21 +51,88 @@ private:
     uint32_t                                _flightIndex;
     uint64_t                                _uploadFenceValue;
 
+   
 public:
     explicit Device(/* args */);
     ~Device();
 
     ComPtr<IDXGISwapChain3> createSwapChian(const uint32_t width, const uint32_t height);
 
-    float AspectRatio() const { return static_cast<float>(_width) / _height; }
     void set4xMassState(const bool value);
     bool get4xMassState() const { return _4xMsaaState; }
+    uint32_t get4xMassQuality() const { return _4xMsaaQuality; }
     void flushGraphicsCommandQueue();
     void waitForFlight(uint32_t flight);
     ComPtr<ID3D12GraphicsCommandList> draw(uint32_t flightIndex, ComPtr<ID3D12PipelineState> &pipelineStete);
     void executeCommand(ComPtr<ID3D12GraphicsCommandList> &commandList);
+    void createRtvAndDsvDescriptorHeaps();
     
     operator ComPtr<ID3D12Device> () const;
+
+    inline ComPtr<IDXGISwapChain3> &getSwapChain()
+    {
+        return _swapChain;
+    }
+
+    inline const uint32_t getRtvDescSize() const
+    {
+        return _rtvDescriptorSize;
+    }
+
+    inline const uint32_t getDsvDescSize() const 
+    {
+        return _dsvDescriptorSize;
+    }
+
+    inline const uint32_t getCbvDescSize() const 
+    {
+        return _cbvSrvUavDescriptorSize;
+    }
+
+    inline ComPtr<ID3D12GraphicsCommandList> getUploadCommandList() 
+    {
+        return _uploadCommandList;
+    }
+
+    inline ComPtr<ID3D12CommandAllocator> getUploadCommandAllocation()
+    {
+        return _uploadCommandAllocator;
+    }
+
+    inline ComPtr<ID3D12CommandQueue> getUploadCommandQueue()
+    {
+        return _uploadQueue;
+    }
+
+    inline ComPtr<ID3D12Fence> getUploadFence()
+    {
+        return _uploadFence;
+    }
+
+    inline void setUploadFenceValue(const uint64_t value)
+    {
+        _uploadFenceValue = value;
+    }
+
+    inline uint64_t getUploadFenceValue()
+    {
+        return _uploadFenceValue;
+    }
+
+    inline ComPtr<ID3D12DescriptorHeap> &getRtvHeap()
+    {
+        return _rtvHeap;
+    }
+
+    inline ComPtr<ID3D12DescriptorHeap> &getDsvHeap()
+    {
+        return _dsvHeap;
+    }
+
+    inline ComPtr<ID3D12CommandQueue> &getGraphicsCmdQueue()
+    {
+        return _graphicsCommandQueue;
+    }
 
 protected:
     void logAdapters();

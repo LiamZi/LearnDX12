@@ -846,7 +846,7 @@ void TriangleDelux::draw()
 
 }
 
-void TriangleDelux::tick(double dt)
+void TriangleDelux::tick(float dt)
 {
     
 }

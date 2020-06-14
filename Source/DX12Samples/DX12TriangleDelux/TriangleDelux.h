@@ -105,7 +105,7 @@ public:
     virtual bool initialize(void *wnd, Nix::IArchive *);
     virtual void resize(uint32_t width, uint32_t height);
     virtual void release();
-    virtual void tick(double dt) override;
+    virtual void tick(float dt) override;
     virtual void draw() override;
     virtual char *title();
     virtual uint32_t rendererType();
