@@ -188,25 +188,29 @@ void SimluatorApp::createCubeGeometry(ComPtr<ID3D12Device> device)
 
     std::array<uint16_t, 36> indices = 
     {
-        //font face
-        0, 1, 2,
-        0, 2, 3,
+        // front face
+		0, 1, 2,
+		0, 2, 3,
 
-        //back face
-        4, 5, 6,
-        4, 7, 6, 
+		// back face
+		4, 6, 5,
+		4, 7, 6,
 
-        //left face
-        3, 2, 6, 
-        3, 6, 7, 
+		// left face
+		4, 5, 1,
+		4, 1, 0,
 
-        //top face
-        1, 5, 6, 
-        1, 6, 2,
-        
-        //bottom face
-        4, 0, 3, 
-        4, 3, 7,
+		// right face
+		3, 2, 6,
+		3, 6, 7,
+
+		// top face
+		1, 5, 6,
+		1, 6, 2,
+
+		// bottom face
+		4, 0, 3,
+		4, 3, 7
     };
 
     const uint32_t vbSize = static_cast<uint32_t>(vertices.size() * sizeof(Vertex));
@@ -479,7 +483,47 @@ void SimluatorApp::draw()
 
 void SimluatorApp::onMouseEvent(eMouseButton btn, eMouseEvent event, int x, int y)
 {
+    switch (event)
+    {
+        case eMouseEvent::MouseDown:
+        {
+            _lasstMousePos.x = x;
+            _lasstMousePos.y = y;
 
+            SetCapture((HWND)_hwnd);
+        }
+            break;
+        case eMouseEvent::MouseUp:
+        {
+            ReleaseCapture();
+        }
+            break;
+        case eMouseEvent::MouseMove:
+        {
+            if((btn & eMouseButton::LButtonMouse != 0))
+            {
+                auto dx = XMConvertToRadians(0.25f * static_cast<float>(x - _lasstMousePos.x));
+                auto dy = XMConvertToRadians(0.25f * static_cast<float>(y - _lasstMousePos.y));
+
+                _theta += dx;
+                _phi += dy;
+
+                _phi = MathHelper::Clamp(_phi, 0.1f, MathHelper::Pi - 0.1f);
+            }
+            else if((btn & eMouseButton::RButtonMouse) != 0)
+            {
+                auto dx = 0.005f * static_cast<float>(x - _lasstMousePos.x);
+                auto dy = 0.00f * static_cast<float>(y - _lasstMousePos.y);
+
+                _radius += dx - dy;
+                _radius = MathHelper::Clamp(_radius, 3.0f, 15.0f);
+            }
+        }
+            break;
+    }
+
+    _lasstMousePos.x = x;
+    _lasstMousePos.y = y;
 }
 
 char * SimluatorApp::title()
