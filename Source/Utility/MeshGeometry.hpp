@@ -1,7 +1,7 @@
 #ifndef __MESH_GEOMETRY_HPP__
 #define __MESH_GEOMETRY_HPP__
 
-#include "../Common/Common.hpp"
+#include <Common.hpp>
 
 using namespace Microsoft::WRL;
 
@@ -44,6 +44,11 @@ public:
     void setDrawArgsElement(const std::string &name, SubMeshGeometry &geometry)
     {
         _drawArgs[name] = geometry;
+    }
+
+    SubMeshGeometry &getDrawArgsSubMeshByName(const std::string &name)
+    {
+        return _drawArgs[name]; 
     }
 
     std::unordered_map<std::string, SubMeshGeometry> &getDrawArgs()

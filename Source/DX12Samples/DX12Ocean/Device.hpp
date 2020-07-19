@@ -20,8 +20,10 @@ private:
 
     //graphics queue
     ComPtr<ID3D12CommandQueue>              _graphicsCommandQueue;
-    ComPtr<ID3D12GraphicsCommandList>       _graphicsCommandLists[MaxFlightCount];
-    ComPtr<ID3D12CommandAllocator>          _graphicsCommandAllocator[MaxFlightCount];
+    // ComPtr<ID3D12GraphicsCommandList>       _graphicsCommandLists[MaxFlightCount];
+    // ComPtr<ID3D12CommandAllocator>          _graphicsCommandAllocator[MaxFlightCount];
+    ComPtr<ID3D12CommandAllocator>          _graphicsCommandAllocator;
+    ComPtr<ID3D12GraphicsCommandList>       _graphicsCommandLists;
 
     //upload queue
     ComPtr<ID3D12CommandQueue>              _uploadQueue;
@@ -63,7 +65,7 @@ public:
     uint32_t get4xMassQuality() const { return _4xMsaaQuality; }
     void flushGraphicsCommandQueue();
     void waitForFlight(uint32_t flight);
-    ComPtr<ID3D12GraphicsCommandList> draw(uint32_t flightIndex, ComPtr<ID3D12PipelineState> &pipelineStete);
+    // ComPtr<ID3D12GraphicsCommandList> draw(uint32_t flightIndex, ComPtr<ID3D12PipelineState> &pipelineStete);
     void executeCommand(ComPtr<ID3D12GraphicsCommandList> &commandList);
     void createRtvAndDsvDescriptorHeaps();
     
@@ -132,6 +134,18 @@ public:
     inline ComPtr<ID3D12CommandQueue> &getGraphicsCmdQueue()
     {
         return _graphicsCommandQueue;
+    }
+
+    inline ComPtr<ID3D12GraphicsCommandList> &getGraphicsCmdList(const uint32_t flightIndex)
+    {
+        // return _graphicsCommandLists[flightIndex];
+        return _graphicsCommandLists;
+    }
+
+    inline ComPtr<ID3D12CommandAllocator> &getGraphicsCmdAllocator(const uint32_t flightIndex)
+    {
+        // return _graphicsCommandAllocator[flightIndex];
+        return _graphicsCommandAllocator;
     }
 
 protected:

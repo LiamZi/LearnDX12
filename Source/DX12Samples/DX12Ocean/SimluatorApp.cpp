@@ -1,25 +1,22 @@
 #include "SimluatorApp.hpp"
 #include "MeshGeometry.hpp"
-#include "../ThirdPart/Nix/Utils/Utils.hpp"
+#include "Vertex.hpp"
+#include "Nix/Utils/Utils.hpp"
+#include "Waves.hpp"
 
 
-
-
-struct Vertex
-{
-    DirectX::XMFLOAT3 pos;
-    DirectX::XMFLOAT4 color;
-};
+static const XMFLOAT4 OCEANCOLOR = XMFLOAT4(0.004f, 0.016f, 0.047f, 1.0f);
 
 
 SimluatorApp::SimluatorApp()
-:_vsShader(nullptr)
-,_fragShader(nullptr)
-,_boxGeometry(nullptr)
-,_pipelineStateObject(nullptr)
-,_swapChain(nullptr)
+:_swapChain(nullptr)
 {
 
+}
+
+SimluatorApp::~SimluatorApp()
+{
+    _device.flushGraphicsCommandQueue();
 }
 
 
@@ -49,16 +46,7 @@ bool SimluatorApp::initialize(void *hwnd, Nix::IArchive *archive)
     auto rtvDescriptorSize = _device.getRtvDescSize();
     _swapChain = _device.getSwapChain();
 
-    // for (int i = 0; i < MaxFlightCount; i++) {
-    //     // first we get the n'th buffer in the swap chain and store it in the n'th
-    //     // position of our ID3D12Resource array
-    //     HRESULT rst = _swapChain->GetBuffer( i, IID_PPV_ARGS(&_renderTargets[i]));
-    //     _renderTargets[i]->SetName(L"swapchain render target buffer");
-    //     if (FAILED(rst)) return false;
-    //     // the we "create" a render target view which binds the swap chain buffer (ID3D12Resource[n]) to the rtv handle
-    //     device->CreateRenderTargetView(_renderTargets[i].Get(), nullptr, { rtvHandle.ptr + rtvDescriptorSize * i });
-    // }
-
+    _waves = std::make_unique<Waves>(256, 256, 1.0f, 0.03f, 4.0f, 2.0f);
 
     return true;
 }
@@ -124,9 +112,10 @@ void SimluatorApp::createShaderAndLayout(ComPtr<ID3D12Device> device)
 {
     HRESULT result = S_OK;
 
-    _vsShader = Nix::Utils::compileShader(L"bin\\shaders\\color.hlsl", nullptr, "vsMain", "vs_5_0");
-    _fragShader = Nix::Utils::compileShader(L"bin\\shaders\\color.hlsl", nullptr, "psMain", "ps_5_0");
- 
+    // _vsShader = Nix::Utils::compileShader(L"bin\\shaders\\color.hlsl", nullptr, "vsMain", "vs_5_0");
+    // _fragShader = Nix::Utils::compileShader(L"bin\\shaders\\color.hlsl", nullptr, "psMain", "ps_5_0");
+    _shaders["standardVS"] = Nix::Utils::compileShader(L"bin\\shaders\\color.hlsl", nullptr, "vsMain", "vs_5_0");
+    _shaders["opaquePS"] =  Nix::Utils::compileShader(L"bin\\shaders\\color.hlsl", nullptr, "psMain", "ps_5_0");
 
     _inputLayout = {
         {"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0},
@@ -136,138 +125,260 @@ void SimluatorApp::createShaderAndLayout(ComPtr<ID3D12Device> device)
 
 void SimluatorApp::createPipelineStateObjects(ComPtr<ID3D12Device> device)
 {
-    D3D12_GRAPHICS_PIPELINE_STATE_DESC desc;
-    ZeroMemory(&desc, sizeof(D3D12_GRAPHICS_PIPELINE_STATE_DESC));
-    desc.InputLayout = { _inputLayout.data(), (uint32_t)_inputLayout.size() };
-    desc.pRootSignature = _pipelineRootSignature.Get();
-    desc.VS = 
-    {
-        reinterpret_cast<BYTE *> (_vsShader->GetBufferPointer()),
-        _vsShader->GetBufferSize(),
-    };
+    // D3D12_GRAPHICS_PIPELINE_STATE_DESC desc;
+    // ZeroMemory(&desc, sizeof(D3D12_GRAPHICS_PIPELINE_STATE_DESC));
+    // desc.InputLayout = { _inputLayout.data(), (uint32_t)_inputLayout.size() };
+    // desc.pRootSignature = _pipelineRootSignature.Get();
+    // desc.VS = 
+    // {
+    //     reinterpret_cast<BYTE *> (_vsShader->GetBufferPointer()),
+    //     _vsShader->GetBufferSize(),
+    // };
 
-    desc.PS = 
-    {
-        reinterpret_cast<BYTE *>(_fragShader->GetBufferPointer()),
-        _fragShader->GetBufferSize()
-    };
+    // desc.PS = 
+    // {
+    //     reinterpret_cast<BYTE *>(_fragShader->GetBufferPointer()),
+    //     _fragShader->GetBufferSize()
+    // };
 
-    desc.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
-    desc.BlendState = CD3DX12_BLEND_DESC(D3D12_DEFAULT);
-    desc.DepthStencilState = CD3DX12_DEPTH_STENCIL_DESC(D3D12_DEFAULT);
-    desc.SampleMask = UINT_MAX;
+    // desc.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
+    // desc.BlendState = CD3DX12_BLEND_DESC(D3D12_DEFAULT);
+    // desc.DepthStencilState = CD3DX12_DEPTH_STENCIL_DESC(D3D12_DEFAULT);
+    // desc.SampleMask = UINT_MAX;
     // desc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
-    desc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_LINE;
-    desc.NumRenderTargets = 1;
-    desc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM;
-    desc.SampleDesc.Count = _device.get4xMassState() ? 4 : 1;
-    desc.SampleDesc.Quality = _device.get4xMassState() ? (_device.get4xMassQuality() - 1) : 0;
-    desc.DSVFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
+    // // desc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_LINE;
+    // desc.NumRenderTargets = 1;
+    // desc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM;
+    // desc.SampleDesc.Count = _device.get4xMassState() ? 4 : 1;
+    // desc.SampleDesc.Quality = _device.get4xMassState() ? (_device.get4xMassQuality() - 1) : 0;
+    // desc.DSVFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
 
-    ThrowIfFailed(device->CreateGraphicsPipelineState(&desc, IID_PPV_ARGS(&_pipelineStateObject)));
+    // ThrowIfFailed(device->CreateGraphicsPipelineState(&desc, IID_PPV_ARGS(&_pipelineStateObject)));
+
+    D3D12_GRAPHICS_PIPELINE_STATE_DESC opaqueDesc;
+
+    ZeroMemory(&opaqueDesc, sizeof(D3D12_GRAPHICS_PIPELINE_STATE_DESC));
+    opaqueDesc.InputLayout = { _inputLayout.data(), (uint32_t)_inputLayout.size()};
+    opaqueDesc.pRootSignature = _pipelineRootSignature.Get();
+    opaqueDesc.VS = 
+    {
+        reinterpret_cast<BYTE *>(_shaders["standardVS"]->GetBufferPointer()),
+        _shaders["standardVS"]->GetBufferSize()
+    };
+
+    opaqueDesc.PS = 
+    {
+        reinterpret_cast<BYTE *>(_shaders["opaquePS"]->GetBufferPointer()),
+        _shaders["opaquePS"]->GetBufferSize()
+    };
+
+    opaqueDesc.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
+    opaqueDesc.BlendState = CD3DX12_BLEND_DESC(D3D12_DEFAULT);
+    opaqueDesc.DepthStencilState = CD3DX12_DEPTH_STENCIL_DESC1(D3D12_DEFAULT);
+    opaqueDesc.SampleMask = UINT_MAX;
+    opaqueDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+    opaqueDesc.NumRenderTargets = 1;
+    opaqueDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM;
+    opaqueDesc.SampleDesc.Count = _device.get4xMassState() ? 4 : 1;
+    opaqueDesc.SampleDesc.Quality = _device.get4xMassState() ? (_device.get4xMassQuality() - 1) : 0;
+    opaqueDesc.DSVFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
+    ThrowIfFailed(device->CreateGraphicsPipelineState(&opaqueDesc, IID_PPV_ARGS(&_pipelineStateObjects["opaque"])));
+
+    D3D12_GRAPHICS_PIPELINE_STATE_DESC opaqueWireFramePsoDesc = opaqueDesc;
+    opaqueWireFramePsoDesc.RasterizerState.FillMode = D3D12_FILL_MODE_WIREFRAME;
+    ThrowIfFailed(device->CreateGraphicsPipelineState(&opaqueWireFramePsoDesc, IID_PPV_ARGS(&_pipelineStateObjects["opaque_wireframe"])));
 }
 
-void SimluatorApp::createFrameResouce(ComPtr<ID3D12Device> device)
+void SimluatorApp::createFrameResource(ComPtr<ID3D12Device> device)
+{
+    for (size_t i = 0; i < MaxFlightCount; i++)
+    {
+        _framesResources.push_back(std::make_unique<FrameResource>(device.Get(), 
+                                                    1, 
+                                                    (uint32_t)_allRenderItems.size(), 
+                                                    _waves->vertexCount()));
+    }
+}
+
+
+void SimluatorApp::createRenderItems(ComPtr<ID3D12Device> device)
+{
+    auto wavesRenderItem = std::make_unique<RenderItem>();
+    wavesRenderItem->_world = MathHelper::Identity4x4();
+    wavesRenderItem->_objContantBufferIndex = 0;
+    wavesRenderItem->_geo = _geometries["water"].get();
+    wavesRenderItem->_primitiveType = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+    auto subMesh =  wavesRenderItem->_geo->getDrawArgsSubMeshByName("gird");
+    wavesRenderItem->_indexCount = subMesh._indexCount;
+    wavesRenderItem->_startIndexLocation = subMesh._startIndexLocation;
+    wavesRenderItem->_baseVertexLocation = subMesh._baseVertexLocation;
+
+    _wavesRenderItem = wavesRenderItem.get();
+
+    _renderItemLayer[(int)RenderLayer::Opaque].push_back(wavesRenderItem.get());
+
+    _allRenderItems.push_back(std::move(wavesRenderItem));
+}
+
+void SimluatorApp::drawRenderItem(ID3D12GraphicsCommandList *cmdList, const std::vector<RenderItem *> &renderItems)
 {
 
 }
 
 void SimluatorApp::createCubeGeometry(ComPtr<ID3D12Device> device)
 {
-     std::array<Vertex, 8> vertices = 
-    {
-        Vertex({XMFLOAT3(-1.0f, -1.0f, -1.0f), XMFLOAT4(Colors::White)}),
-        Vertex({XMFLOAT3(-1.0f, 1.0f, -1.0f), XMFLOAT4(Colors::Black)}),
-        Vertex({XMFLOAT3(1.0f, 1.0f, -1.0f), XMFLOAT4(Colors::Red)}),
-        Vertex({XMFLOAT3(1.0f, -1.0f, -1.0f), XMFLOAT4(Colors::Green)}),
-        Vertex({XMFLOAT3(-1.0f, -1.0f, 1.0f), XMFLOAT4(Colors::Blue)}),
-        Vertex({XMFLOAT3(-1.0f, 1.0f, 1.0f), XMFLOAT4(Colors::Yellow)}),
-        Vertex({XMFLOAT3(1.0f, 1.0f, 1.0f), XMFLOAT4(Colors::Cyan)}),
-        Vertex({XMFLOAT3(1.0f, -1.0f, 1.0f), XMFLOAT4(Colors::Magenta)}),
-    };
+    // std::array<Vertex, 8> vertices = 
+    // {
+    //     Vertex({XMFLOAT3(-1.0f, -1.0f, -1.0f), XMFLOAT4(Colors::White)}),
+    //     Vertex({XMFLOAT3(-1.0f, 1.0f, -1.0f), XMFLOAT4(Colors::Black)}),
+    //     Vertex({XMFLOAT3(1.0f, 1.0f, -1.0f), XMFLOAT4(Colors::Red)}),
+    //     Vertex({XMFLOAT3(1.0f, -1.0f, -1.0f), XMFLOAT4(Colors::Green)}),
+    //     Vertex({XMFLOAT3(-1.0f, -1.0f, 1.0f), XMFLOAT4(Colors::Blue)}),
+    //     Vertex({XMFLOAT3(-1.0f, 1.0f, 1.0f), XMFLOAT4(Colors::Yellow)}),
+    //     Vertex({XMFLOAT3(1.0f, 1.0f, 1.0f), XMFLOAT4(Colors::Cyan)}),
+    //     Vertex({XMFLOAT3(1.0f, -1.0f, 1.0f), XMFLOAT4(Colors::Magenta)}),
+    // };
 
-    std::array<uint16_t, 36> indices = 
-    {
-        // front face
-		0, 1, 2,
-		0, 2, 3,
+    // std::array<uint16_t, 36> indices = 
+    // {
+    //     // front face
+	// 	0, 1, 2,
+	// 	0, 2, 3,
 
-		// back face
-		4, 6, 5,
-		4, 7, 6,
+	// 	// back face
+	// 	4, 6, 5,
+	// 	4, 7, 6,
 
-		// left face
-		4, 5, 1,
-		4, 1, 0,
+	// 	// left face
+	// 	4, 5, 1,
+	// 	4, 1, 0,
 
-		// right face
-		3, 2, 6,
-		3, 6, 7,
+	// 	// right face
+	// 	3, 2, 6,
+	// 	3, 6, 7,
 
-		// top face
-		1, 5, 6,
-		1, 6, 2,
+	// 	// top face
+	// 	1, 5, 6,
+	// 	1, 6, 2,
 
-		// bottom face
-		4, 0, 3,
-		4, 3, 7
-    };
+	// 	// bottom face
+	// 	4, 0, 3,
+	// 	4, 3, 7
+    // };
 
-    const uint32_t vbSize = static_cast<uint32_t>(vertices.size() * sizeof(Vertex));
-    const uint32_t ibSize = static_cast<uint32_t>(indices.size() * sizeof(uint16_t));
+    // const uint32_t vbSize = static_cast<uint32_t>(vertices.size() * sizeof(Vertex));
+    // const uint32_t ibSize = static_cast<uint32_t>(indices.size() * sizeof(uint16_t));
 
-    _boxGeometry = std::make_unique<MeshGeometry>();
+    // _boxGeometry = std::make_unique<MeshGeometry>();
 
-    // auto lh = D3DCreateBlob(vbSize, &_boxGeometry->getVertexBufferCPU());
-    ThrowIfFailed(D3DCreateBlob(vbSize, &_boxGeometry->getVertexBufferCPU()));
-    CopyMemory(_boxGeometry->getVertexBufferCPU()->GetBufferPointer(), vertices.data(), vbSize);
+    // // auto lh = D3DCreateBlob(vbSize, &_boxGeometry->getVertexBufferCPU());
+    // ThrowIfFailed(D3DCreateBlob(vbSize, &_boxGeometry->getVertexBufferCPU()));
+    // CopyMemory(_boxGeometry->getVertexBufferCPU()->GetBufferPointer(), vertices.data(), vbSize);
 
-    ThrowIfFailed(D3DCreateBlob(ibSize, &_boxGeometry->getIndexBufferCPU()));
-    CopyMemory(_boxGeometry->getIndexBufferCPU()->GetBufferPointer(), indices.data(), ibSize);
+    // ThrowIfFailed(D3DCreateBlob(ibSize, &_boxGeometry->getIndexBufferCPU()));
+    // CopyMemory(_boxGeometry->getIndexBufferCPU()->GetBufferPointer(), indices.data(), ibSize);
     
-    //TODO:  uploadcommandList, uploadComandAllocation and uploadQueue 
+    // //TODO:  uploadcommandList, uploadComandAllocation and uploadQueue 
+    // auto deviceCmdList = _device.getUploadCommandList();
+    // auto deviceCmdAllocation = _device.getUploadCommandAllocation();
+    // auto deviceCmdQueue = _device.getUploadCommandQueue();
+    // auto deviceFence = _device.getUploadFence();
+    // auto deviceFenceValue = _device.getUploadFenceValue();
+
+    // auto vertexbuffer = Nix::Utils::createUploadBuffer(device, deviceCmdList, 
+    //                                         deviceCmdAllocation, deviceCmdQueue, 
+    //                                         deviceFence, deviceFenceValue, 
+    //                                         vertices.data(), vbSize, _boxGeometry->getVertexBufferUploader());
+
+    // // auto vertexBuffer = Nix::Utils::createBuffer(device, deviceCmdList, vertices.data(), vbSize);
+
+                            
+    // _boxGeometry->setVertexBufferGPU(vertexbuffer);
+
+    // auto indexBuffer = Nix::Utils::createUploadBuffer(device, deviceCmdList, 
+    //                                         deviceCmdAllocation, deviceCmdQueue, 
+    //                                         deviceFence, deviceFenceValue, 
+    //                                         indices.data(), ibSize, _boxGeometry->getIndexBufferUploader());
+
+    // _boxGeometry->setIndexBufferGPU(indexBuffer);
+
+    // _boxGeometry->setVertexStride(sizeof(Vertex));
+    // _boxGeometry->setVertexBufferSize(vbSize);
+    // _boxGeometry->setIndexBufferSize(ibSize);
+    // _boxGeometry->setIndexFormat(DXGI_FORMAT_R16_UINT);
+
+    // SubMeshGeometry subMesh;
+    // subMesh._indexCount = (uint32_t)indices.size();
+    // subMesh._startIndexLocation = 0;
+    // subMesh._baseVertexLocation = 0;
+
+    // // auto drawArgs = _boxGeometry->getDrawArgs();
+    // // drawArgs["box"] = subMesh;
+    // _boxGeometry->setDrawArgsElement("box", subMesh);
+}
+
+void SimluatorApp::createWavesGeometryBuffers(ComPtr<ID3D12Device> device)
+{
+    std::vector<uint16_t> indices(3 * _waves->triangleCount());
+    assert(_waves->vertexCount() < 0x0000ffff);
+    
+    int m = _waves->rowCount();
+    int n = _waves->columnCount();
+
+    int k = 0;
+
+    for (int i = 0; i < m - 1; i++)
+    {
+       for (int j = 0; j < n - 1; j++)
+       {
+           indices[k] = i * n + j;
+           indices[k + 1] = i * n + j + 1;
+           indices[k + 2] = (i + 1) * n + j;
+
+           indices[k + 3] = (i + 1) * n + j;
+           indices[k + 4] = i * n + j  + 1;
+           indices[k + 5] = (i + 1) * n + j + 1;
+
+           k += 6;
+       }
+    }
+
+    uint32_t vbSize = _waves->vertexCount() * sizeof(Vertex);
+    uint32_t ibSize = (uint32_t)indices.size() * sizeof(uint16_t);
+
+    auto geo = std::make_unique<MeshGeometry>();
+    geo->setName("Ocean Geometry");
+
+    ThrowIfFailed(D3DCreateBlob(ibSize, &geo->getIndexBufferCPU()));
+    CopyMemory(geo->getIndexBufferCPU()->GetBufferPointer(), indices.data(), ibSize);
+
     auto deviceCmdList = _device.getUploadCommandList();
     auto deviceCmdAllocation = _device.getUploadCommandAllocation();
     auto deviceCmdQueue = _device.getUploadCommandQueue();
     auto deviceFence = _device.getUploadFence();
     auto deviceFenceValue = _device.getUploadFenceValue();
 
-    auto vertexbuffer = Nix::Utils::createUploadBuffer(device, deviceCmdList, 
+
+    auto buffer = Nix::Utils::createUploadBuffer(device, deviceCmdList, 
                                             deviceCmdAllocation, deviceCmdQueue, 
                                             deviceFence, deviceFenceValue, 
-                                            vertices.data(), vbSize, _boxGeometry->getVertexBufferUploader());
+                                            indices.data(), ibSize, geo->getIndexBufferUploader());
+    geo->setIndexBufferGPU(buffer);
 
-    // auto vertexBuffer = Nix::Utils::createBuffer(device, deviceCmdList, vertices.data(), vbSize);
-
-                            
-    _boxGeometry->setVertexBufferGPU(vertexbuffer);
-
-    auto indexBuffer = Nix::Utils::createUploadBuffer(device, deviceCmdList, 
-                                            deviceCmdAllocation, deviceCmdQueue, 
-                                            deviceFence, deviceFenceValue, 
-                                            indices.data(), ibSize, _boxGeometry->getIndexBufferUploader());
-
-    _boxGeometry->setIndexBufferGPU(indexBuffer);
-
-    _boxGeometry->setVertexStride(sizeof(Vertex));
-    _boxGeometry->setVertexBufferSize(vbSize);
-    _boxGeometry->setIndexBufferSize(ibSize);
-    _boxGeometry->setIndexFormat(DXGI_FORMAT_R16_UINT);
+    geo->setVertexStride(sizeof(Vertex));
+    geo->setVertexBufferSize(vbSize);
+    geo->setIndexFormat(DXGI_FORMAT_R16_UINT);
+    geo->setIndexBufferSize(ibSize);
 
     SubMeshGeometry subMesh;
     subMesh._indexCount = (uint32_t)indices.size();
     subMesh._startIndexLocation = 0;
-    subMesh._baseVertexLocation = 0;
+    subMesh._baseVertexLocation =0;
 
-    // auto drawArgs = _boxGeometry->getDrawArgs();
-    // drawArgs["box"] = subMesh;
-    _boxGeometry->setDrawArgsElement("box", subMesh);
-}
+    geo->setDrawArgsElement("grid", subMesh);
 
-void SimluatorApp::createWavesGeometryBuffers()
-{
-   
-    
+
+    _geometries["water"] = std::move(geo);
 }
 
 void SimluatorApp::createLandGeometry()
@@ -277,27 +388,40 @@ void SimluatorApp::createLandGeometry()
 
 void SimluatorApp::updateWaves(const float dt)
 {
+    static float base = 0.0f;
+    if((_timer.totalTime() - base) >= 0.25f)
+    {
+        base += 0.25f;
 
+        auto i = MathHelper::Rand(4, _waves->rowCount() - 5);
+        auto j = MathHelper::Rand(4, _waves->columnCount() - 5);
+
+        auto r = MathHelper::RandF(0.2f, 0.5f);
+
+        _waves->disturb(i, j , r);
+    }
+
+    _waves->update(dt);
+
+    auto currWavesVB = _currFrameResource->_waveVertexBuffer.get();
+
+    for(auto i = 0; i < _waves->vertexCount(); ++i)
+    {
+        Vertex v;
+
+        v.pos = _waves->position(i);
+        v.color = OCEANCOLOR;
+
+        currWavesVB->copyData(i, v);
+    }
+
+    _wavesRenderItem->_geo->setVertexBufferGPU(currWavesVB->Resource());
 }
 
 
 void SimluatorApp::resize(uint32_t width, uint32_t height)
 {
     if(width <= 0 && height <= 0) return;
-
-    _viewPort.TopLeftX = 0;
-    _viewPort.TopLeftY = 0;
-    _viewPort.Width = (float)(width);
-    _viewPort.Height = (float)(height);
-    _viewPort.MinDepth = 0.0f;
-    _viewPort.MaxDepth = 1.0f;
-
-    _viewScissor.left = 0;
-    _viewScissor.top = 0;
-    _viewScissor.right = width;
-    _viewScissor.bottom = height;
-
-
 
     if(!_swapChain) {
         // _swapChain = _device.createSwapChian(width, height);
@@ -307,16 +431,24 @@ void SimluatorApp::resize(uint32_t width, uint32_t height)
         
         ComPtr<ID3D12Device> device = (ComPtr<ID3D12Device>)_device;
 
-        D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle = _device.getRtvHeap()->GetCPUDescriptorHandleForHeapStart();
-
         _device.flushGraphicsCommandQueue();
+
+        auto cmdList = _device.getGraphicsCmdList(_flightIndex);
+        cmdList->Reset(_device.getGraphicsCmdAllocator(_flightIndex).Get(), nullptr);
+
+        D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle = _device.getRtvHeap()->GetCPUDescriptorHandleForHeapStart();
 
         for (uint32_t flightIndex = 0; flightIndex < MaxFlightCount; ++flightIndex) {
             _renderTargets[flightIndex].Reset();
         }
 
-        HRESULT rst = _swapChain->ResizeBuffers( MaxFlightCount, width, height, DXGI_FORMAT_R8G8B8A8_UNORM, 0 );
+        _depthStencilBuffer.Reset();
+
+        HRESULT rst = _swapChain->ResizeBuffers( MaxFlightCount, width, height, DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH );
         if( FAILED(rst)) OutputDebugString(L"Error!");
+
+        // 不一定需要重置当前render target flight index.
+        // _flightIndex = 0;
 
         auto rtvDescriptorSize = _device.getRtvDescSize();
         // get render target buffer & re-create render target view
@@ -362,22 +494,42 @@ void SimluatorApp::resize(uint32_t width, uint32_t height)
         dsvDesc.Texture2D.MipSlice = 0;
         device->CreateDepthStencilView(_depthStencilBuffer.Get(), &dsvDesc, _device.getDsvHeap()->GetCPUDescriptorHandleForHeapStart());
 
-        ComPtr<ID3D12GraphicsCommandList> commandList = _device.draw(_flightIndex, _pipelineStateObject);
+        // ComPtr<ID3D12GraphicsCommandList> commandList = _device.draw(_flightIndex, nullptr);
+        // ComPtr<ID3D12GraphicsCommandList> commandList = _device.getUploadCommandList();
+
+        ComPtr<ID3D12GraphicsCommandList> commandList = _device.getGraphicsCmdList(_flightIndex);
+
         commandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(_depthStencilBuffer.Get(),
 		D3D12_RESOURCE_STATE_COMMON, D3D12_RESOURCE_STATE_DEPTH_WRITE));
 
         ThrowIfFailed(commandList->Close());
 
-        ID3D12CommandList *cmdList[] = { commandList.Get() };
+        ID3D12CommandList *cmdLists[] = { commandList.Get() };
 
+        //TODO: 可以尝试使用upload command queue
         auto cmdQueue = _device.getGraphicsCmdQueue();
-        cmdQueue->ExecuteCommandLists(_countof(cmdList), cmdList);
+        // auto uploadCmdQueue = _device.getUploadCommandQueue();
+
+        cmdQueue->ExecuteCommandLists(_countof(cmdLists), cmdLists);
+        // uploadCmdQueue->ExecuteCommandLists(_countof(cmdList), cmdList);
 
         _device.flushGraphicsCommandQueue();
     }
 
-    XMMATRIX p = XMMatrixPerspectiveFovLH(0.25f * MathHelper::Pi, AspectRatio(), 1.0f, 1000.0f);
-    XMStoreFloat4x4(&_proj, p);
+    _viewPort.TopLeftX = 0;
+    _viewPort.TopLeftY = 0;
+    _viewPort.Width = (float)(width);
+    _viewPort.Height = (float)(height);
+    _viewPort.MinDepth = 0.0f;
+    _viewPort.MaxDepth = 1.0f;
+
+    _viewScissor.left = 0;
+    _viewScissor.top = 0;
+    _viewScissor.right = width;
+    _viewScissor.bottom = height;
+
+    // XMMATRIX p = XMMatrixPerspectiveFovLH(0.25f * MathHelper::Pi, AspectRatio(), 1.0f, 1000.0f);
+    // XMStoreFloat4x4(&_proj, p);
 
 }
 
@@ -388,97 +540,206 @@ void SimluatorApp::release()
 
 void SimluatorApp::tick(float dt)
 {
-    auto x = _radius * sinf(_phi) * cosf(_theta);
-    auto y = _radius * cosf(_phi);
-    auto z = _radius * sinf(_phi) * sinf(_theta);
+    // auto x = _radius * sinf(_phi) * cosf(_theta);
+    // auto y = _radius * cosf(_phi);
+    // auto z = _radius * sinf(_phi) * sinf(_theta);
 
-    XMVECTOR pos = XMVectorSet(x, y, z, 1.0f);
+    // XMVECTOR pos = XMVectorSet(x, y, z, 1.0f);
+    // XMVECTOR target = XMVectorZero();
+    // XMVECTOR up = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
+
+    // XMMATRIX view = XMMatrixLookAtLH(pos, target, up);
+    // XMStoreFloat4x4(&_view, view);
+
+    // XMMATRIX world = XMLoadFloat4x4(&_world);
+    // XMMATRIX proj = XMLoadFloat4x4(&_proj);
+    // XMMATRIX worldViewProj = world * view * proj;
+
+    // // update the constant buffer view the lastst worldviewproj.
+    // ConstantObject obj;
+    // XMStoreFloat4x4(&obj.world, XMMatrixTranspose(worldViewProj));
+    // _cbvObj->copyData(0, obj);
+
+
+    updateCamera(dt);
+
+    _flightIndex = (_flightIndex + 1) % MaxFlightCount;
+    _currFrameResource = _framesResources[_flightIndex].get();
+    _device.waitForFlight(_flightIndex);
+
+    updateObjectConstantBuffers(dt);
+    updateMainPassConstantBuffer(dt);
+    updateWaves(dt);
+}
+
+void SimluatorApp::updateObjectConstantBuffers(const float dt)
+{
+    auto currCB = _currFrameResource->_objectConstantBuffer.get();
+    for(auto &iter : _allRenderItems)
+    {
+        if(iter->_numFramesDirty > 0)
+        {
+            XMMATRIX world = XMLoadFloat4x4(&iter->_world);
+            ConstantObject constants;
+            XMStoreFloat4x4(&constants.world, XMMatrixTranspose(world));
+            currCB->copyData(iter->_objContantBufferIndex, constants);
+            iter->_numFramesDirty--;
+        }
+    }
+}
+
+void SimluatorApp::updateMainPassConstantBuffer(const float dt)
+{
+    XMMATRIX view = XMLoadFloat4x4(&_view);
+    XMMATRIX proj = XMLoadFloat4x4(&_proj);
+
+    XMMATRIX viewProj = XMMatrixMultiply(view, proj);
+    XMMATRIX invView = XMMatrixInverse(&XMMatrixDeterminant(view), view);
+    XMMATRIX invProj = XMMatrixInverse(&XMMatrixDeterminant(proj), proj);
+    XMMATRIX invViewProj = XMMatrixInverse(&XMMatrixDeterminant(viewProj), viewProj);
+    
+    // XMStoreFloat4x4(&_mainPassConstantBuffer._view, XMMatrixTranspose(view));
+    // XMStoreFloat4x4(&_mainPassConstantBuffer._invView, XMMatrixTranspose(invView));
+    // XMStoreFloat4x4(&_mainPassConstantBuffer._proj, XMMatrixTranspose(proj));
+    // XMStoreFloat4x4(&_mainPassConstantBuffer._invProj, XMMatrixTranspose(invProj));
+    // XMStoreFloat4x4(&_mainPassConstantBuffer._viewProj, XMMatrixTranspose(viewProj));
+    // XMStoreFloat4x4(&_mainPassConstantBuffer._invViewProj, XMMatrixTranspose(invViewProj));
+
+    // _mainPassConstantBuffer._eyePosW = _eyePos;
+    // _mainPassConstantBuffer._renderTargetSize = XMFLOAT2((float)_width, (float)_height);
+    // _mainPassConstantBuffer._invRenderTargetSize  = XMFLOAT2(1.0f / _width, 1.0f/ _height);
+    // _mainPassConstantBuffer._nearZ = 1.0f;
+    // _mainPassConstantBuffer._farZ = 1000.0f;
+    // _mainPassConstantBuffer._totalTime = _timer.totalTime();
+    // _mainPassConstantBuffer._deltaTime = _timer.deltaTime();
+
+    // auto currPassCb = _currFrameResource->_passConstantBuffer.get();
+    // currPassCb->copyData(0, _mainPassConstantBuffer);
+
+}
+
+void SimluatorApp::updateCamera(const float dt)
+{
+    _eyePos.x = _radius * sinf(_phi) * cosf(_theta);
+    _eyePos.y = _radius * cosf(_phi);
+    _eyePos.z = _radius * sinf(_phi) * sinf(_theta);
+
+    XMVECTOR pos = XMVectorSet(_eyePos.x, _eyePos.y, _eyePos.z, 1.0f);
     XMVECTOR target = XMVectorZero();
     XMVECTOR up = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
 
     XMMATRIX view = XMMatrixLookAtLH(pos, target, up);
     XMStoreFloat4x4(&_view, view);
-
-    XMMATRIX world = XMLoadFloat4x4(&_world);
-    XMMATRIX proj = XMLoadFloat4x4(&_proj);
-    XMMATRIX worldViewProj = world * view * proj;
-
-    // update the constant buffer view the lastst worldviewproj.
-    ConstantObject obj;
-    XMStoreFloat4x4(&obj.worldViewProj, XMMatrixTranspose(worldViewProj));
-    _cbvObj->copyData(0, obj);
-
 }
 
 void SimluatorApp::draw()
 {
+    // if(!_swapChain) return;
+    // HRESULT result = S_OK;
+
+    // _flightIndex = _swapChain->GetCurrentBackBufferIndex();
+    // _device.waitForFlight(_flightIndex);
+
+    // // ComPtr<ID3D12GraphicsCommandList> commandList = _device.draw(_flightIndex, _pipelineStateObject);
+    // ComPtr<ID3D12GraphicsCommandList> commandList;
+    // if(_isWireFrame) 
+    //     commandList = _device.draw(_flightIndex, _pipelineStateObjects["opaque_wireframe"]);
+    // else
+    //     commandList = _device.draw(_flightIndex, _pipelineStateObjects["opaque"]);
+
+    // // D3D12_RESOURCE_BARRIER barrier;
+    // // {
+    // //     barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
+    // //     barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+    // //     barrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
+    // //     barrier.Transition.pResource = _renderTargets[_flightIndex].Get();
+    // //     barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_RENDER_TARGET;
+    // //     barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_PRESENT;
+    // // }
+
+    // // commandList->ResourceBarrier(1, &barrier);
+    // commandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(currentBackBuffer(), 
+    //                         D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET));
+
+    // // auto rtvDescriptorSize = _device.getRtvDescSize();
+    // // auto dsvDescriptorSize = _device.getDsvDescSize();
+    // // CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHandle(_device.getRtvHeap()->GetCPUDescriptorHandleForHeapStart(), _flightIndex, rtvDescriptorSize);
+    // // CD3DX12_CPU_DESCRIPTOR_HANDLE dsvHandle(_device.getDsvHeap()->GetCPUDescriptorHandleForHeapStart());
+    // commandList->ClearRenderTargetView(rtvHandle, Colors::LightSteelBlue, 0, nullptr);
+    // commandList->ClearDepthStencilView(_device.getDsvHeap()->GetCPUDescriptorHandleForHeapStart(), D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, nullptr);
+    // commandList->OMSetRenderTargets(1, &rtvHandle, true, &dsvHandle);
+    // // commandList->OMSetRenderTargets(1, &rtvHandle, false);
+    // //transfrom the render target's layout
+
+    // commandList->SetGraphicsRootSignature(_pipelineRootSignature.Get());
+
+    // ID3D12DescriptorHeap* heaps[] = {
+    //     _cbvHeap.Get(),
+    //     // _samplerDescriptorHeap.Get()
+    // };
+
+    // commandList->SetDescriptorHeaps( _countof(heaps), heaps ); 
+
+    // CD3DX12_GPU_DESCRIPTOR_HANDLE pipelineGPUDescriptorHandlerStart( _cbvHeap->GetGPUDescriptorHandleForHeapStart());
+
+
+    // // 第[0]个是 const buffer view descriptor
+    // // commandList->SetGraphicsRootDescriptorTable(0, pipelineGPUDescriptorHandlerStart.Offset(_flightIndex, _device.getCbvDescSize()));
+    // commandList->SetGraphicsRootDescriptorTable(0, _cbvHeap->GetGPUDescriptorHandleForHeapStart()); 
+    // // commandList->SetGraphicsRootDescriptorTable(0, pipelineGPUDescriptorHandlerStart.Offset(_device.getCbvDescSize()));
+    // // 第[1] 个是 texture view descriptor
+    // // commandList->SetGraphicsRootDescriptorTable(1, _simpleTextureViewGPUDescriptorHandle );
+    // // 第[2] 个是 sampler descriptor
+    // // commandList->SetGraphicsRootDescriptorTable(2, _samplerGPUDescriptorHandle);
+
+    // commandList->SetPipelineState(_pipelineStateObject.Get());
+    // commandList->RSSetViewports(1, &_viewPort);
+    // commandList->RSSetScissorRects(1, &_viewScissor);
+    // commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+    // // commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_LINESTRIP);
+    // commandList->IASetVertexBuffers(0, 1, &_boxGeometry->vertexBufferView());
+    // // commandList->DrawInstanced(3, 1, 0, 0); //fianlly draw 3 vertices (draw the triangle)
+    // commandList->IASetIndexBuffer(&_boxGeometry->indexBufferView());
+    // commandList->DrawIndexedInstanced(_boxGeometry->getDrawArgs()["box"]._indexCount, 1, 0, 0, 0);
+
+    // std::swap(barrier.Transition.StateAfter, barrier.Transition.StateBefore);
+    // commandList->ResourceBarrier(1, &barrier);
+
+    // result = commandList->Close();
+    // _device.executeCommand(commandList);
+
+    // result = _swapChain->Present(1, 0);
+
     if(!_swapChain) return;
     HRESULT result = S_OK;
 
     _flightIndex = _swapChain->GetCurrentBackBufferIndex();
     _device.waitForFlight(_flightIndex);
 
-    ComPtr<ID3D12GraphicsCommandList> commandList = _device.draw(_flightIndex, _pipelineStateObject);
-    D3D12_RESOURCE_BARRIER barrier;
+    auto cmdListAlloc = _currFrameResource->_cmdListAllocation;
+    ThrowIfFailed(cmdListAlloc->Reset());
+
+    //TODO: 与帧对象绑定数据
+    
+    // ComPtr<ID3D12GraphicsCommandList> commandList;
+    // if(_isWireFrame) 
+    //     commandList = _device.draw(_flightIndex, _pipelineStateObjects["opaque_wireframe"]);
+    // else
+    //     commandList = _device.draw(_flightIndex, _pipelineStateObjects["opaque"]);
+
+}
+
+void SimluatorApp::onKeyEvent(unsigned char key, eKeyEvent event)
+{
+    //  if(GetAsyncKeyState('1') & 0x8000)
+    //     _isWireFrame = true;
+    // else
+    //     _isWireFrame = false;
+
+    if(key == '1' && event == eKeyEvent::eKeyDown)
     {
-        barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
-        barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
-        barrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
-        barrier.Transition.pResource = _renderTargets[_flightIndex].Get();
-        barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_RENDER_TARGET;
-        barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_PRESENT;
+        _isWireFrame = !_isWireFrame;
     }
-
-    commandList->ResourceBarrier(1, &barrier);
-
-    auto rtvDescriptorSize = _device.getRtvDescSize();
-    auto dsvDescriptorSize = _device.getDsvDescSize();
-    CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHandle(_device.getRtvHeap()->GetCPUDescriptorHandleForHeapStart(), _flightIndex, rtvDescriptorSize);
-    CD3DX12_CPU_DESCRIPTOR_HANDLE dsvHandle(_device.getDsvHeap()->GetCPUDescriptorHandleForHeapStart(), _flightIndex, dsvDescriptorSize);
-    commandList->ClearRenderTargetView(rtvHandle, Colors::LightSteelBlue, 0, nullptr);
-    commandList->ClearDepthStencilView(_device.getDsvHeap()->GetCPUDescriptorHandleForHeapStart(), D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, nullptr);
-    commandList->OMSetRenderTargets(1, &rtvHandle, true, &_device.getDsvHeap()->GetCPUDescriptorHandleForHeapStart());
-    // commandList->OMSetRenderTargets(1, &rtvHandle, false);
-    //transfrom the render target's layout
-
-    commandList->SetGraphicsRootSignature(_pipelineRootSignature.Get());
-
-    ID3D12DescriptorHeap* heaps[] = {
-        _cbvHeap.Get(),
-        // _samplerDescriptorHeap.Get()
-    };
-
-    commandList->SetDescriptorHeaps( _countof(heaps), heaps ); 
-
-    CD3DX12_GPU_DESCRIPTOR_HANDLE pipelineGPUDescriptorHandlerStart( _cbvHeap->GetGPUDescriptorHandleForHeapStart());
-
-
-    // 第[0]个是 const buffer view descriptor
-    // commandList->SetGraphicsRootDescriptorTable(0, pipelineGPUDescriptorHandlerStart.Offset(_flightIndex, _device.getCbvDescSize()));
-    commandList->SetGraphicsRootDescriptorTable(0, _cbvHeap->GetGPUDescriptorHandleForHeapStart()); 
-    // commandList->SetGraphicsRootDescriptorTable(0, pipelineGPUDescriptorHandlerStart.Offset(_device.getCbvDescSize()));
-    // 第[1] 个是 texture view descriptor
-    // commandList->SetGraphicsRootDescriptorTable(1, _simpleTextureViewGPUDescriptorHandle );
-    // 第[2] 个是 sampler descriptor
-    // commandList->SetGraphicsRootDescriptorTable(2, _samplerGPUDescriptorHandle);
-
-    commandList->SetPipelineState(_pipelineStateObject.Get());
-    commandList->RSSetViewports(1, &_viewPort);
-    commandList->RSSetScissorRects(1, &_viewScissor);
-    // commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-    commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_LINESTRIP);
-    commandList->IASetVertexBuffers(0, 1, &_boxGeometry->vertexBufferView());
-    // commandList->DrawInstanced(3, 1, 0, 0); //fianlly draw 3 vertices (draw the triangle)
-    commandList->IASetIndexBuffer(&_boxGeometry->indexBufferView());
-    commandList->DrawIndexedInstanced(_boxGeometry->getDrawArgs()["box"]._indexCount, 1, 0, 0, 0);
-
-    std::swap(barrier.Transition.StateAfter, barrier.Transition.StateBefore);
-    commandList->ResourceBarrier(1, &barrier);
-
-    result = commandList->Close();
-    _device.executeCommand(commandList);
-
-    result = _swapChain->Present(1, 0);
 }
 
 void SimluatorApp::onMouseEvent(eMouseButton btn, eMouseEvent event, int x, int y)
@@ -500,7 +761,7 @@ void SimluatorApp::onMouseEvent(eMouseButton btn, eMouseEvent event, int x, int 
             break;
         case eMouseEvent::MouseMove:
         {
-            if((btn & eMouseButton::LButtonMouse != 0))
+            if((btn & eMouseButton::LButtonMouse) != 0)
             {
                 auto dx = XMConvertToRadians(0.25f * static_cast<float>(x - _lasstMousePos.x));
                 auto dy = XMConvertToRadians(0.25f * static_cast<float>(y - _lasstMousePos.y));
@@ -524,6 +785,27 @@ void SimluatorApp::onMouseEvent(eMouseButton btn, eMouseEvent event, int x, int 
 
     _lasstMousePos.x = x;
     _lasstMousePos.y = y;
+}
+
+ID3D12Resource *SimluatorApp::currentBackBuffer() const
+{
+    return _renderTargets[_flightIndex].Get();
+}
+
+D3D12_CPU_DESCRIPTOR_HANDLE SimluatorApp::currentBackBufferView() 
+{
+    return CD3DX12_CPU_DESCRIPTOR_HANDLE(_device.getRtvHeap()->GetCPUDescriptorHandleForHeapStart(), _flightIndex, _device.getRtvDescSize());
+
+}
+
+D3D12_CPU_DESCRIPTOR_HANDLE SimluatorApp::depthStencilView()
+{
+    return _device.getDsvHeap()->GetCPUDescriptorHandleForHeapStart();
+}
+
+void SimluatorApp::onKeyBoardInput(const float dt)
+{
+   
 }
 
 char * SimluatorApp::title()

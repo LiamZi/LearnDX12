@@ -69,6 +69,30 @@ void Device::check4xMsaaSupport()
     assert(_4xMsaaQuality > 0 && "Unexpected MSAA quality level. ");
 }
 
+// void Device::createCommnadObjectsAndFence()
+// {
+//     //initizaliza command object and graphics fence
+
+//     D3D12_COMMAND_QUEUE_DESC queueDesc = {};
+//     queueDesc.Type = D3D12_COMMAND_LIST_TYPE_DIRECT;
+//     queueDesc.Flags = D3D12_COMMAND_QUEUE_FLAG_NONE;
+
+//     ThrowIfFailed(_device->CreateCommandQueue(&queueDesc, IID_PPV_ARGS(&_graphicsCommandQueue)));
+
+//     for (uint32_t i = 0; i < MaxFlightCount; ++i)
+//     {
+//         ThrowIfFailed(_device->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, IID_PPV_ARGS(_graphicsCommandAllocator[i].GetAddressOf())));
+
+//         ThrowIfFailed(_device->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, _graphicsCommandAllocator[i].Get(), nullptr, IID_PPV_ARGS(_graphicsCommandLists[i].GetAddressOf())));
+//         _graphicsCommandLists[i]->Close();
+
+//         ThrowIfFailed(_device->CreateFence(0, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&_graphicsFences[i])));
+//     }
+
+//     //TODO: 感觉初始化这个EVENT 并没有什么效果。 以后再看。
+//     _graphicsFenceEvent = CreateEventEx(nullptr, FALSE, FALSE, EVENT_ALL_ACCESS);
+// }
+
 void Device::createCommnadObjectsAndFence()
 {
     //initizaliza command object and graphics fence
@@ -79,15 +103,16 @@ void Device::createCommnadObjectsAndFence()
 
     ThrowIfFailed(_device->CreateCommandQueue(&queueDesc, IID_PPV_ARGS(&_graphicsCommandQueue)));
 
-    for (uint32_t i = 0; i < MaxFlightCount; ++i)
-    {
-        ThrowIfFailed(_device->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, IID_PPV_ARGS(_graphicsCommandAllocator[i].GetAddressOf())));
+    ThrowIfFailed(_device->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, 
+                                            IID_PPV_ARGS(&_graphicsCommandAllocator)));
 
-        ThrowIfFailed(_device->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, _graphicsCommandAllocator[i].Get(), nullptr, IID_PPV_ARGS(_graphicsCommandLists[i].GetAddressOf())));
-        _graphicsCommandLists[i]->Close();
+    ThrowIfFailed(_device->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, 
+                                    _graphicsCommandAllocator.Get(), nullptr, 
+                                    IID_PPV_ARGS(_graphicsCommandLists.GetAddressOf())));
 
-        ThrowIfFailed(_device->CreateFence(0, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&_graphicsFences[i])));
-    }
+
+    _graphicsCommandLists->Close();                    
+
 
     //TODO: 感觉初始化这个EVENT 并没有什么效果。 以后再看。
     _graphicsFenceEvent = CreateEventEx(nullptr, FALSE, FALSE, EVENT_ALL_ACCESS);
@@ -159,7 +184,7 @@ void Device::flushGraphicsCommandQueue()
 
 void Device::waitForFlight(uint32_t flight)
 {
-    if(_graphicsFences[flight]->GetCompletedValue() < _graphicsFenceValues[flight])
+    if(_graphicsFences[flight] != 0 && _graphicsFences[flight]->GetCompletedValue() < _graphicsFenceValues[flight])
     {
         auto eventHandle = CreateEventEx(nullptr, false, false, EVENT_ALL_ACCESS);
         ThrowIfFailed(_graphicsFences[flight]->SetEventOnCompletion(_graphicsFenceValues[flight], eventHandle));
@@ -168,20 +193,20 @@ void Device::waitForFlight(uint32_t flight)
     }
 }
 
-ComPtr<ID3D12GraphicsCommandList> Device::draw(uint32_t flightIndex, ComPtr<ID3D12PipelineState> &pipelineState)
-{
-    ComPtr<ID3D12PipelineState> state = nullptr;
-    if(pipelineState || pipelineState.Get()) state = pipelineState;
+// ComPtr<ID3D12GraphicsCommandList> Device::draw(uint32_t flightIndex, ComPtr<ID3D12PipelineState> &pipelineState)
+// {
+//     ComPtr<ID3D12PipelineState> state = nullptr;
+//     if(pipelineState || pipelineState.Get()) state = pipelineState;
 
-    _flightIndex = flightIndex;
-    ++_graphicsFenceValues[flightIndex];
-    auto &cmdAllocator = _graphicsCommandAllocator[flightIndex];
-    auto &cmdList = _graphicsCommandLists[flightIndex];
-    cmdAllocator->Reset();
-    //TODO: cmdList reset need pipeline state.
-    ThrowIfFailed(cmdList->Reset(cmdAllocator.Get(), state.Get()));
-    return cmdList;
-}
+//     _flightIndex = flightIndex;
+//     ++_graphicsFenceValues[flightIndex];
+//     auto &cmdAllocator = _graphicsCommandAllocator[flightIndex];
+//     auto &cmdList = _graphicsCommandLists[flightIndex];
+//     cmdAllocator->Reset();
+//     //TODO: cmdList reset need pipeline state.
+//     ThrowIfFailed(cmdList->Reset(cmdAllocator.Get(), state.Get()));
+//     return cmdList;
+// }
 
 void Device::executeCommand(ComPtr<ID3D12GraphicsCommandList> &commandList)
 {
@@ -199,13 +224,6 @@ void Device::createRtvAndDsvDescriptorHeaps()
     rtvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
     rtvHeapDesc.NodeMask = 0;
     ThrowIfFailed(_device->CreateDescriptorHeap(&rtvHeapDesc, IID_PPV_ARGS(_rtvHeap.GetAddressOf())));
-
-    // D3D12_DESCRIPTOR_HEAP_DESC dsvHeapDesc;
-    // dsvHeapDesc.NumDescriptors = 1;
-    // dsvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_DSV;
-    // dsvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
-    // dsvHeapDesc.NodeMask = 0;
-    // ThrowIfFailed(_device->CreateDescriptorHeap(&dsvHeapDesc, IID_PPV_ARGS(_dsvHeap.GetAddressOf())));
 
     D3D12_DESCRIPTOR_HEAP_DESC dsvHeapDesc;
     dsvHeapDesc.NumDescriptors = 1;

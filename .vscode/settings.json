@@ -52,6 +52,13 @@
         "sstream": "cpp",
         "xhash": "cpp",
         "array": "cpp",
-        "unordered_map": "cpp"
+        "unordered_map": "cpp",
+        "atomic": "cpp",
+        "chrono": "cpp",
+        "condition_variable": "cpp",
+        "functional": "cpp",
+        "mutex": "cpp",
+        "ratio": "cpp",
+        "thread": "cpp"
     }
 }
