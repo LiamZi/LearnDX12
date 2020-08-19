@@ -36,9 +36,14 @@ private:
     ComPtr<ID3D12DescriptorHeap>            _dsvHeap;
 
     //cpu and graphics fance
+#if MULTIFLIHGT
     ComPtr<ID3D12Fence>                     _graphicsFences[MaxFlightCount];
+#else
+    ComPtr<ID3D12Fence>                     _graphicsFences;
+#endif
+
     HANDLE                                  _graphicsFenceEvent;
-    uint64_t                                _graphicsFenceValues[MaxFlightCount];
+
 
     uint32_t                                _rtvDescriptorSize = 0;
     uint32_t                                _dsvDescriptorSize = 0;
@@ -50,8 +55,15 @@ private:
     HWND                                    _hwnd;
     uint32_t                                _width;
     uint32_t                                _height;
-    uint32_t                                _flightIndex;
-    uint64_t                                _uploadFenceValue;
+    uint32_t                                _flightIndex = 0;
+    uint64_t                                _uploadFenceValue = 0;
+   
+public:
+#if MULTIFLIHGT
+    uint64_t                                _graphicsFenceValues[MaxFlightCount];
+#else
+    uint64_t                                _graphicsFenceValues = 0;
+#endif
 
    
 public:
@@ -64,7 +76,12 @@ public:
     bool get4xMassState() const { return _4xMsaaState; }
     uint32_t get4xMassQuality() const { return _4xMsaaQuality; }
     void flushGraphicsCommandQueue();
+
+#if MULTIFLIHGT
     void waitForFlight(uint32_t flight);
+#else
+    void waitForFlight(uint32_t flight = 0);
+#endif
     // ComPtr<ID3D12GraphicsCommandList> draw(uint32_t flightIndex, ComPtr<ID3D12PipelineState> &pipelineStete);
     void executeCommand(ComPtr<ID3D12GraphicsCommandList> &commandList);
     void createRtvAndDsvDescriptorHeaps();
@@ -146,6 +163,11 @@ public:
     {
         // return _graphicsCommandAllocator[flightIndex];
         return _graphicsCommandAllocator;
+    }
+
+    inline ComPtr<ID3D12Fence> &getGraphicsFences()
+    {
+        return _graphicsFences;
     }
 
 protected:

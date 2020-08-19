@@ -31,15 +31,19 @@ bool SimluatorApp::initialize(void *hwnd, Nix::IArchive *archive)
 
     ComPtr<ID3D12Device> device = (ComPtr<ID3D12Device>)_device;
 
-    createDescriptorHeap(device);
-    createConstantBuffers(device);
+    _waves = std::make_unique<Waves>(128, 128, 1.0f, 0.03f, 4.0f, 0.2f);
+
+    // createDescriptorHeap(device);
+    // createConstantBuffers(device);
     createRootSignature(device);
     createShaderAndLayout(device);
     // createFrameResouce(device);
     
     createCubeGeometry(device);
     // createLandGeometry();
-    // createWavesGeometryBuffers();
+    createWavesGeometryBuffers(device);
+    createRenderItems(device);
+    createFrameResource(device);
     createPipelineStateObjects(device);
 
     D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle = _device.getRtvHeap()->GetCPUDescriptorHandleForHeapStart();
@@ -82,30 +86,33 @@ void SimluatorApp::createDescriptorHeap(ComPtr<ID3D12Device> device)
 
 void SimluatorApp::createRootSignature(ComPtr<ID3D12Device> device)
 {
-    CD3DX12_ROOT_PARAMETER rootParameter[1];
+    CD3DX12_ROOT_PARAMETER rootParameter[2];
+    rootParameter[0].InitAsConstantBufferView(0);
+    rootParameter[1].InitAsConstantBufferView(1);
+    CD3DX12_ROOT_SIGNATURE_DESC rootSigDesc(2, 
+                                rootParameter, 0, 
+                                nullptr, D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
 
-    //create root cbv.
-    // rootParameter[0].InitAsConstantBufferView(0);
-    // rootParameter[1].InitAsConstantBufferView(1);
-    CD3DX12_DESCRIPTOR_RANGE cbvTable;
-    cbvTable.Init(D3D12_DESCRIPTOR_RANGE_TYPE_CBV, 1, 0);
 
-    rootParameter[0].InitAsDescriptorTable(1, &cbvTable);
-    //a root signature is an array of root parameters.
-    CD3DX12_ROOT_SIGNATURE_DESC desc(1, rootParameter, 0, nullptr, D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
-    
-    //create a root signature with a single slot which points to a descriptor range consisting of a single constant buffer
     ComPtr<ID3DBlob> serializedRootSignature = nullptr;
     ComPtr<ID3DBlob> errorBlob = nullptr;
 
-    auto result = D3D12SerializeRootSignature(&desc, D3D_ROOT_SIGNATURE_VERSION_1, serializedRootSignature.GetAddressOf(), errorBlob.GetAddressOf());
-    if(errorBlob != nullptr) ::OutputDebugStringA((char *)errorBlob->GetBufferPointer());
+    HRESULT result = D3D12SerializeRootSignature(&rootSigDesc, 
+                                    D3D_ROOT_SIGNATURE_VERSION_1, 
+                                    serializedRootSignature.GetAddressOf(), 
+                                    errorBlob.GetAddressOf());
+    if(errorBlob != nullptr)
+    {
+        ::OutputDebugStringA((char*)errorBlob->GetBufferPointer());
+    }
 
     ThrowIfFailed(result);
 
-    ThrowIfFailed(device->CreateRootSignature(0, serializedRootSignature->GetBufferPointer(), 
-                                        serializedRootSignature->GetBufferSize(), 
-                                        IID_PPV_ARGS(&_pipelineRootSignature)));
+    ThrowIfFailed(device->CreateRootSignature(0, 
+                serializedRootSignature->GetBufferPointer(),
+                serializedRootSignature->GetBufferSize(),
+                IID_PPV_ARGS(_pipelineRootSignature.GetAddressOf())));
+
 }
 
 void SimluatorApp::createShaderAndLayout(ComPtr<ID3D12Device> device)
@@ -114,8 +121,8 @@ void SimluatorApp::createShaderAndLayout(ComPtr<ID3D12Device> device)
 
     // _vsShader = Nix::Utils::compileShader(L"bin\\shaders\\color.hlsl", nullptr, "vsMain", "vs_5_0");
     // _fragShader = Nix::Utils::compileShader(L"bin\\shaders\\color.hlsl", nullptr, "psMain", "ps_5_0");
-    _shaders["standardVS"] = Nix::Utils::compileShader(L"bin\\shaders\\color.hlsl", nullptr, "vsMain", "vs_5_0");
-    _shaders["opaquePS"] =  Nix::Utils::compileShader(L"bin\\shaders\\color.hlsl", nullptr, "psMain", "ps_5_0");
+    _shaders["standardVS"] = Nix::Utils::compileShader(L"bin\\shaders\\Ocean\\ocean.hlsl", nullptr, "vsMain", "vs_5_0");
+    _shaders["opaquePS"] =  Nix::Utils::compileShader(L"bin\\shaders\\Ocean\\ocean.hlsl", nullptr, "psMain", "ps_5_0");
 
     _inputLayout = {
         {"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0},
@@ -125,36 +132,6 @@ void SimluatorApp::createShaderAndLayout(ComPtr<ID3D12Device> device)
 
 void SimluatorApp::createPipelineStateObjects(ComPtr<ID3D12Device> device)
 {
-    // D3D12_GRAPHICS_PIPELINE_STATE_DESC desc;
-    // ZeroMemory(&desc, sizeof(D3D12_GRAPHICS_PIPELINE_STATE_DESC));
-    // desc.InputLayout = { _inputLayout.data(), (uint32_t)_inputLayout.size() };
-    // desc.pRootSignature = _pipelineRootSignature.Get();
-    // desc.VS = 
-    // {
-    //     reinterpret_cast<BYTE *> (_vsShader->GetBufferPointer()),
-    //     _vsShader->GetBufferSize(),
-    // };
-
-    // desc.PS = 
-    // {
-    //     reinterpret_cast<BYTE *>(_fragShader->GetBufferPointer()),
-    //     _fragShader->GetBufferSize()
-    // };
-
-    // desc.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
-    // desc.BlendState = CD3DX12_BLEND_DESC(D3D12_DEFAULT);
-    // desc.DepthStencilState = CD3DX12_DEPTH_STENCIL_DESC(D3D12_DEFAULT);
-    // desc.SampleMask = UINT_MAX;
-    // desc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
-    // // desc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_LINE;
-    // desc.NumRenderTargets = 1;
-    // desc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM;
-    // desc.SampleDesc.Count = _device.get4xMassState() ? 4 : 1;
-    // desc.SampleDesc.Quality = _device.get4xMassState() ? (_device.get4xMassQuality() - 1) : 0;
-    // desc.DSVFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
-
-    // ThrowIfFailed(device->CreateGraphicsPipelineState(&desc, IID_PPV_ARGS(&_pipelineStateObject)));
-
     D3D12_GRAPHICS_PIPELINE_STATE_DESC opaqueDesc;
 
     ZeroMemory(&opaqueDesc, sizeof(D3D12_GRAPHICS_PIPELINE_STATE_DESC));
@@ -191,6 +168,8 @@ void SimluatorApp::createPipelineStateObjects(ComPtr<ID3D12Device> device)
 
 void SimluatorApp::createFrameResource(ComPtr<ID3D12Device> device)
 {
+    if(_allRenderItems.size() <= 0) return;
+
     for (size_t i = 0; i < MaxFlightCount; i++)
     {
         _framesResources.push_back(std::make_unique<FrameResource>(device.Get(), 
@@ -208,10 +187,12 @@ void SimluatorApp::createRenderItems(ComPtr<ID3D12Device> device)
     wavesRenderItem->_objContantBufferIndex = 0;
     wavesRenderItem->_geo = _geometries["water"].get();
     wavesRenderItem->_primitiveType = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
-    auto subMesh =  wavesRenderItem->_geo->getDrawArgsSubMeshByName("gird");
-    wavesRenderItem->_indexCount = subMesh._indexCount;
-    wavesRenderItem->_startIndexLocation = subMesh._startIndexLocation;
-    wavesRenderItem->_baseVertexLocation = subMesh._baseVertexLocation;
+    auto subMesh =  wavesRenderItem->_geo->getDrawArgsSubMeshByName("grid");
+    assert(subMesh);
+
+    wavesRenderItem->_indexCount = subMesh->_indexCount;
+    wavesRenderItem->_startIndexLocation = subMesh->_startIndexLocation;
+    wavesRenderItem->_baseVertexLocation = subMesh->_baseVertexLocation;
 
     _wavesRenderItem = wavesRenderItem.get();
 
@@ -222,6 +203,26 @@ void SimluatorApp::createRenderItems(ComPtr<ID3D12Device> device)
 
 void SimluatorApp::drawRenderItem(ID3D12GraphicsCommandList *cmdList, const std::vector<RenderItem *> &renderItems)
 {
+    auto objconstantBufferByteSize = Utils::calcConstantBufferSize(sizeof(ConstantObject));
+
+    auto objectCB = _currFrameResource->_objectConstantBuffer->Resource();
+
+    for (size_t i = 0; i < renderItems.size(); i++)
+    {
+        /* code */
+        auto item = renderItems[i];
+
+        cmdList->IASetVertexBuffers(0, 1, &item->_geo->vertexBufferView());
+        cmdList->IASetIndexBuffer(&item->_geo->indexBufferView());
+        cmdList->IASetPrimitiveTopology(item->_primitiveType);
+
+        auto objCBAddresss = objectCB->GetGPUVirtualAddress();
+
+        objCBAddresss += item->_objContantBufferIndex * objconstantBufferByteSize;
+
+        cmdList->SetGraphicsRootConstantBufferView(0, objCBAddresss);
+        cmdList->DrawIndexedInstanced(item->_indexCount, 1, item->_startIndexLocation, item->_baseVertexLocation, 0);
+    }
 
 }
 
@@ -598,24 +599,23 @@ void SimluatorApp::updateMainPassConstantBuffer(const float dt)
     XMMATRIX invProj = XMMatrixInverse(&XMMatrixDeterminant(proj), proj);
     XMMATRIX invViewProj = XMMatrixInverse(&XMMatrixDeterminant(viewProj), viewProj);
     
-    // XMStoreFloat4x4(&_mainPassConstantBuffer._view, XMMatrixTranspose(view));
-    // XMStoreFloat4x4(&_mainPassConstantBuffer._invView, XMMatrixTranspose(invView));
-    // XMStoreFloat4x4(&_mainPassConstantBuffer._proj, XMMatrixTranspose(proj));
-    // XMStoreFloat4x4(&_mainPassConstantBuffer._invProj, XMMatrixTranspose(invProj));
-    // XMStoreFloat4x4(&_mainPassConstantBuffer._viewProj, XMMatrixTranspose(viewProj));
-    // XMStoreFloat4x4(&_mainPassConstantBuffer._invViewProj, XMMatrixTranspose(invViewProj));
+    XMStoreFloat4x4(&_mainPassConstantBuffer._view, XMMatrixTranspose(view));
+    XMStoreFloat4x4(&_mainPassConstantBuffer._invView, XMMatrixTranspose(invView));
+    XMStoreFloat4x4(&_mainPassConstantBuffer._proj, XMMatrixTranspose(proj));
+    XMStoreFloat4x4(&_mainPassConstantBuffer._invProj, XMMatrixTranspose(invProj));
+    XMStoreFloat4x4(&_mainPassConstantBuffer._viewProj, XMMatrixTranspose(viewProj));
+    XMStoreFloat4x4(&_mainPassConstantBuffer._invViewProj, XMMatrixTranspose(invViewProj));
 
-    // _mainPassConstantBuffer._eyePosW = _eyePos;
-    // _mainPassConstantBuffer._renderTargetSize = XMFLOAT2((float)_width, (float)_height);
-    // _mainPassConstantBuffer._invRenderTargetSize  = XMFLOAT2(1.0f / _width, 1.0f/ _height);
-    // _mainPassConstantBuffer._nearZ = 1.0f;
-    // _mainPassConstantBuffer._farZ = 1000.0f;
-    // _mainPassConstantBuffer._totalTime = _timer.totalTime();
-    // _mainPassConstantBuffer._deltaTime = _timer.deltaTime();
+    _mainPassConstantBuffer._eyePosW = _eyePos;
+    _mainPassConstantBuffer._renderTargetSize = XMFLOAT2((float)_width, (float)_height);
+    _mainPassConstantBuffer._invRenderTargetSize  = XMFLOAT2(1.0f / _width, 1.0f/ _height);
+    _mainPassConstantBuffer._nearZ = 1.0f;
+    _mainPassConstantBuffer._farZ = 1000.0f;
+    _mainPassConstantBuffer._totalTime = _timer.totalTime();
+    _mainPassConstantBuffer._deltaTime = _timer.deltaTime();
 
-    // auto currPassCb = _currFrameResource->_passConstantBuffer.get();
-    // currPassCb->copyData(0, _mainPassConstantBuffer);
-
+    auto currPassCb = _currFrameResource->_passConstantBuffer.get();
+    currPassCb->copyData(0, _mainPassConstantBuffer);
 }
 
 void SimluatorApp::updateCamera(const float dt)
@@ -630,104 +630,148 @@ void SimluatorApp::updateCamera(const float dt)
 
     XMMATRIX view = XMMatrixLookAtLH(pos, target, up);
     XMStoreFloat4x4(&_view, view);
-}
+ }
 
+#if MULTIFLIHGT
 void SimluatorApp::draw()
 {
-    // if(!_swapChain) return;
-    // HRESULT result = S_OK;
-
-    // _flightIndex = _swapChain->GetCurrentBackBufferIndex();
-    // _device.waitForFlight(_flightIndex);
-
-    // // ComPtr<ID3D12GraphicsCommandList> commandList = _device.draw(_flightIndex, _pipelineStateObject);
-    // ComPtr<ID3D12GraphicsCommandList> commandList;
-    // if(_isWireFrame) 
-    //     commandList = _device.draw(_flightIndex, _pipelineStateObjects["opaque_wireframe"]);
-    // else
-    //     commandList = _device.draw(_flightIndex, _pipelineStateObjects["opaque"]);
-
-    // // D3D12_RESOURCE_BARRIER barrier;
-    // // {
-    // //     barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
-    // //     barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
-    // //     barrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
-    // //     barrier.Transition.pResource = _renderTargets[_flightIndex].Get();
-    // //     barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_RENDER_TARGET;
-    // //     barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_PRESENT;
-    // // }
-
-    // // commandList->ResourceBarrier(1, &barrier);
-    // commandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(currentBackBuffer(), 
-    //                         D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET));
-
-    // // auto rtvDescriptorSize = _device.getRtvDescSize();
-    // // auto dsvDescriptorSize = _device.getDsvDescSize();
-    // // CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHandle(_device.getRtvHeap()->GetCPUDescriptorHandleForHeapStart(), _flightIndex, rtvDescriptorSize);
-    // // CD3DX12_CPU_DESCRIPTOR_HANDLE dsvHandle(_device.getDsvHeap()->GetCPUDescriptorHandleForHeapStart());
-    // commandList->ClearRenderTargetView(rtvHandle, Colors::LightSteelBlue, 0, nullptr);
-    // commandList->ClearDepthStencilView(_device.getDsvHeap()->GetCPUDescriptorHandleForHeapStart(), D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, nullptr);
-    // commandList->OMSetRenderTargets(1, &rtvHandle, true, &dsvHandle);
-    // // commandList->OMSetRenderTargets(1, &rtvHandle, false);
-    // //transfrom the render target's layout
-
-    // commandList->SetGraphicsRootSignature(_pipelineRootSignature.Get());
-
-    // ID3D12DescriptorHeap* heaps[] = {
-    //     _cbvHeap.Get(),
-    //     // _samplerDescriptorHeap.Get()
-    // };
-
-    // commandList->SetDescriptorHeaps( _countof(heaps), heaps ); 
-
-    // CD3DX12_GPU_DESCRIPTOR_HANDLE pipelineGPUDescriptorHandlerStart( _cbvHeap->GetGPUDescriptorHandleForHeapStart());
-
-
-    // // 第[0]个是 const buffer view descriptor
-    // // commandList->SetGraphicsRootDescriptorTable(0, pipelineGPUDescriptorHandlerStart.Offset(_flightIndex, _device.getCbvDescSize()));
-    // commandList->SetGraphicsRootDescriptorTable(0, _cbvHeap->GetGPUDescriptorHandleForHeapStart()); 
-    // // commandList->SetGraphicsRootDescriptorTable(0, pipelineGPUDescriptorHandlerStart.Offset(_device.getCbvDescSize()));
-    // // 第[1] 个是 texture view descriptor
-    // // commandList->SetGraphicsRootDescriptorTable(1, _simpleTextureViewGPUDescriptorHandle );
-    // // 第[2] 个是 sampler descriptor
-    // // commandList->SetGraphicsRootDescriptorTable(2, _samplerGPUDescriptorHandle);
-
-    // commandList->SetPipelineState(_pipelineStateObject.Get());
-    // commandList->RSSetViewports(1, &_viewPort);
-    // commandList->RSSetScissorRects(1, &_viewScissor);
-    // commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-    // // commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_LINESTRIP);
-    // commandList->IASetVertexBuffers(0, 1, &_boxGeometry->vertexBufferView());
-    // // commandList->DrawInstanced(3, 1, 0, 0); //fianlly draw 3 vertices (draw the triangle)
-    // commandList->IASetIndexBuffer(&_boxGeometry->indexBufferView());
-    // commandList->DrawIndexedInstanced(_boxGeometry->getDrawArgs()["box"]._indexCount, 1, 0, 0, 0);
-
-    // std::swap(barrier.Transition.StateAfter, barrier.Transition.StateBefore);
-    // commandList->ResourceBarrier(1, &barrier);
-
-    // result = commandList->Close();
-    // _device.executeCommand(commandList);
-
-    // result = _swapChain->Present(1, 0);
-
     if(!_swapChain) return;
     HRESULT result = S_OK;
 
     _flightIndex = _swapChain->GetCurrentBackBufferIndex();
     _device.waitForFlight(_flightIndex);
 
+    // ComPtr<ID3D12GraphicsCommandList> commandList = _device.draw(_flightIndex, _pipelineStateObject);
+    ComPtr<ID3D12GraphicsCommandList> commandList;
+    if(_isWireFrame) 
+        commandList = _device.draw(_flightIndex, _pipelineStateObjects["opaque_wireframe"]);
+    else
+        commandList = _device.draw(_flightIndex, _pipelineStateObjects["opaque"]);
+
+    // D3D12_RESOURCE_BARRIER barrier;
+    // {
+    //     barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
+    //     barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+    //     barrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
+    //     barrier.Transition.pResource = _renderTargets[_flightIndex].Get();
+    //     barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_RENDER_TARGET;
+    //     barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_PRESENT;
+    // }
+
+    // commandList->ResourceBarrier(1, &barrier);
+    commandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(currentBackBuffer(), 
+                            D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET));
+
+    // auto rtvDescriptorSize = _device.getRtvDescSize();
+    // auto dsvDescriptorSize = _device.getDsvDescSize();
+    // CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHandle(_device.getRtvHeap()->GetCPUDescriptorHandleForHeapStart(), _flightIndex, rtvDescriptorSize);
+    // CD3DX12_CPU_DESCRIPTOR_HANDLE dsvHandle(_device.getDsvHeap()->GetCPUDescriptorHandleForHeapStart());
+    commandList->ClearRenderTargetView(rtvHandle, Colors::LightSteelBlue, 0, nullptr);
+    commandList->ClearDepthStencilView(_device.getDsvHeap()->GetCPUDescriptorHandleForHeapStart(), D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, nullptr);
+    commandList->OMSetRenderTargets(1, &rtvHandle, true, &dsvHandle);
+    // commandList->OMSetRenderTargets(1, &rtvHandle, false);
+    //transfrom the render target's layout
+
+    commandList->SetGraphicsRootSignature(_pipelineRootSignature.Get());
+
+    ID3D12DescriptorHeap* heaps[] = {
+        _cbvHeap.Get(),
+        // _samplerDescriptorHeap.Get()
+    };
+
+    commandList->SetDescriptorHeaps( _countof(heaps), heaps ); 
+
+    CD3DX12_GPU_DESCRIPTOR_HANDLE pipelineGPUDescriptorHandlerStart( _cbvHeap->GetGPUDescriptorHandleForHeapStart());
+
+
+    // 第[0]个是 const buffer view descriptor
+    // commandList->SetGraphicsRootDescriptorTable(0, pipelineGPUDescriptorHandlerStart.Offset(_flightIndex, _device.getCbvDescSize()));
+    commandList->SetGraphicsRootDescriptorTable(0, _cbvHeap->GetGPUDescriptorHandleForHeapStart()); 
+    // commandList->SetGraphicsRootDescriptorTable(0, pipelineGPUDescriptorHandlerStart.Offset(_device.getCbvDescSize()));
+    // 第[1] 个是 texture view descriptor
+    // commandList->SetGraphicsRootDescriptorTable(1, _simpleTextureViewGPUDescriptorHandle );
+    // 第[2] 个是 sampler descriptor
+    // commandList->SetGraphicsRootDescriptorTable(2, _samplerGPUDescriptorHandle);
+
+    commandList->SetPipelineState(_pipelineStateObject.Get());
+    commandList->RSSetViewports(1, &_viewPort);
+    commandList->RSSetScissorRects(1, &_viewScissor);
+    commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+    // commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_LINESTRIP);
+    commandList->IASetVertexBuffers(0, 1, &_boxGeometry->vertexBufferView());
+    // commandList->DrawInstanced(3, 1, 0, 0); //fianlly draw 3 vertices (draw the triangle)
+    commandList->IASetIndexBuffer(&_boxGeometry->indexBufferView());
+    commandList->DrawIndexedInstanced(_boxGeometry->getDrawArgs()["box"]._indexCount, 1, 0, 0, 0);
+
+    std::swap(barrier.Transition.StateAfter, barrier.Transition.StateBefore);
+    commandList->ResourceBarrier(1, &barrier);
+
+    result = commandList->Close();
+    _device.executeCommand(commandList);
+
+    result = _swapChain->Present(1, 0);
+}
+#else
+void SimluatorApp::draw()
+{
+    if(!_swapChain) return;
+    HRESULT result = S_OK;
+
+
     auto cmdListAlloc = _currFrameResource->_cmdListAllocation;
+
     ThrowIfFailed(cmdListAlloc->Reset());
 
-    //TODO: 与帧对象绑定数据
-    
-    // ComPtr<ID3D12GraphicsCommandList> commandList;
-    // if(_isWireFrame) 
-    //     commandList = _device.draw(_flightIndex, _pipelineStateObjects["opaque_wireframe"]);
-    // else
-    //     commandList = _device.draw(_flightIndex, _pipelineStateObjects["opaque"]);
+     _flightIndex = _swapChain->GetCurrentBackBufferIndex();
+    // _device.waitForFlight(_flightIndex);
 
+    ComPtr<ID3D12GraphicsCommandList> commandList = _device.getGraphicsCmdList(_flightIndex);
+    if(_isWireFrame) 
+    {
+        ThrowIfFailed(commandList->Reset(cmdListAlloc.Get(), _pipelineStateObjects["opaque_wireframe"].Get()));
+    }
+    else
+    {
+        ThrowIfFailed(commandList->Reset(cmdListAlloc.Get(), _pipelineStateObjects["opaque"].Get()));
+    }
+        
+
+    commandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(currentBackBuffer(), 
+                            D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET));
+
+    
+    auto cbbv = currentBackBufferView();
+
+    commandList->RSSetViewports(1, &_viewPort);
+    commandList->RSSetScissorRects(1, &_viewScissor);
+    commandList->ClearRenderTargetView(cbbv, Colors::LightSteelBlue, 0, nullptr);
+    commandList->ClearDepthStencilView(depthStencilView(), D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, nullptr);
+
+    commandList->OMSetRenderTargets(1, &cbbv, true, &depthStencilView());
+    commandList->SetGraphicsRootSignature(_pipelineRootSignature.Get());
+
+    auto passConstantBuffer = _currFrameResource->_passConstantBuffer->Resource();
+    commandList->SetGraphicsRootConstantBufferView(1, passConstantBuffer->GetGPUVirtualAddress());
+    drawRenderItem(commandList.Get(), _renderItemLayer[(int)RenderLayer::Opaque]);
+
+    commandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(currentBackBuffer(), 
+                            D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT));
+
+    ThrowIfFailed(commandList->Close());
+
+    ID3D12CommandList *cmdLists[] = { commandList.Get() };
+                    
+
+    auto commandQueue = _device.getGraphicsCmdQueue();
+    commandQueue->ExecuteCommandLists(_countof(cmdLists), cmdLists);
+
+    ThrowIfFailed(_swapChain->Present(0, 0));
+    
+    _currFrameResource->_fences = ++_device._graphicsFenceValues;
+
+    commandQueue->Signal(_device.getGraphicsFences().Get(), _device._graphicsFenceValues);
 }
+#endif
 
 void SimluatorApp::onKeyEvent(unsigned char key, eKeyEvent event)
 {

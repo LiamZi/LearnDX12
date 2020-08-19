@@ -434,7 +434,8 @@ bool TriangleDelux::initialize(void *wnd, Nix::IArchive *arch)
     //creator constant buffer view
     device->CreateConstantBufferView(&cbufferViewDesc, pipelineCPUDescriptorHandlerStart.Offset(cbvSrvDescriptorSize));
 
-	CD3DX12_DESCRIPTOR_RANGE1 vertexDescriptorRanges[1];{
+	CD3DX12_DESCRIPTOR_RANGE1 vertexDescriptorRanges[1];
+    {
 		// vertex constant buffer / uniform
 		vertexDescriptorRanges[0].Init(
 			D3D12_DESCRIPTOR_RANGE_TYPE_CBV,			// type

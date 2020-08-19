@@ -46,9 +46,14 @@ public:
         _drawArgs[name] = geometry;
     }
 
-    SubMeshGeometry &getDrawArgsSubMeshByName(const std::string &name)
+    SubMeshGeometry *getDrawArgsSubMeshByName(const std::string &name)
     {
-        return _drawArgs[name]; 
+        // return _drawArgs[name]; 
+        auto iter = _drawArgs.find(name);
+        if(iter != _drawArgs.end())  
+            return &(iter->second);
+
+        return nullptr;
     }
 
     std::unordered_map<std::string, SubMeshGeometry> &getDrawArgs()

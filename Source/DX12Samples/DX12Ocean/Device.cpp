@@ -69,29 +69,31 @@ void Device::check4xMsaaSupport()
     assert(_4xMsaaQuality > 0 && "Unexpected MSAA quality level. ");
 }
 
-// void Device::createCommnadObjectsAndFence()
-// {
-//     //initizaliza command object and graphics fence
+#if MULTIFLIHGT
+void Device::createCommnadObjectsAndFence()
+{
+    //initizaliza command object and graphics fence
 
-//     D3D12_COMMAND_QUEUE_DESC queueDesc = {};
-//     queueDesc.Type = D3D12_COMMAND_LIST_TYPE_DIRECT;
-//     queueDesc.Flags = D3D12_COMMAND_QUEUE_FLAG_NONE;
+    D3D12_COMMAND_QUEUE_DESC queueDesc = {};
+    queueDesc.Type = D3D12_COMMAND_LIST_TYPE_DIRECT;
+    queueDesc.Flags = D3D12_COMMAND_QUEUE_FLAG_NONE;
 
-//     ThrowIfFailed(_device->CreateCommandQueue(&queueDesc, IID_PPV_ARGS(&_graphicsCommandQueue)));
+    ThrowIfFailed(_device->CreateCommandQueue(&queueDesc, IID_PPV_ARGS(&_graphicsCommandQueue)));
 
-//     for (uint32_t i = 0; i < MaxFlightCount; ++i)
-//     {
-//         ThrowIfFailed(_device->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, IID_PPV_ARGS(_graphicsCommandAllocator[i].GetAddressOf())));
+    for (uint32_t i = 0; i < MaxFlightCount; ++i)
+    {
+        ThrowIfFailed(_device->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, IID_PPV_ARGS(_graphicsCommandAllocator[i].GetAddressOf())));
 
-//         ThrowIfFailed(_device->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, _graphicsCommandAllocator[i].Get(), nullptr, IID_PPV_ARGS(_graphicsCommandLists[i].GetAddressOf())));
-//         _graphicsCommandLists[i]->Close();
+        ThrowIfFailed(_device->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, _graphicsCommandAllocator[i].Get(), nullptr, IID_PPV_ARGS(_graphicsCommandLists[i].GetAddressOf())));
+        _graphicsCommandLists[i]->Close();
 
-//         ThrowIfFailed(_device->CreateFence(0, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&_graphicsFences[i])));
-//     }
+        ThrowIfFailed(_device->CreateFence(0, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&_graphicsFences[i])));
+    }
 
-//     //TODO: 感觉初始化这个EVENT 并没有什么效果。 以后再看。
-//     _graphicsFenceEvent = CreateEventEx(nullptr, FALSE, FALSE, EVENT_ALL_ACCESS);
-// }
+    //TODO: 感觉初始化这个EVENT 并没有什么效果。 以后再看。
+    _graphicsFenceEvent = CreateEventEx(nullptr, FALSE, FALSE, EVENT_ALL_ACCESS);
+}
+#endif
 
 void Device::createCommnadObjectsAndFence()
 {
@@ -111,7 +113,8 @@ void Device::createCommnadObjectsAndFence()
                                     IID_PPV_ARGS(_graphicsCommandLists.GetAddressOf())));
 
 
-    _graphicsCommandLists->Close();                    
+    _graphicsCommandLists->Close();       
+    ThrowIfFailed(_device->CreateFence(0, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&_graphicsFences)));             
 
 
     //TODO: 感觉初始化这个EVENT 并没有什么效果。 以后再看。
@@ -163,6 +166,7 @@ ComPtr<IDXGISwapChain3> Device::createSwapChian(const uint32_t width, const uint
     return finalSwapChain;
 }
 
+#if MULTIFLIHGT
 void Device::flushGraphicsCommandQueue()
 {
     for (uint32_t i = 0; i < MaxFlightCount; ++i)
@@ -182,6 +186,23 @@ void Device::flushGraphicsCommandQueue()
     }
 }
 
+#else
+void Device::flushGraphicsCommandQueue()
+{
+    ++_graphicsFenceValues;
+    ThrowIfFailed(_graphicsCommandQueue->Signal(_graphicsFences.Get(), _graphicsFenceValues));
+
+    if(_graphicsFences->GetCompletedValue() < _graphicsFenceValues)
+    {
+        HANDLE eventHandle = CreateEventEx(nullptr, false, false, EVENT_ALL_ACCESS);
+        ThrowIfFailed(_graphicsFences->SetEventOnCompletion(_graphicsFenceValues, eventHandle));
+        WaitForSingleObject(eventHandle, INFINITE);
+        CloseHandle(eventHandle);
+    }
+}
+#endif
+
+#if MULTIFLIGHT
 void Device::waitForFlight(uint32_t flight)
 {
     if(_graphicsFences[flight] != 0 && _graphicsFences[flight]->GetCompletedValue() < _graphicsFenceValues[flight])
@@ -192,6 +213,19 @@ void Device::waitForFlight(uint32_t flight)
         CloseHandle(eventHandle);
     }
 }
+#else
+void Device::waitForFlight(uint32_t flight)
+{
+    if(_graphicsFences->GetCompletedValue() < _graphicsFenceValues)
+    {
+        auto eventHandle = CreateEventEx(nullptr, false, false, EVENT_ALL_ACCESS);
+        // ThrowIfFailed(_graphicsFences[flight]->SetEventOnCompletion(_graphicsFenceValues[flight], eventHandle));
+        ThrowIfFailed(_graphicsFences->SetEventOnCompletion(_graphicsFenceValues, eventHandle));
+        WaitForSingleObject(eventHandle, INFINITE);
+        CloseHandle(eventHandle);   
+    }
+}
+#endif
 
 // ComPtr<ID3D12GraphicsCommandList> Device::draw(uint32_t flightIndex, ComPtr<ID3D12PipelineState> &pipelineState)
 // {
@@ -208,6 +242,7 @@ void Device::waitForFlight(uint32_t flight)
 //     return cmdList;
 // }
 
+#if MULTIFLIHGT
 void Device::executeCommand(ComPtr<ID3D12GraphicsCommandList> &commandList)
 {
     ID3D12CommandList *lists[] = { commandList.Get() };
@@ -215,6 +250,7 @@ void Device::executeCommand(ComPtr<ID3D12GraphicsCommandList> &commandList)
     ThrowIfFailed(_graphicsCommandQueue->Signal(_graphicsFences[_flightIndex].Get(), _graphicsFenceValues[_flightIndex]));
     // flushGraphicsCommandQueue();
 }
+#endif
 
 void Device::createRtvAndDsvDescriptorHeaps()
 {
