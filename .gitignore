@@ -1,5 +1,5 @@
 /build/*
 /win32/*
-/bin/*
+/bin/Windows/*
 /.vs/*
 /out/*
