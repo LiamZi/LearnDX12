@@ -51,6 +51,8 @@ private:
     // ComPtr<ID3DBlob>                            _fragShader;
     std::unordered_map<std::string, ComPtr<ID3DBlob>> _shaders;
 
+
+#
     std::vector<D3D12_INPUT_ELEMENT_DESC>       _inputLayout;
 
     D3D12_VIEWPORT                              _viewPort;
@@ -105,8 +107,8 @@ public:
     virtual void draw() override;
 	virtual char * title() override;
 	virtual uint32_t rendererType() override;
-    virtual void onMouseEvent(eMouseButton btn, eMouseEvent event, int x, int y) override;
-    virtual void onKeyEvent(unsigned char key, eKeyEvent event) override;
+virtual void onMouseEvent(eMouseButton btn, eMouseEvent event, int x, int y) override;
+    virtual void onKeyEvent(unsigned char key, eKeyEvent event) override;    
 
 private:
     void createRootSignature(ComPtr<ID3D12Device> device);
@@ -120,7 +122,7 @@ private:
     void createFrameResource(ComPtr<ID3D12Device> device);
     void createRenderItems(ComPtr<ID3D12Device> device);
 
-    void drawRenderItem(ID3D12GraphicsCommandList *cmdList, const std::vector<RenderItem *> &renderItems);
+    void drawRenderItems(ID3D12GraphicsCommandList *cmdList, const std::vector<RenderItem *> &renderItems);
     void updateWaves(const float dt);
     void updateCamera(const float dt);
     void onKeyBoardInput(const float dt);

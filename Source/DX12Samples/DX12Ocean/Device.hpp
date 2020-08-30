@@ -155,14 +155,20 @@ public:
 
     inline ComPtr<ID3D12GraphicsCommandList> &getGraphicsCmdList(const uint32_t flightIndex)
     {
-        // return _graphicsCommandLists[flightIndex];
+#if MULTIFLIHGT
+        return _graphicsCommandLists[flightIndex];
+#else
         return _graphicsCommandLists;
+#endif
     }
 
     inline ComPtr<ID3D12CommandAllocator> &getGraphicsCmdAllocator(const uint32_t flightIndex)
     {
+#if MULTIFLIHGT
         // return _graphicsCommandAllocator[flightIndex];
+#else
         return _graphicsCommandAllocator;
+#endif
     }
 
     inline ComPtr<ID3D12Fence> &getGraphicsFences()

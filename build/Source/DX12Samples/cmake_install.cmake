@@ -34,7 +34,7 @@ endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for each subdirectory.
-  include("D:/GitHub/LearnDX12/build/Source/DX12Samples/DX12Ocean/cmake_install.cmake")
+  include("D:/GitHub/LearnDX12/build/Source/DX12Samples/Shapes/cmake_install.cmake")
 
 endif()
 

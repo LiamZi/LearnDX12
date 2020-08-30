@@ -50,7 +50,9 @@ bool SimluatorApp::initialize(void *hwnd, Nix::IArchive *archive)
     auto rtvDescriptorSize = _device.getRtvDescSize();
     _swapChain = _device.getSwapChain();
 
-    _waves = std::make_unique<Waves>(256, 256, 1.0f, 0.03f, 4.0f, 2.0f);
+   
+
+    _device.flushGraphicsCommandQueue();
 
     return true;
 }
@@ -201,7 +203,7 @@ void SimluatorApp::createRenderItems(ComPtr<ID3D12Device> device)
     _allRenderItems.push_back(std::move(wavesRenderItem));
 }
 
-void SimluatorApp::drawRenderItem(ID3D12GraphicsCommandList *cmdList, const std::vector<RenderItem *> &renderItems)
+void SimluatorApp::drawRenderItems(ID3D12GraphicsCommandList *cmdList, const std::vector<RenderItem *> &renderItems)
 {
     auto objconstantBufferByteSize = Utils::calcConstantBufferSize(sizeof(ConstantObject));
 
@@ -326,23 +328,40 @@ void SimluatorApp::createWavesGeometryBuffers(ComPtr<ID3D12Device> device)
     int m = _waves->rowCount();
     int n = _waves->columnCount();
 
+    // int k = 0;
+
+    // for (int i = 0; i < m - 1; i++)
+    // {
+    //    for (int j = 0; j < n - 1; j++)
+    //    {
+    //        indices[k] = i * n + j;
+    //        indices[k + 1] = i * n + j + 1;
+    //        indices[k + 2] = (i + 1) * n + j;
+
+    //        indices[k + 3] = (i + 1) * n + j;
+    //        indices[k + 4] = i * n + j  + 1;
+    //        indices[k + 5] = (i + 1) * n + j + 1;
+
+    //        k += 6;
+    //    }
+    // }
+
     int k = 0;
+	for(int i = 0; i < m - 1; ++i)
+	{
+		for(int j = 0; j < n - 1; ++j)
+		{
+			indices[k] = i*n + j;
+			indices[k + 1] = i*n + j + 1;
+			indices[k + 2] = (i + 1)*n + j;
 
-    for (int i = 0; i < m - 1; i++)
-    {
-       for (int j = 0; j < n - 1; j++)
-       {
-           indices[k] = i * n + j;
-           indices[k + 1] = i * n + j + 1;
-           indices[k + 2] = (i + 1) * n + j;
+			indices[k + 3] = (i + 1)*n + j;
+			indices[k + 4] = i*n + j + 1;
+			indices[k + 5] = (i + 1)*n + j + 1;
 
-           indices[k + 3] = (i + 1) * n + j;
-           indices[k + 4] = i * n + j  + 1;
-           indices[k + 5] = (i + 1) * n + j + 1;
-
-           k += 6;
-       }
-    }
+			k += 6; // next quad
+		}
+	}
 
     uint32_t vbSize = _waves->vertexCount() * sizeof(Vertex);
     uint32_t ibSize = (uint32_t)indices.size() * sizeof(uint16_t);
@@ -374,7 +393,7 @@ void SimluatorApp::createWavesGeometryBuffers(ComPtr<ID3D12Device> device)
     SubMeshGeometry subMesh;
     subMesh._indexCount = (uint32_t)indices.size();
     subMesh._startIndexLocation = 0;
-    subMesh._baseVertexLocation =0;
+    subMesh._baseVertexLocation = 0;
 
     geo->setDrawArgsElement("grid", subMesh);
 
@@ -411,7 +430,7 @@ void SimluatorApp::updateWaves(const float dt)
         Vertex v;
 
         v.pos = _waves->position(i);
-        v.color = OCEANCOLOR;
+        v.color = XMFLOAT4(DirectX::Colors::Blue);;
 
         currWavesVB->copyData(i, v);
     }
@@ -564,7 +583,7 @@ void SimluatorApp::tick(float dt)
 
     updateCamera(dt);
 
-    _flightIndex = (_flightIndex + 1) % MaxFlightCount;
+    // _flightIndex = (_flightIndex + 1) % MaxFlightCount;
     _currFrameResource = _framesResources[_flightIndex].get();
     _device.waitForFlight(_flightIndex);
 
@@ -752,7 +771,7 @@ void SimluatorApp::draw()
 
     auto passConstantBuffer = _currFrameResource->_passConstantBuffer->Resource();
     commandList->SetGraphicsRootConstantBufferView(1, passConstantBuffer->GetGPUVirtualAddress());
-    drawRenderItem(commandList.Get(), _renderItemLayer[(int)RenderLayer::Opaque]);
+    drawRenderItems(commandList.Get(), _renderItemLayer[(int)RenderLayer::Opaque]);
 
     commandList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(currentBackBuffer(), 
                             D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT));
@@ -767,6 +786,7 @@ void SimluatorApp::draw()
 
     ThrowIfFailed(_swapChain->Present(0, 0));
     
+    // _flightIndex = (_flightIndex + 1) % SwapChainBufferCount;
     _currFrameResource->_fences = ++_device._graphicsFenceValues;
 
     commandQueue->Signal(_device.getGraphicsFences().Get(), _device._graphicsFenceValues);
@@ -775,11 +795,6 @@ void SimluatorApp::draw()
 
 void SimluatorApp::onKeyEvent(unsigned char key, eKeyEvent event)
 {
-    //  if(GetAsyncKeyState('1') & 0x8000)
-    //     _isWireFrame = true;
-    // else
-    //     _isWireFrame = false;
-
     if(key == '1' && event == eKeyEvent::eKeyDown)
     {
         _isWireFrame = !_isWireFrame;
@@ -829,6 +844,12 @@ void SimluatorApp::onMouseEvent(eMouseButton btn, eMouseEvent event, int x, int 
 
     _lasstMousePos.x = x;
     _lasstMousePos.y = y;
+
+    // std::wstring text =
+    // L"_lasstMousePos x: = " + std::to_wstring(x) +
+    // L"_lasstMousePos y: = " + std::to_wstring(y) + L"\n";
+
+	// OutputDebugString(text.c_str());
 }
 
 ID3D12Resource *SimluatorApp::currentBackBuffer() const
@@ -839,7 +860,6 @@ ID3D12Resource *SimluatorApp::currentBackBuffer() const
 D3D12_CPU_DESCRIPTOR_HANDLE SimluatorApp::currentBackBufferView() 
 {
     return CD3DX12_CPU_DESCRIPTOR_HANDLE(_device.getRtvHeap()->GetCPUDescriptorHandleForHeapStart(), _flightIndex, _device.getRtvDescSize());
-
 }
 
 D3D12_CPU_DESCRIPTOR_HANDLE SimluatorApp::depthStencilView()

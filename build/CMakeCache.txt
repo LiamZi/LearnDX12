@@ -320,6 +320,12 @@ Nix_BINARY_DIR:STATIC=D:/GitHub/LearnDX12/build/Source/ThirdPart/Nix
 Nix_SOURCE_DIR:STATIC=D:/GitHub/LearnDX12/Source/ThirdPart/Nix
 
 //Value Computed by CMake
+OceanNew_BINARY_DIR:STATIC=D:/GitHub/LearnDX12/build/Source/DX12Samples/OceanNew
+
+//Value Computed by CMake
+OceanNew_SOURCE_DIR:STATIC=D:/GitHub/LearnDX12/Source/DX12Samples/OceanNew
+
+//Value Computed by CMake
 OceanSimulator_BINARY_DIR:STATIC=D:/GitHub/LearnDX12/build/Source/DX12Samples/DX12Ocean
 
 //Value Computed by CMake
@@ -345,6 +351,12 @@ SOURCE_SOURCE_DIR:STATIC=D:/GitHub/LearnDX12/Source
 
 //Path to a program.
 SVNCOMMAND:FILEPATH=SVNCOMMAND-NOTFOUND
+
+//Value Computed by CMake
+Shapes_BINARY_DIR:STATIC=D:/GitHub/LearnDX12/build/Source/DX12Samples/Shapes
+
+//Value Computed by CMake
+Shapes_SOURCE_DIR:STATIC=D:/GitHub/LearnDX12/Source/DX12Samples/Shapes
 
 //Value Computed by CMake
 TriangleDelux_BINARY_DIR:STATIC=D:/GitHub/LearnDX12/build/Source/DX12Samples/DX12TriangleDelux

@@ -270,6 +270,8 @@ void Device::createRtvAndDsvDescriptorHeaps()
         &dsvHeapDesc, IID_PPV_ARGS(_dsvHeap.GetAddressOf())));
 }
 
+
+
 Device::operator ComPtr<ID3D12Device> () const {
     return _device;
 }
