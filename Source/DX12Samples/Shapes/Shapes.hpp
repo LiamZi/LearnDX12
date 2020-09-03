@@ -9,10 +9,10 @@
 #include <crtdbg.h>
 #endif
 
-#include <FrameResource.hpp>
-#include <PassConstants.hpp>
-#include <ConstantObject.hpp>
-#include <RenderItem.hpp>
+#include "../ThirdPart/Nix/Utility/FrameResource.hpp"
+#include "../ThirdPart/Nix/Utility/PassConstants.hpp"
+#include "../ThirdPart/Nix/Utility/ConstantObject.hpp"
+#include "../ThirdPart/Nix/Utility/RenderItem.hpp"
 
 
 using namespace Microsoft::WRL;
@@ -53,6 +53,10 @@ private:
     uint32_t _passCbvOffset = 0;
 
     POINT _lastMousePos;
+
+    uint32_t _rtvDescriptorSize = 0;
+    uint32_t _dsvDescriptorSize = 0;
+    uint32_t _cbvSrvUavDescriptorSize = 0;
 
 public:
     explicit Shapes(/* args */) {}

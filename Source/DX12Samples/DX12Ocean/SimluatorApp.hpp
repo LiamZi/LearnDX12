@@ -107,7 +107,7 @@ public:
     virtual void draw() override;
 	virtual char * title() override;
 	virtual uint32_t rendererType() override;
-virtual void onMouseEvent(eMouseButton btn, eMouseEvent event, int x, int y) override;
+    virtual void onMouseEvent(eMouseButton btn, eMouseEvent event, int x, int y) override;
     virtual void onKeyEvent(unsigned char key, eKeyEvent event) override;    
 
 private:

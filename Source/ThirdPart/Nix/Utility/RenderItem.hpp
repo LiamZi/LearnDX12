@@ -3,12 +3,14 @@
 
 #include <d3d12.h>
 #include <DirectXMath.h>
+#include "../Math/MathHelper.h"
 #include "MeshGeometry.hpp"
-#include "Nix/Math/MathHelper.h"
 
 
 using namespace DirectX;
 using namespace Nix;
+
+// class MeshGeometry;
 
 const int MAXFLIGHTRESOURCE = 3;
 

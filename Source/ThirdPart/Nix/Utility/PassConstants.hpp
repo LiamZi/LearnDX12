@@ -4,7 +4,7 @@
 // #include <Common.hpp>
 #include <stdint.h>
 #include <DirectXMath.h>
-#include "Nix/Math/MathHelper.h"
+#include "../Math/MathHelper.h"
 
 using namespace Nix;
 

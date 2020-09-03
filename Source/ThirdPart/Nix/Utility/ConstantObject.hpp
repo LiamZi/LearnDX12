@@ -2,7 +2,7 @@
 #define __OBJECT_CONSTATNTS_HPP__
 
 #include <DirectXMath.h>
-#include "Nix/Math/MathHelper.h"
+#include "../Math/MathHelper.h"
 
 struct ConstantObject
 {

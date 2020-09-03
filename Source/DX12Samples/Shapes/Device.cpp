@@ -308,6 +308,7 @@ void Device::createPipelineStateObjects(ComPtr<ID3D12PipelineState> &opaque,
     //pso for opaque objects.
     ZeroMemory(&opaqueDesc, sizeof(D3D12_GRAPHICS_PIPELINE_STATE_DESC));
     opaqueDesc.InputLayout = { inputLayout.data(), (uint32_t) inputLayout.size() };
+    opaqueDesc.pRootSignature = _rootSignature.Get();
     opaqueDesc.VS = 
     {
         reinterpret_cast<BYTE *>(shaders["standardVS"]->GetBufferPointer()),
@@ -352,6 +353,26 @@ void Device::createShadersAndLayout(std::unordered_map<std::string, ComPtr<ID3DB
         {"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0},
         {"COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 12, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0}
     };
+}
+
+void Device::createDescriptorHeap(ComPtr<ID3D12DescriptorHeap> &cbvHeap, uint32_t descNum)
+{
+    D3D12_DESCRIPTOR_HEAP_DESC cbvHeapDesc;
+    cbvHeapDesc.NumDescriptors = descNum;
+    cbvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
+    cbvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
+    cbvHeapDesc.NodeMask = 0;
+    ThrowIfFailed(_d3dDevice->CreateDescriptorHeap(&cbvHeapDesc, IID_PPV_ARGS(cbvHeap.GetAddressOf())));
+}
+
+void Device::setViewPorts(uint32_t numViewPort)
+{
+    _graphicsCmdList->RSSetViewports(numViewPort, &_viewPort);
+}
+    
+void Device::setScissorRects(uint32_t scissorNum)
+{
+    _graphicsCmdList->RSSetScissorRects(scissorNum, &_viewScissor);
 }
 
 ID3D12Resource *Device::currRenderTarget() const

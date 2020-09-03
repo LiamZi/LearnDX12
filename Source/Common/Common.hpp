@@ -26,7 +26,12 @@
 #include "../ThirdPart/Nix/Utils/Utils.hpp"
 #include "../ThirdPart/Nix/Utils/UploadBuffer.hpp"
 #include "../ThirdPart/Nix/Math/MathHelper.h"
-
+// #include "../ThirdPart/Nix/Utility/FrameResource.hpp"
+// #include "../ThirdPart/Nix/Utility/GeometryGenerator.hpp"
+// #include "../ThirdPart/Nix/Utility/ConstantObject.hpp"
+// #include "../ThirdPart/Nix/Utility/MeshGeometry.hpp"
+// #include "../ThirdPart/Nix/Utility/PassConstants.hpp"
+// #include "../ThirdPart/Nix/Utility/RenderItem.hpp"
 #define MULTIFLIHGT 0
 
 constexpr uint32_t MaxFlightCount = 3;

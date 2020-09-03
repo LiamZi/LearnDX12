@@ -3,6 +3,19 @@
 
 #include <Common.hpp>
 
+#ifndef ThrowIfFailed
+#define ThrowIfFailed(x)                                                    \
+{                                                                           \
+    HRESULT hr__ = (x);                                                     \
+    std::wstring wfn = Nix::AnsiToWString(__FILE__);                        \
+    if(FAILED(hr__)) { throw Nix::DxException(hr__, L#x, wfn, __LINE__); }  \
+}
+#endif
+
+#ifndef ReleaseCom
+#define ReleaseCom(x) { if(x) { x->Release(); x = 0;}}
+#endif
+
 namespace Nix {
 
 inline std::wstring AnsiToWString(const std::string &str)
@@ -29,20 +42,9 @@ public:
 
 };
 
-#ifndef ThrowIfFailed
-#define ThrowIfFailed(x)                                                    \
-{                                                                           \
-    HRESULT hr__ = (x);                                                     \
-    std::wstring wfn = Nix::AnsiToWString(__FILE__);                        \
-    if(FAILED(hr__)) { throw Nix::DxException(hr__, L#x, wfn, __LINE__); }  \
-}
-#endif
 
-#ifndef ReleaseCom
-#define ReleaseCom(x) { if(x) { x->Release(); x = 0;}}
-#endif
 
-    class Utils {
+class Utils {
 
     public:
 

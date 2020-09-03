@@ -1,7 +1,7 @@
 #ifndef __UPLOAD_BUFFER_HPP__
 #define __UPLOAD_BUFFER_HPP__
 
-#include <Common.hpp>
+#include "Utils.hpp"
 
 template<typename T>
 class UploadBuffer
@@ -20,16 +20,33 @@ public:
         _elementByteSize = sizeof(T);
         if(_isConstantBuffer) _elementByteSize = Nix::Utils::calcConstantBufferSize(sizeof(T));
 
-        ThrowIfFailed(device->CreateCommittedResource(
+        // ThrowIfFailed(device->CreateCommittedResource(
+        //     &CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD),
+        //     D3D12_HEAP_FLAG_NONE,
+        //     &CD3DX12_RESOURCE_DESC::Buffer(uint64_t(_elementByteSize * elementCount)),
+        //     D3D12_RESOURCE_STATE_GENERIC_READ,
+        //     nullptr,
+        //     IID_PPV_ARGS(&_uploadBuffer)
+        // ));
+
+        HRESULT hr__ = device->CreateCommittedResource(
             &CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD),
             D3D12_HEAP_FLAG_NONE,
             &CD3DX12_RESOURCE_DESC::Buffer(uint64_t(_elementByteSize * elementCount)),
             D3D12_RESOURCE_STATE_GENERIC_READ,
             nullptr,
             IID_PPV_ARGS(&_uploadBuffer)
-        ));
+        );
 
-        ThrowIfFailed(_uploadBuffer->Map(0, nullptr, reinterpret_cast<void**>(&_mappedData)));
+        std::wstring wfn = Nix::AnsiToWString(__FILE__); 
+
+        if(FAILED(hr__))  throw Nix::DxException(hr__, L"UploadBuffer", wfn, __LINE__); 
+
+        // ThrowIfFailed(_uploadBuffer->Map(0, nullptr, reinterpret_cast<void**>(&_mappedData)));
+
+        hr__ = _uploadBuffer->Map(0, nullptr, reinterpret_cast<void**>(&_mappedData));
+        wfn = Nix::AnsiToWString(__FILE__); 
+        if(FAILED(hr__))  throw Nix::DxException(hr__, L"UploadBuffer", wfn, __LINE__); 
     }
 
     UploadBuffer(const UploadBuffer &rhs) = delete;

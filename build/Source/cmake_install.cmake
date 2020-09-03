@@ -36,7 +36,6 @@ if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for each subdirectory.
   include("D:/GitHub/LearnDX12/build/Source/DX12Samples/cmake_install.cmake")
   include("D:/GitHub/LearnDX12/build/Source/ThirdPart/cmake_install.cmake")
-  include("D:/GitHub/LearnDX12/build/Source/Utility/cmake_install.cmake")
 
 endif()
 

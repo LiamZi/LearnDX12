@@ -36,7 +36,11 @@ private:
 
     std::unordered_map<std::string, SubMeshGeometry> _drawArgs;
 public:
-    MeshGeometry(/* args */) {}
+    MeshGeometry(/* args */):_name("")
+    ,_indexFormat(DXGI_FORMAT_B8G8R8A8_UNORM)
+    {
+        
+    };
     ~MeshGeometry() {}
 
 public:

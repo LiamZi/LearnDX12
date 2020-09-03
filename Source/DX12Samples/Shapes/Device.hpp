@@ -34,8 +34,7 @@ private:
     void *_hwnd;
 
 private:
-    uint64_t _currentFence = 0;
-    uint32_t _currFlightIndex = 0;
+   
 
     uint32_t _rtvDescSize = 0;
     uint32_t _dsvDescSize = 0;
@@ -46,6 +45,10 @@ private:
 
     bool _4xMsaaState = false;
     bool _4xMsaaQuality = 0;
+
+public:
+    uint64_t _currentFence = 0;
+    uint32_t _currFlightIndex = 0;
 
 public:
     explicit Device(void *hwnd, uint32_t width, uint32_t height)
@@ -88,6 +91,10 @@ public:
 
     void createShadersAndLayout(std::unordered_map<std::string, ComPtr<ID3DBlob>> &shaders, 
                             std::vector<D3D12_INPUT_ELEMENT_DESC> &inputLayout);
+    void createDescriptorHeap(ComPtr<ID3D12DescriptorHeap> &cbvHeap, uint32_t descNum);
+    void setViewPorts(uint32_t numViewPort);
+    void setScissorRects(uint32_t scissorNum);
+
     void release();
     
 public:
@@ -102,6 +109,8 @@ public:
     ID3D12Device *getD3DDevice() { return _d3dDevice.Get(); }
     ID3D12RootSignature *getRootSignature() { return _rootSignature.Get(); }
     ID3D12GraphicsCommandList *getGraphicsCmdList() { return _graphicsCmdList.Get(); }
+    ComPtr<ID3D12Fence> &getFence() { return _fence; }
+    ComPtr<ID3D12CommandQueue> &getGraphicsCmdQueue() { return _graphicsCmdQueue; }
 };
 
 
