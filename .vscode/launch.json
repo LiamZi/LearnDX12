@@ -16,10 +16,10 @@
             "externalConsole": false
         },
         {
-            "name": "OceanNew x64 (Windows) 启动",
+            "name": "OceanFFT x64 (Windows) 启动",
             "type": "cppvsdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/bin/Windows/x64/Debug/OceanNew.exe",
+            "program": "${workspaceFolder}/bin/Windows/x64/Debug/OceanFFT.exe",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
@@ -28,10 +28,10 @@
         },
 
         {
-            "name": "Ocean Simluator x64 启动",
+            "name": "WaterWave x64 启动",
             "type": "cppvsdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/bin/Windows/x64/Debug/OceanSimulator.exe",
+            "program": "${workspaceFolder}/bin/Windows/x64/Debug/WaterWave.exe",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",

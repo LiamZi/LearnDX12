@@ -1,7 +1,8 @@
 #ifndef __VERTEX_HPP__
 #define __VERTEX_HPP__
 
-#include <Common.hpp>
+// #include <Common.hpp>
+#include <DirectXMath.h>
 
 struct Vertex
 {

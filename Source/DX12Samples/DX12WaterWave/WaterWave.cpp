@@ -1,8 +1,9 @@
-#include "Shapes.hpp"
+#include "WaterWave.hpp"
+
 #include "../ThirdPart/Nix/Utility/GeometryGenerator.hpp"
 
 
-bool Shapes::initialize(void *hwnd, Nix::IArchive *archive)
+bool WaterWave::initialize(void *hwnd, Nix::IArchive *archive)
 {
     _hwnd = hwnd;
     _width = 800;
@@ -11,13 +12,16 @@ bool Shapes::initialize(void *hwnd, Nix::IArchive *archive)
 
     _device->resetGraphicsCmdList();
 
+    _waves = std::make_unique<Waves>(128, 128, 1.0f, 0.03f, 4.0f, 0.2f);
+
     buildRootSignature();
     buildShadersAndInputLayout();
-    buildShapeGeometry();
+    buildWavesGeometry();
+    
     buildRenderItems();
     buildFrameResources();
-    buildDescriptorHeaps();
-    buildConstantBufferViews();
+    // buildDescriptorHeaps();
+    // buildConstantBufferViews();
     buildPipelineObjects();
 
     _device->closeGraphicsCmdList();
@@ -29,7 +33,7 @@ bool Shapes::initialize(void *hwnd, Nix::IArchive *archive)
     return true;
 }
 
-void Shapes::resize(uint32_t width, uint32_t height)
+void WaterWave::resize(uint32_t width, uint32_t height)
 {
     if(!_device || (width <= 0 && height <= 0)) return;
     _device->onResize(width, height);
@@ -41,13 +45,13 @@ void Shapes::resize(uint32_t width, uint32_t height)
     XMStoreFloat4x4(&_proj, point);
 }
 
-void Shapes::release()
+void WaterWave::release()
 {
-    OutputDebugStringA("Shapes app release it. \n");
+    OutputDebugStringA("WaterWave app release it. \n");
     if(_device) _device->release();
 }
 
-void Shapes::tick(float dt)
+void WaterWave::tick(float dt)
 {
     updateCamera(dt);
 
@@ -68,9 +72,10 @@ void Shapes::tick(float dt)
 
     updateObjectConstantBuffers(dt);
     updateMainPassConstantBuffer(dt);
+    updateWaves(dt);
 }
 
-void Shapes::draw()
+void WaterWave::draw()
 {
     auto cmdListAlloc = _currFrameResource->_cmdListAllocation;
 
@@ -103,16 +108,20 @@ void Shapes::draw()
     //specify the buffers we are going to render to.
     graphicsCmdList->OMSetRenderTargets(1, &currRenderTargetView, true, &depthView);
 
-    ID3D12DescriptorHeap *decsHeaps[] = { _cbvHeap.Get() };
-    graphicsCmdList->SetDescriptorHeaps(_countof(decsHeaps), decsHeaps);
+    // ID3D12DescriptorHeap *decsHeaps[] = { _cbvHeap.Get() };
+    // graphicsCmdList->SetDescriptorHeaps(_countof(decsHeaps), decsHeaps);
     graphicsCmdList->SetGraphicsRootSignature(_device->getRootSignature());
 
-    int passCbvIndex = _passCbvOffset + _currFrameResourceIndex;
-    auto passCbvHandle = CD3DX12_GPU_DESCRIPTOR_HANDLE(_cbvHeap->GetGPUDescriptorHandleForHeapStart());
-    passCbvHandle.Offset(passCbvIndex, _cbvSrvUavDescriptorSize);
-    graphicsCmdList->SetGraphicsRootDescriptorTable(1, passCbvHandle);
+    // int passCbvIndex = _passCbvOffset + _currFrameResourceIndex;
+    // auto passCbvHandle = CD3DX12_GPU_DESCRIPTOR_HANDLE(_cbvHeap->GetGPUDescriptorHandleForHeapStart());
+    // passCbvHandle.Offset(passCbvIndex, _cbvSrvUavDescriptorSize);
+    // graphicsCmdList->SetGraphicsRootDescriptorTable(1, passCbvHandle);
 
-    drawRenderItems(graphicsCmdList, _opaqueRenderItems);
+    auto passCb = _currFrameResource->_passConstantBuffer->Resource();
+    graphicsCmdList->SetGraphicsRootConstantBufferView(1, passCb->GetGPUVirtualAddress());
+
+    drawRenderItems(graphicsCmdList, _renderItemLayer[(int)RenderLayer::Opaque]);
+    // drawRenderItems(graphicsCmdList, _opaqueRenderItems);
 
     //indicate a state transition on the resouce usage.
     graphicsCmdList->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(currRenderTarget, D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT));
@@ -133,12 +142,12 @@ void Shapes::draw()
     _device->getGraphicsCmdQueue()->Signal(_device->getFence().Get(), _device->_currentFence);
 }
 
-void Shapes::onKeyEvent(unsigned char key, eKeyEvent event)
+void WaterWave::onKeyEvent(unsigned char key, eKeyEvent event)
 {
 
 }
 
-void Shapes::onMouseEvent(eMouseButton btn, eMouseEvent event, int x, int y)
+void WaterWave::onMouseEvent(eMouseButton btn, eMouseEvent event, int x, int y)
 {
     switch (btn)
     {
@@ -195,7 +204,7 @@ void Shapes::onMouseEvent(eMouseButton btn, eMouseEvent event, int x, int y)
     _lastMousePos.y = y;
 }
 
-void Shapes::buildDescriptorHeaps()
+void WaterWave::buildDescriptorHeaps()
 {
     uint32_t objCount = (uint32_t)_opaqueRenderItems.size();
     uint32_t numDescs = (objCount + 1) * MaxFlightCount;
@@ -206,7 +215,7 @@ void Shapes::buildDescriptorHeaps()
 }
 
 
-void Shapes::buildConstantBufferViews()
+void WaterWave::buildConstantBufferViews()
 {
     uint32_t objCbByteSize = Utils::calcConstantBufferSize(sizeof(ConstantObject));
 
@@ -221,7 +230,7 @@ void Shapes::buildConstantBufferViews()
 
             cbAdress += i * objCbByteSize;
 
-            int heapIndex = frameIndex * objCount + (int)i;
+            int heapIndex = frameIndex * objCount + i;
             auto handle = CD3DX12_CPU_DESCRIPTOR_HANDLE(_cbvHeap->GetCPUDescriptorHandleForHeapStart());
             handle.Offset(heapIndex, _cbvSrvUavDescriptorSize);
 
@@ -253,155 +262,84 @@ void Shapes::buildConstantBufferViews()
     }
 }
 
-void Shapes::buildRootSignature()
+void WaterWave::buildRootSignature()
 {
     if(!_device) return;
     _device->createRootSignature();
 }
 
-void Shapes::buildShadersAndInputLayout()
+void WaterWave::buildShadersAndInputLayout()
 {
     if(!_device) return;
-    _device->createShadersAndLayout(_shaders, _inputLayout);
+    _device->createShadersAndLayout(_shaders, _inputLayout, 
+                                L"bin\\shaders\\WaterWave\\water.hlsl", 
+                               L"bin\\shaders\\WaterWave\\water.hlsl");
+
     if(_shaders.empty() || _inputLayout.empty()) assert(true);
 }
     
-void Shapes::buildShapeGeometry()
+void WaterWave::buildWavesGeometry()
 {
-    GeometryGenerator geoGen;
-	GeometryGenerator::MeshData box = geoGen.createBox(1.5f, 0.5f, 1.5f, 3);
-	GeometryGenerator::MeshData grid = geoGen.createGrid(20.0f, 30.0f, 60, 40);
-	GeometryGenerator::MeshData sphere = geoGen.createSphere(0.5f, 20, 20);
-	GeometryGenerator::MeshData cylinder = geoGen.createCylinder(0.5f, 0.3f, 3.0f, 20, 20);
+  std::vector<std::uint16_t> indices(3 * _waves->triangleCount());
+  assert(_waves->vertexCount() < 0x0000ffff);
 
-    // we are concatenating all the geometry into on big vertex/index buffer.
-    // so define the regions in the buffer each submesh covers.
+  auto m = _waves->rowCount();
+  auto n = _waves->columnCount();
+  auto k = 0;
 
-    // cache the vertex offsets to each object in the consatenated vertex buffer.
-
-    uint32_t boxVertexOffset = 0;
-    auto gridVertexOffset = (uint32_t)box._vertices.size();
-    auto sphereVertexOffset = gridVertexOffset + (uint32_t)grid._vertices.size();
-    auto cylinderVertexOffset = sphereVertexOffset + (uint32_t)sphere._vertices.size();
-
-
-    //cache the starting index for each object in the concatenated index buffer.
-    uint32_t boxIndexOffset = 0;
-    auto gridIndexOffset = (uint32_t)box._indices32.size();
-    auto sphereIndexOffset = gridIndexOffset + (uint32_t)grid._indices32.size();
-    auto cylinderIndexOffset = sphereIndexOffset + (uint32_t)sphere._indices32.size();
-
-    //define the submeshGeometry that cover different
-    //regions of the vertex/index buffers.
-
-    SubMeshGeometry boxSubMesh;
-    boxSubMesh._indexCount = (uint32_t)box._indices32.size();
-    boxSubMesh._startIndexLocation = boxIndexOffset;
-    boxSubMesh._baseVertexLocation = boxVertexOffset;
-
-    SubMeshGeometry gridSubMesh;
-    gridSubMesh._indexCount = (uint32_t)grid._indices32.size();
-    gridSubMesh._startIndexLocation = gridIndexOffset;
-    gridSubMesh._baseVertexLocation = gridVertexOffset;
-
-    SubMeshGeometry sphereSubMesh;
-    sphereSubMesh._indexCount = (uint32_t)sphere._indices32.size();
-    sphereSubMesh._startIndexLocation = sphereIndexOffset;
-    sphereSubMesh._baseVertexLocation = sphereVertexOffset;
-
-    SubMeshGeometry cylinderSubMesh;
-    cylinderSubMesh._indexCount = (uint32_t)cylinder._indices32.size();
-    cylinderSubMesh._startIndexLocation = cylinderIndexOffset;
-    cylinderSubMesh._baseVertexLocation = cylinderVertexOffset;
-
-
-    //extrcat the vertex elements we are interested in and pack 
-    //the vertices of all meshes into on vertex buffer.
-
-    auto totalVertexCount = box._vertices.size() + grid._vertices.size()
-                            + sphere._vertices.size() + cylinder._vertices.size();
-
-    std::vector<Vertex> vertices(totalVertexCount);
-
-    //TODO: using namespace distinguish Vertex struct.
-    
-    uint32_t k = 0;
-    for (size_t i = 0; i < box._vertices.size(); ++i, ++k)
+  for (int i = 0; i < m - 1; ++i)
+  { 
+    for (int j = 0; j < n - 1; ++j)
     {
-        vertices[k].pos = box._vertices[i]._position;
-        vertices[k].color = XMFLOAT4(Colors::DarkGreen);
+        indices[k] = i * n + j;
+        indices[k + 1] = i * n + j + 1;
+        indices[k + 2] = (i + 1) * n + j;
+        indices[k + 3] = (i + 1) * n + j;
+        indices[k + 4] = i * n + j + 1;
+        indices[k + 5] = (i + 1) * n + j + 1;
+
+        k += 6;
     }
-
-    for (size_t i = 0; i < grid._vertices.size(); ++i, ++k)
-    {
-        vertices[k].pos = grid._vertices[i]._position;
-        vertices[k].color = XMFLOAT4(Colors::ForestGreen);
-    }
-
-    for (size_t i = 0; i < sphere._vertices.size(); ++i, ++k)
-    {
-        vertices[k].pos = sphere._vertices[i]._position;
-        vertices[k].color = XMFLOAT4(Colors::Crimson);
-    }
-
-    for (size_t i = 0; i < cylinder._vertices.size(); ++i, ++k)
-    {
-        vertices[k].pos = cylinder._vertices[i]._position;
-        vertices[k].color = XMFLOAT4(Colors::SteelBlue);
-    }
-    
-
-    std::vector<std::uint16_t> indices;
-    indices.insert(indices.end(), std::begin(box.getIndices16()), std::end(box.getIndices16()));
-    indices.insert(indices.end(), std::begin(grid.getIndices16()), std::end(grid.getIndices16()));
-    indices.insert(indices.end(), std::begin(sphere.getIndices16()), std::end(sphere.getIndices16()));
-    indices.insert(indices.end(), std::begin(cylinder.getIndices16()), std::end(cylinder.getIndices16()));
+  }
 
 
-    const uint32_t vbByteSize = (uint32_t)vertices.size() * sizeof(Vertex);
-    const uint32_t ibByteSize = (uint32_t)indices.size() * sizeof(std::uint16_t);
+  uint32_t vbByteSize = _waves->vertexCount() * sizeof(Vertex);
+  uint32_t ibByteSize = (uint32_t)indices.size() * sizeof(std::uint16_t);
 
-    auto geo = std::make_unique<MeshGeometry>();
-    geo->setName("shapeGeo");
+  auto geo = std::make_unique<MeshGeometry>();
+  geo->setName("waterGeo");
 
-    ThrowIfFailed(D3DCreateBlob(vbByteSize, &geo->getVertexBufferCPU()));
-    CopyMemory(geo->getVertexBufferCPU()->GetBufferPointer(), vertices.data(), vbByteSize);
+  geo->setVertexBufferCPU(nullptr);
+  geo->setVertexBufferGPU(nullptr);
 
-    ThrowIfFailed(D3DCreateBlob(ibByteSize, &geo->getIndexBufferCPU()));
-    CopyMemory(geo->getIndexBufferCPU()->GetBufferPointer(), indices.data(), ibByteSize);
+  ThrowIfFailed(D3DCreateBlob(ibByteSize, &geo->getIndexBufferCPU()));
+  CopyMemory(geo->getIndexBufferCPU()->GetBufferPointer(), indices.data(), ibByteSize);
+  
+  auto uploadIndexGPUBuffer = Utils::createBuffer(_device->getD3DDevice(), 
+                                        _device->getGraphicsCmdList(), 
+                                        indices.data(), 
+                                        ibByteSize,
+                                        geo->getIndexBufferUploader());
 
-    auto vertexBufferGPU = Utils::createBuffer(_device->getD3DDevice(), 
-                                            _device->getGraphicsCmdList(), 
-                                            vertices.data(), 
-                                            vbByteSize, 
-                                            geo->getVertexBufferUploader());
+  geo->setIndexBufferGPU(uploadIndexGPUBuffer);
 
-    if(!vertexBufferGPU) assert(!vertexBufferGPU);
-    geo->setVertexBufferGPU(vertexBufferGPU);
+  geo->setVertexStride(sizeof(Vertex));
+  geo->setVertexBufferSize(vbByteSize);
+  geo->setIndexFormat(DXGI_FORMAT_R16_UINT);
+  geo->setIndexBufferSize(ibByteSize);
 
-    auto indexBufferGPU = Utils::createBuffer(_device->getD3DDevice(),
-                                            _device->getGraphicsCmdList(),
-                                            indices.data(),
-                                            ibByteSize,
-                                            geo->getIndexBufferUploader());
-    if(!indexBufferGPU) assert(!indexBufferGPU);
 
-    geo->setIndexBufferGPU(indexBufferGPU);
+  SubMeshGeometry subMesh;
+  subMesh._indexCount = (uint32_t)indices.size();
+  subMesh._startIndexLocation = 0;
+  subMesh._baseVertexLocation = 0;
 
-    geo->setVertexStride(sizeof(Vertex));
-    geo->setVertexBufferSize(vbByteSize);
-    geo->setIndexFormat(DXGI_FORMAT_R16_UINT);
-    geo->setIndexBufferSize(ibByteSize);
+  geo->setDrawArgsElement("grid", subMesh);
 
-    geo->setDrawArgsElement("box", boxSubMesh);
-    geo->setDrawArgsElement("grid", gridSubMesh);
-    geo->setDrawArgsElement("sphere", sphereSubMesh);
-    geo->setDrawArgsElement("cylinder", cylinderSubMesh);
-
-    _geometries[geo->getName()] = std::move(geo);
+  _geometries["waterGeo"] = std::move(geo);
 }
 
-void Shapes::buildPipelineObjects()
+void WaterWave::buildPipelineObjects()
 {
     //pipeline state object for opaque objects;
     if(!_device) return;
@@ -409,44 +347,50 @@ void Shapes::buildPipelineObjects()
 }
 
 
-void Shapes::buildFrameResources()
+void WaterWave::buildFrameResources()
 {
     for (size_t i = 0; i < MaxFlightCount; i++)
     {
-        _frameResources.push_back(std::make_unique<FrameResource>(_device->getD3DDevice(), 1, (uint32_t)_allRenderItems.size(), 1));
+        _frameResources.push_back(std::make_unique<FrameResource>(_device->getD3DDevice(), 1, (uint32_t)_allRenderItems.size(), _waves->vertexCount()));
     }
     
 }
 
-void Shapes::buildRenderItems()
+void WaterWave::buildRenderItems()
 {
-    auto boxItem = std::make_unique<RenderItem>();
-    XMStoreFloat4x4(&boxItem->_world, XMMatrixScaling(2.0f, 2.0f, 2.0f) * XMMatrixTranslation(0.0f, 0.5f, 0.0f));
-    boxItem->_objContantBufferIndex = 0;
-    boxItem->_geo = _geometries["shapeGeo"].get();
-    boxItem->_primitiveType = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
-    auto subMesh = boxItem->_geo->getDrawArgsSubMeshByName("box");
-    boxItem->_indexCount = subMesh->_indexCount;
-    boxItem->_startIndexLocation = subMesh->_startIndexLocation;
-    boxItem->_baseVertexLocation = subMesh->_baseVertexLocation;
-    _allRenderItems.push_back(std::move(boxItem));
+    auto wavesItem = std::make_unique<RenderItem>();
+    wavesItem->_world = MathHelper::Identity4x4();
+    wavesItem->_objContantBufferIndex = 0;
+    wavesItem->_geo = _geometries["waterGeo"].get();
+    wavesItem->_primitiveType = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+    wavesItem->_indexCount = wavesItem->_geo->getDrawArgsSubMeshByName("grid")->_indexCount;
+    wavesItem->_startIndexLocation = wavesItem->_geo->getDrawArgsSubMeshByName("grid")->_startIndexLocation;
+    wavesItem->_baseVertexLocation = wavesItem->_geo->getDrawArgsSubMeshByName("grid")->_baseVertexLocation;
 
-    auto gridItem = std::make_unique<RenderItem>();
-    gridItem->_world = MathHelper::Identity4x4();
-    gridItem->_objContantBufferIndex = 1;
-    gridItem->_geo = _geometries["shapeGeo"].get();
-    gridItem->_primitiveType = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
-    auto gridSubMesh = gridItem->_geo->getDrawArgsSubMeshByName("grid");
-    gridItem->_indexCount = gridSubMesh->_indexCount;
-    gridItem->_startIndexLocation = gridSubMesh->_startIndexLocation;
-    gridItem->_baseVertexLocation = gridSubMesh->_baseVertexLocation;
-    _allRenderItems.push_back(std::move(gridItem));
+    _waveRenderItem = wavesItem.get();
 
-    for(auto &e : _allRenderItems) _opaqueRenderItems.push_back(e.get());
+    _renderItemLayer[(int)RenderLayer::Opaque].push_back(wavesItem.get());
+    _opaqueRenderItems.push_back(std::move(wavesItem.get())); 
+
+    _allRenderItems.push_back(std::move(wavesItem));
+
+    // auto gridItem = std::make_unique<RenderItem>();
+    // gridItem->_world = MathHelper::Identity4x4();
+    // gridItem->_objContantBufferIndex = 1;
+    // gridItem->_geo = _geometries["shapeGeo"].get();
+    // gridItem->_primitiveType = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+    // auto gridSubMesh = gridItem->_geo->getDrawArgsSubMeshByName("grid");
+    // gridItem->_indexCount = gridSubMesh->_indexCount;
+    // gridItem->_startIndexLocation = gridSubMesh->_startIndexLocation;
+    // gridItem->_baseVertexLocation = gridSubMesh->_baseVertexLocation;
+    // _renderItemLayer[(int)RenderLayer::Opaque].push_back(gridItem.get());
+    // _opaqueRenderItems.push_back(std::move(gridItem.get()));
+    // _allRenderItems.push_back(std::move(gridItem));
+    
 
 }
 
-void Shapes::drawRenderItems(ID3D12GraphicsCommandList *cmdList, const std::vector<RenderItem *> &items)
+void WaterWave::drawRenderItems(ID3D12GraphicsCommandList *cmdList, const std::vector<RenderItem *> &items)
 {
     uint32_t objectConstantByteSize = Utils::calcConstantBufferSize(sizeof(ConstantObject));
 
@@ -459,21 +403,21 @@ void Shapes::drawRenderItems(ID3D12GraphicsCommandList *cmdList, const std::vect
         cmdList->IASetIndexBuffer(&renderItem->_geo->indexBufferView());
         cmdList->IASetPrimitiveTopology(renderItem->_primitiveType);
 
-        uint32_t cbvIndex = _currFrameResourceIndex * (uint32_t)_opaqueRenderItems.size() + renderItem->_objContantBufferIndex;
-        auto cbvHandle = CD3DX12_GPU_DESCRIPTOR_HANDLE(_cbvHeap->GetGPUDescriptorHandleForHeapStart());
-        cbvHandle.Offset(cbvIndex, _cbvSrvUavDescriptorSize);
-        
-        cmdList->SetGraphicsRootDescriptorTable(0, cbvHandle);
+        D3D12_GPU_VIRTUAL_ADDRESS objCbAddress = objectCb->GetGPUVirtualAddress();
+        objCbAddress += renderItem->_objContantBufferIndex;
+
+        cmdList->SetGraphicsRootConstantBufferView(0, objCbAddress);
         cmdList->DrawIndexedInstanced(renderItem->_indexCount, 1, renderItem->_startIndexLocation, renderItem->_baseVertexLocation, 0);
+
     }
     
 }
 
 
-void Shapes::updateCamera(float dt)
+void WaterWave::updateCamera(float dt)
 {
     _eyePos.x = _radius * sinf(_phi) * cosf(_theta);
-    _eyePos.z = _radius * sinf(_phi) * cosf(_theta);
+    _eyePos.z = _radius * sinf(_phi) * sinf(_theta);
     _eyePos.y = _radius * cosf(_phi);
 
     XMVECTOR pos = XMVectorSet(_eyePos.x, _eyePos.y, _eyePos.z, 1.0f);
@@ -484,7 +428,7 @@ void Shapes::updateCamera(float dt)
     XMStoreFloat4x4(&_view, view);
 }
 
-void Shapes::updateObjectConstantBuffers(float dt)
+void WaterWave::updateObjectConstantBuffers(float dt)
 {
     auto currObjectCb = _currFrameResource->_objectConstantBuffer.get();
     for(auto &e : _allRenderItems)
@@ -501,7 +445,7 @@ void Shapes::updateObjectConstantBuffers(float dt)
     }
 }
 
-void Shapes::updateMainPassConstantBuffer(float dt)
+void WaterWave::updateMainPassConstantBuffer(float dt)
 {
     XMMATRIX view = XMLoadFloat4x4(&_view);
     XMMATRIX proj = XMLoadFloat4x4(&_proj);
@@ -523,23 +467,55 @@ void Shapes::updateMainPassConstantBuffer(float dt)
 	_mainPassConstanBuffer._nearZ = 1.0f;
 	_mainPassConstanBuffer._farZ = 1000.0f;
 	_mainPassConstanBuffer._totalTime = _timer.totalTime();
-	_mainPassConstanBuffer._deltaTime = dt;
+	_mainPassConstanBuffer._deltaTime = _timer.deltaTime();
 
 	auto currPassCB = _currFrameResource->_passConstantBuffer.get();
 	currPassCB->copyData(0, _mainPassConstanBuffer);
 }
 
-uint32_t Shapes::rendererType()
+void WaterWave::updateWaves(float dt)
+{
+    static float base = 0.0f;
+    if((_timer.totalTime() - base) >= 0.25f)
+    {
+        base += 0.25f;
+
+        int i = MathHelper::Rand(4, _waves->rowCount() - 5);
+        int j = MathHelper::Rand(4, _waves->columnCount() - 5);
+
+        float r = MathHelper::RandF(0.2f, 0.5f);
+        _waves->disturb(i, j, r);
+    }
+
+    _waves->update(_timer.deltaTime());
+
+    auto currWaveVb = _currFrameResource->_waveVertexBuffer.get();
+    for(int i = 0; i < _waves->vertexCount(); ++i)
+    {
+        Vertex v;
+        v.pos = _waves->position(i);
+        v.color = XMFLOAT4(DirectX::Colors::Blue);
+
+        currWaveVb->copyData(i, v);
+    }
+
+    _waveRenderItem->_geo->setVertexBufferGPU(currWaveVb->Resource());
+
+}
+
+uint32_t WaterWave::rendererType()
 {
     return 0;
 }
 
-float Shapes::aspectRatio() const
+float WaterWave::aspectRatio() const
 {
     return static_cast<float>(_width / _height);
 }
 
 
-Shapes theApp;
+
+
+WaterWave theApp;
 
 NixApplication *getApplication() { return &theApp;}

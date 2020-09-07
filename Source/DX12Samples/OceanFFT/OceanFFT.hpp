@@ -1,5 +1,5 @@
-#ifndef __OCEAN_NEW_HPP__
-#define __OCEAN_NEW_HPP__
+#ifndef __OCEAN_FFT_HPP__
+#define __OCEAN_FFT_HPP__
 
 #include <NixApplication.hpp>
 #include "Device.hpp"
@@ -13,13 +13,13 @@
 using namespace Microsoft::WRL;
 using namespace DirectX;
 
-class OceanNew : public NixApplication
+class OceanFFT : public NixApplication
 {
 private:
    Device _device;
 public:
-    explicit OceanNew(/* args */) {}
-    ~OceanNew() {}
+    explicit OceanFFT(/* args */) {}
+    ~OceanFFT() {}
 
 
 public:
@@ -28,6 +28,7 @@ public:
     void tick(float dt) override;
     void draw() override;
     uint32_t rendererType() override;
+    virtual char *title() { return "OceanTTF"; };
 
 private:
 

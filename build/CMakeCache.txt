@@ -320,6 +320,12 @@ Nix_BINARY_DIR:STATIC=D:/GitHub/LearnDX12/build/Source/ThirdPart/Nix
 Nix_SOURCE_DIR:STATIC=D:/GitHub/LearnDX12/Source/ThirdPart/Nix
 
 //Value Computed by CMake
+OceanFFT_BINARY_DIR:STATIC=D:/GitHub/LearnDX12/build/Source/DX12Samples/OceanFFT
+
+//Value Computed by CMake
+OceanFFT_SOURCE_DIR:STATIC=D:/GitHub/LearnDX12/Source/DX12Samples/OceanFFT
+
+//Value Computed by CMake
 OceanNew_BINARY_DIR:STATIC=D:/GitHub/LearnDX12/build/Source/DX12Samples/OceanNew
 
 //Value Computed by CMake
@@ -363,6 +369,12 @@ TriangleDelux_BINARY_DIR:STATIC=D:/GitHub/LearnDX12/build/Source/DX12Samples/DX1
 
 //Value Computed by CMake
 TriangleDelux_SOURCE_DIR:STATIC=D:/GitHub/LearnDX12/Source/DX12Samples/DX12TriangleDelux
+
+//Value Computed by CMake
+WaterWave_BINARY_DIR:STATIC=D:/GitHub/LearnDX12/build/Source/DX12Samples/DX12WaterWave
+
+//Value Computed by CMake
+WaterWave_SOURCE_DIR:STATIC=D:/GitHub/LearnDX12/Source/DX12Samples/DX12WaterWave
 
 
 ########################
@@ -451,7 +463,7 @@ CMAKE_MODULE_LINKER_FLAGS_RELWITHDEBINFO-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_MT
 CMAKE_MT-ADVANCED:INTERNAL=1
 //number of local generators
-CMAKE_NUMBER_OF_MAKEFILES:INTERNAL=6
+CMAKE_NUMBER_OF_MAKEFILES:INTERNAL=7
 //Platform information initialized
 CMAKE_PLATFORM_INFO_INITIALIZED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_RC_COMPILER

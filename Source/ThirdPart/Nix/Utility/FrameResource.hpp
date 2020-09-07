@@ -29,7 +29,7 @@ public:
     
         _passConstantBuffer = std::make_unique<UploadBuffer<PassConstants>>(device, passCount, true);
         _objectConstantBuffer = std::make_unique<UploadBuffer<ConstantObject>>(device, objectCount, true);
-        // _waveVertexBuffer = std::make_unique<UploadBuffer<Vertex>>(device, waveVertexCount, false);
+        _waveVertexBuffer = std::make_unique<UploadBuffer<Vertex>>(device, waveVertexCount, false);
     };
     FrameResource(const FrameResource &rhs) = delete;
     FrameResource &operator=(const FrameResource &rhs) = delete;

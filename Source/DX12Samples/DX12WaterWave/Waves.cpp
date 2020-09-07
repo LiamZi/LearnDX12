@@ -251,17 +251,4 @@ void Waves::disturb(int i, int j, float magnitude)
 	_currSolution[i * _numCols + j - 1].y   += halfMag;
 	_currSolution[(i + 1) * _numCols + j].y += halfMag;
 	_currSolution[(i - 1) * _numCols + j].y += halfMag;
-
-
-    // assert(i > 1 && i < _numRows-2);
-	// assert(j > 1 && j < _numCols-2);
-
-	// float halfMag = 0.5f*magnitude;
-
-	// // Disturb the ijth vertex height and its neighbors.
-	// _currSolution[i*_numCols+j].y     += magnitude;
-	// _currSolution[i*_numCols+j+1].y   += halfMag;
-	// _currSolution[i*_numCols+j-1].y   += halfMag;
-	// _currSolution[(i+1)*_numCols+j].y += halfMag;
-	// _currSolution[(i-1)*_numCols+j].y += halfMag;
 }
